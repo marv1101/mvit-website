@@ -1,0 +1,1 @@
+bunx @tailwindcss/cli -i ./src/styles/globals.css -o ./src/output.css

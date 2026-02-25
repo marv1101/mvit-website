@@ -1,0 +1,85 @@
+services:
+
+#Postgres as a Database
+  postgres:
+    image: postgres:16
+    container_name: postgres
+    ports:
+      - 4242:5432
+    restart: unless-stopped
+    env_file:
+      - ../../.env
+      - ../../.env.development.local
+    volumes:
+      - pg_volume:/var/lib/postgresql/data:rw
+      - ../postgres/postgres.conf:/etc/postgresql/postgresql.conf:ro
+      - ../postgres/init-scripts:/docker-entrypoint-initdb.d:ro
+    command: [ "postgres", "-c", "config_file=/etc/postgresql/postgresql.conf", "-c", "log_statement=none", "-c", "log_min_duration_statement=1000", "-c", "log_connections=on", "-c", "log_disconnections=on" ]
+    #user: "70:70" # Postgres user
+    healthcheck:
+      test: [ "CMD-SHELL", 'pg_isready -U "$${POSTGRES_USER:-postgres}" -d "$${POSTGRES_DB:-postgres}" -h localhost || exit 1' ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+    stop_grace_period: 120s
+    networks:
+      - project_network
+    security_opt:
+      - no-new-privileges:true
+    shm_size: "512mb"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "5"
+    deploy:
+      resources:
+        limits:
+          cpus: "1.5"
+          memory: 1G
+        reservations:
+          cpus: "0.5"
+          memory: 512M
+
+#PG-Admin for Database administration
+  pgadmin:
+    image: elestio/pgadmin:latest
+    container_name: pgadmin
+    restart: unless-stopped
+    ports:
+      - "5050:8080"
+    env_file:
+      - ../../.env
+      - ../../.env.development.local
+    volumes:
+      - pgadmin_volume:/var/lib/pgadmin:rw
+    depends_on:
+      - postgres
+    networks:
+      - project_network
+
+  drupal:
+    image: drupal:10.5.8-php8.3-apache-trixie
+    ports:
+      - 8081:80
+    volumes:
+      - /var/www/html/modules
+      - /var/www/html/profiles
+      - /var/www/html/themes
+      # this takes advantage of the feature in Docker that a new anonymous
+      # volume (which is what we're creating here) will be initialized with the
+      # existing content of the image at the same location
+      - /var/www/html/sites
+    restart: unless-stopped
+
+networks:
+  project_network:
+    driver: bridge
+
+volumes:
+  pg_volume:
+    driver: local
+  pgadmin_volume:
+    driver: local
+
