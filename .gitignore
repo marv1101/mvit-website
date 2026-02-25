@@ -1,3 +1,6 @@
 .env
 .env.development.local
 mvits-webV2/infra/postgres/init-scripts/init.sql
+mvit-webV2-backend/node_modules*
+mvit-webV2-backend/package-lock.json
+.gitignore

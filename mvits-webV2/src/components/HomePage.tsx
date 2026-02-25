@@ -82,7 +82,7 @@ export function HomePage({onNavigate}: HomePageProps) {
       <section id="hero" className="pt-32 pb-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto text-center">
           <h1 className="text-5xl md:text-6xl mb-6 bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-            MVIT - IT, die sich rechnet.
+            MVIT - IT in guten Händen.
           </h1>
           <p className="text-xl text-muted-foreground mb-8 max-w-3xl mx-auto">
             Moderne, skalierbare und sichere Software-Produkte für Ihr Unternehmen. 
