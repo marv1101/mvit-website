@@ -3,6 +3,6 @@ export type offeringObject = {
     title: string,
     description: string,
     icon: string,
-    category: string,
+    category: number,
     price: number
 }
