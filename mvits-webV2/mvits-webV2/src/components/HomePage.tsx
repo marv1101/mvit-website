@@ -1,9 +1,11 @@
+import { useEffect, useState } from 'react';
 import { ProductCard, type Product } from './ProductCard';
 import { BlogCard, type BlogPost } from './BlogCard';
 import { ContactForm } from './ContactForm';
 import { Code, Database, Cloud, DatabaseZap, LucideFilter, MonitorCog, Server } from 'lucide-react';
+import api from '../lib/api';
 
-const offerings: Product[] = [
+const initialOfferings: Product[] = [
   {
     id: '1',
     name: 'Cloud migration',
@@ -76,6 +78,22 @@ interface HomePageProps {
 }
 
 export function HomePage({onNavigate}: HomePageProps) {
+
+  const [offerings, setOfferings] = useState<Product[]>(initialOfferings);
+
+  useEffect(() => {
+    let mounted = true;
+    api.get<Product[]>('/offerings/')
+      .then((data) => {
+        if (!mounted) return;
+        if (Array.isArray(data)) setOfferings(data);
+      })
+      .catch((err) => {
+         console.error('Failed to load offerings', err);
+      });
+    return () => { mounted = false; };
+  }, []);
+
   return (
     <>
       {/* Hero Section */}

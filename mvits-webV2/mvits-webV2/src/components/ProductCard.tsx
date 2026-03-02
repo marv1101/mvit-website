@@ -34,7 +34,7 @@ export function ProductCard({ product, productNavigation }: ProductCardProps) {
             </span>
           </div>
           <div className="text-primary">
-            {product.price}
+            {product.price == '0' ? 'Projektbasiert' : product.price + '€' }
           </div>
         </div>
         
