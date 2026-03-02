@@ -1,0 +1,32 @@
+{
+  "name": "mvits-webv2-api",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "npx tsx ./bin/www.ts",
+    "dev": "npx tsx --env-file=.env --watch ./bin/www.ts"
+  },
+  "dependencies": {
+    "@types/express": "^5.0.6",
+    "@types/node": "^22.7.6",
+    "cookie-parser": "~1.4.7",
+    "debug": "~4.4.3",
+    "dotenv": "~17.3.1",
+    "drizzle-orm": "~0.45.1",
+    "express": "^5.2.1",
+    "http-errors": "~2.0.1",
+    "morgan": "~1.10.1",
+    "pg": "~8.19.0",
+    "tsx": "^4.21.0"
+  },
+  "devDependencies": {
+    "@types/cookie-parser": "^1.4.10",
+    "@types/debug": "^4.1.12",
+    "@types/express": "^5.0.6",
+    "@types/morgan": "^1.9.10",
+    "@types/pg": "^8.16.0",
+    "drizzle-kit": "^0.31.9",
+    "tsx": "^4.21.0"
+  }
+}

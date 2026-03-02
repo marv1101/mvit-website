@@ -4,3 +4,6 @@ mvits-webV2/infra/postgres/init-scripts/init.sql
 mvit-webV2-backend/node_modules*
 mvit-webV2-backend/package-lock.json
 .gitignore
+mvit-webV2-api/node_modules*
+mvit-webV2-api/package-lock.json
+bun.lock
