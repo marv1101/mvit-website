@@ -17,7 +17,7 @@ const initialOfferings: Product[] = [
       'E-Mail',
       'IT-Beratungsleistungen',
     ],
-    icon: Cloud,
+    icon: "Cloud",
   },
   {
     id: '2',
@@ -30,7 +30,7 @@ const initialOfferings: Product[] = [
       'Optimierung der Systemlandschaft',
       'Prozessautomatisierung',
     ],
-    icon: MonitorCog,
+    icon: "MonitorCog",
   },
   {
     id: '3',
@@ -43,7 +43,7 @@ const initialOfferings: Product[] = [
       'Sicher',
       'Leistungsstark',
     ],
-    icon: Server,
+    icon: "Server",
   },
   {
     id: '4',
@@ -56,7 +56,7 @@ const initialOfferings: Product[] = [
       'Individuell',
       'Passend',
     ],
-    icon: Database,
+    icon: "Database",
   },
   {
     id: '5',
@@ -69,7 +69,7 @@ const initialOfferings: Product[] = [
       'Effizient',
       'Agil',
     ],
-    icon: Code,
+    icon: "Code",
   },
 ];
 
@@ -167,7 +167,7 @@ export function HomePage({onNavigate}: HomePageProps) {
       <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-primary to-accent">
         <div className="max-w-4xl mx-auto text-center text-primary-foreground">
           <h2 className="mb-6">
-            Bereit, Ihr nächstes Projekt zu starten?
+            Bereit, Ihr IT effizienter zu gestalten?
           </h2>
           <p className="text-xl mb-8 opacity-90">
             Kontaktieren Sie uns noch heute und erfahren Sie, wie unsere Software-Lösungen 

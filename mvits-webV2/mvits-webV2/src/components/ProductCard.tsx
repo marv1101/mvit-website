@@ -1,5 +1,6 @@
 import { Code, Download, Star } from 'lucide-react';
 import { ProductInfo } from './ProductInfo';
+import { getIconByName } from '../utils/IconMapper';
 
 export interface Product {
   id: string;
@@ -8,7 +9,7 @@ export interface Product {
   category: string;
   price: string;
   features: string[];
-  icon: typeof Code;
+  icon: string;
 }
 
 interface ProductCardProps {
@@ -17,7 +18,7 @@ interface ProductCardProps {
 }
 
 export function ProductCard({ product, productNavigation }: ProductCardProps) {
-  const Icon = product.icon;
+  const Icon = getIconByName(product.icon) || Code; // Fallback to Code icon if not found
   
   return (
     <div className="bg-card rounded-lg border border-border overflow-hidden hover:shadow-lg transition-shadow duration-300">

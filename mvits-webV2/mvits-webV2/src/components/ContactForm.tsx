@@ -29,7 +29,7 @@ export function ContactForm() {
         <div className="text-center mb-12">
           <h2 className="mb-4">Kontaktieren Sie uns</h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
-            Haben Sie Fragen zu unseren Produkten? Wir helfen Ihnen gerne weiter.
+            Haben Sie Fragen zu unseren Leistungen? Wir helfen Ihnen gerne weiter.
           </p>
         </div>
 
@@ -49,7 +49,7 @@ export function ContactForm() {
                   </div>
                 </div>
 
-                <div className="flex items-start gap-4">
+                <div className="hidden flex items-start gap-4">
                   <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
                     <Phone className="w-6 h-6 text-primary" />
                   </div>
@@ -60,7 +60,7 @@ export function ContactForm() {
                   </div>
                 </div>
 
-                <div className="flex items-start gap-4">
+                <div className="hidden flex items-start gap-4">
                   <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
                     <MapPin className="w-6 h-6 text-primary" />
                   </div>
