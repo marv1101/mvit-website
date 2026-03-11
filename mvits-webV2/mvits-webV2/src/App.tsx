@@ -1,30 +1,69 @@
-import { useState } from 'react';
+import { useEffect } from 'react';
 import { Navigation } from './components/Navigation';
 import { Footer } from './components/Footer';
 import { HomePage } from './components/HomePage';
 import { Impressum } from './components/Impressum';
 import { Datenschutz } from './components/Datenschutz';
 import { ProductInfo } from './components/ProductInfo';
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  useNavigate,
+  useLocation,
+} from 'react-router-dom';
 
 export default function App() {
- 
-  const [currentPage, setCurrentPage] = useState<'home' | 'impressum' | 'datenschutz' | 'ProductInfo'>('home');
+  return (
+    <Router>
+      <Main />
+    </Router>
+  );
+}
 
-  const handleNavigate = (page: 'home' | 'impressum' | 'datenschutz' | 'ProductInfo') => {
-    setCurrentPage(page);
+function Main() {
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
+  }, [location.pathname]);
 
   return (
     <div className="min-h-screen">
       <Navigation />
-      
-      {currentPage === 'home' && <HomePage onNavigate={handleNavigate} />}
-      {currentPage === 'ProductInfo' && <ProductInfo onBack={() => handleNavigate('home')} />}
-      {currentPage === 'impressum' && <Impressum onBack={() => handleNavigate('home')} />}
-      {currentPage === 'datenschutz' && <Datenschutz onBack={() => handleNavigate('home')} />}
-      
-      <Footer onNavigate={handleNavigate} />
+
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route
+          path="/product/:id"
+          element={<ProductInfo onBack={() => navigate('/')} />}
+        />
+        <Route
+          path="/impressum"
+          element={<Impressum onBack={() => navigate('/')} />}
+        />
+        <Route
+          path="/datenschutz"
+          element={<Datenschutz onBack={() => navigate('/')} />}
+        />
+      </Routes>
+
+      <Footer
+        onNavigate={(page) => {
+          switch (page) {
+            case 'home':
+              navigate('/');
+              break;
+            case 'impressum':
+              navigate('/impressum');
+              break;
+            case 'datenschutz':
+              navigate('/datenschutz');
+              break;
+          }
+        }}
+      />
     </div>
   );
 }

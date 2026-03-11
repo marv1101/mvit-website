@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
-import { ProductCard, type Product } from './ProductCard';
+import { ProductCard } from './ProductCard';
+import type { Product } from '../types/Product';
 import { BlogCard, type BlogPost } from './BlogCard';
 import { ContactForm } from './ContactForm';
 import { Code, Database, Cloud, DatabaseZap, LucideFilter, MonitorCog, Server } from 'lucide-react';
@@ -73,11 +74,7 @@ const initialOfferings: Product[] = [
   },
 ];
 
-interface HomePageProps {
-  onNavigate: (page: 'home' | 'ProductInfo') => void;
-}
-
-export function HomePage({onNavigate}: HomePageProps) {
+export function HomePage() {
 
   const [offerings, setOfferings] = useState<Product[]>(initialOfferings);
 
@@ -135,7 +132,7 @@ export function HomePage({onNavigate}: HomePageProps) {
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {offerings.map((product) => (
-              <ProductCard key={product.id} product={product} productNavigation={onNavigate} />
+              <ProductCard key={product.id} product={product} />
             ))}
           </div>
         </div>

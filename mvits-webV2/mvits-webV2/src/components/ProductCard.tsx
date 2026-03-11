@@ -1,25 +1,16 @@
 import { Code, Download, Star } from 'lucide-react';
-import { ProductInfo } from './ProductInfo';
 import { getIconByName } from '../utils/IconMapper';
-
-export interface Product {
-  id: string;
-  name: string;
-  description: string;
-  category: string;
-  price: string;
-  features: string[];
-  icon: string;
-}
+import type { Product } from '../types/Product';
+import { useNavigate } from 'react-router-dom';
 
 interface ProductCardProps {
   product: Product;
-  productNavigation: (page: 'home' | 'ProductInfo') => void;
 }
 
-export function ProductCard({ product, productNavigation }: ProductCardProps) {
+export function ProductCard({ product }: ProductCardProps) {
   const Icon = getIconByName(product.icon) || Code; // Fallback to Code icon if not found
-  
+  const navigate = useNavigate();
+
   return (
     <div className="bg-card rounded-lg border border-border overflow-hidden hover:shadow-lg transition-shadow duration-300">
       <div className="bg-gradient-to-br from-primary to-accent p-8">
@@ -61,7 +52,7 @@ export function ProductCard({ product, productNavigation }: ProductCardProps) {
           </div>
         </div>
         
-        <button onClick={() => productNavigation('ProductInfo')}
+        <button onClick={() => navigate(`/product/${product.id}`)}
         className="w-full px-6 py-3 bg-primary text-primary-foreground rounded-lg hover:bg-accent transition-colors duration-200">
           Mehr erfahren
         </button>
