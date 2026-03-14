@@ -6,6 +6,7 @@ export const offering = pgTable('offering', {
     id: integer().primaryKey().generatedAlwaysAsIdentity(),
     title: varchar({ length: 255 }).notNull(),
     description: varchar({ length: 1024 }).notNull(),
+    description_page: text(),
     icon: text().notNull(),
     category: integer().notNull().references(() => offering_category.id),
     features: json(),
