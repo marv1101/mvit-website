@@ -1,6 +1,7 @@
 import { ArrowLeft } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import DOMPurify from 'dompurify';
 import type { Product } from '../types/Product';
 import api from '../lib/api';
 
@@ -52,7 +53,9 @@ export function ProductInfo({ onBack }: ProductPageProps) {
           <>
             <h1 className="mb-8">{product.name}</h1>
             <p className="text-muted-foreground mb-4">{product.description}</p>
-            {/* additional details could go here */}
+            
+            <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(product.description_page || '') }}></div>
+
           </>
         )}
 
