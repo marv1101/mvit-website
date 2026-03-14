@@ -3,11 +3,18 @@ import { offeringService } from '../services/offeringService.js';
 
 const router = express.Router();
 
-/* GET offerings. */
+/* GET offerings. 
+    Respond with a json array of offerings.
+    Each offering includes its category name instead of the category ID.
+*/
 router.get('/', async (req: Request, res: Response): Promise<void> => {
     try {
 
-        const offerings = await offeringService.getAllOfferings();
+        //user pagination parameters if provided, otherwise default values are used
+        const offset = parseInt(req.query.offset as string) || 0;
+        const limit = parseInt(req.query.limit as string) || 10;
+
+        const offerings = await offeringService.getAllOfferings(offset, limit);
 
         res.json(offerings);
     } catch (error) {
@@ -16,10 +23,15 @@ router.get('/', async (req: Request, res: Response): Promise<void> => {
     }
 });
 
+/* GET offering by id. 
+    Respond with a json array of offerings.
+    Each offering includes its category name instead of the category ID.
+*/
 router.get('/:id', async (req: Request, res: Response): Promise<void> => {
     try {
 
-        const offeringId = req.params.id;
+        // parse the offering ID from the URL parameter
+        const offeringId: number = parseInt(req.params.id[0], 10);
 
         const offering = await offeringService.getOfferingById(offeringId);
 
