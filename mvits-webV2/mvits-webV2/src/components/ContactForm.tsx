@@ -1,7 +1,51 @@
 import { Mail, Phone, MapPin, Send } from 'lucide-react';
 import { useState } from 'react';
+import toast, { Toaster } from 'react-hot-toast';
+import  Modal from 'react-modal';
 
 export function ContactForm() {
+
+  const [modalIsOpen, setIsOpen] = useState(false);
+  const [allowedToSubmitContactInfo, setAllowedToSubmitContactInfo] = useState(false);
+
+  function openModal() {
+    setIsOpen(true);
+  }
+
+  function closeModal() {
+    setIsOpen(false);
+  }
+
+  function closeModalWithoutConsent() {
+    setAllowedToSubmitContactInfo(false);
+    setIsOpen(false);
+
+    toast.error('Ihre Nachricht konnte nicht gesendet werden, da Sie der Verarbeitung Ihrer Daten nicht zugestimmt haben.');
+  }
+
+  function closeModalWithConsent() {
+    setAllowedToSubmitContactInfo(true);
+    setIsOpen(false);
+
+    toast.success('Ihre Nachricht wurde erfolgreich gesendet!');
+    setFormData({ name: '', email: '', subject: '', message: '' });
+  }
+
+  function afterOpenModal() {
+  }
+
+  const customStyles = {
+  content: {
+    top: '50%',
+    left: '50%',
+    right: 'auto',
+    bottom: 'auto',
+    marginRight: '-50%',
+    transform: 'translate(-50%, -50%)',
+  },
+};
+
+
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -9,11 +53,13 @@ export function ContactForm() {
     message: '',
   });
 
+  Modal.setAppElement('#root'); // Setzt das App-Element für die Modal-Komponente
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Hier würde die Form-Submission Logik stehen
-    alert('Vielen Dank für Ihre Nachricht! Wir melden uns bald bei Ihnen.');
-    setFormData({ name: '', email: '', subject: '', message: '' });
+
+    openModal(); // Öffnet das Modal nach dem Absenden des Formulars
+
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -25,6 +71,27 @@ export function ContactForm() {
 
   return (
     <section id="contact" className="py-20 px-4 sm:px-6 lg:px-8">
+      <Toaster position="top-right" reverseOrder={false} />
+      <Modal
+        isOpen={modalIsOpen}
+        onAfterOpen={afterOpenModal}
+        onRequestClose={closeModal}
+        style={customStyles}
+        contentLabel="Submit Modal"
+      >
+
+        <h2>Vielen Dank für Ihre Nachricht!</h2>
+        <p> Aufgrund der DSGVO müssen sie hier bestätigen, dass wie ihre angegebenen Daten verwendet werden dürfen. Dies Betrifft ihren Namen, ihre E-Mail-Adresse und ihre Nachricht.</p>
+        <p> Für weitere Informationen kontaktieren Sie uns unter contact@mvit-solutions.de oder besuchen Sie unsere Datenschutz Seite. Diese finden sie unter <a href="/datenschutz" className="text-primary hover:underline">Datenschutz</a>.</p>
+
+        <button onClick={closeModalWithConsent} className="mt-4 px-4 py-2 bg-primary text-white rounded hover:bg-primary-dark">
+          Ich stimme der Verarbeitung zu
+        </button>
+        <button onClick={closeModalWithoutConsent} className="mt-4 ml-2 px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400">
+          Ich stimme der Verarbeitung nicht zu
+        </button>
+      </Modal>
+
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-12">
           <h2 className="mb-4">Kontaktieren Sie uns</h2>
