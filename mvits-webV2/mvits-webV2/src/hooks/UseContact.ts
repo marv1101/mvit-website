@@ -1,16 +1,17 @@
 import { useState } from "react";
-import { sendContact } from "../services/contactService";
+import { sendContactRequest } from "../services/ContactService";
 import type { ContactPayload, ContactResponse } from "../types/contact";
 
-export function useContact() {
+export function UseContact() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   async function submit(payload: ContactPayload): Promise<ContactResponse | null> {
     setLoading(true);
     setError(null);
+    
     try {
-      const res = await sendContact(payload);
+      const res = await sendContactRequest(payload);
       return res;
     } catch (err: any) {
       setError(err?.message || "Unknown error");
@@ -23,4 +24,4 @@ export function useContact() {
   return { submit, loading, error } as const;
 }
 
-export default useContact;
+export default UseContact;

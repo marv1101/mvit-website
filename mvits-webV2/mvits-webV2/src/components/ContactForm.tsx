@@ -1,13 +1,14 @@
 import { Mail, Phone, MapPin, Send } from 'lucide-react';
 import { useState } from 'react';
 import toast, { Toaster } from 'react-hot-toast';
-import  Modal from 'react-modal';
 import { ContactModal } from './ContactModal';
+import { UseContact } from '../hooks/UseContact';
 
 export function ContactForm() {
 
   const [modalIsOpen, setIsOpen] = useState(false);
   const [allowedToSubmitContactInfo, setAllowedToSubmitContactInfo] = useState(false);
+  const { submit, loading, error } = UseContact();
 
   function openModal() {
     setIsOpen(true);
@@ -24,11 +25,18 @@ export function ContactForm() {
     toast.error('Ihre Nachricht konnte nicht gesendet werden, da Sie der Verarbeitung Ihrer Daten nicht zugestimmt haben.');
   }
 
-  function closeModalWithConsent() {
+  async function closeModalWithConsent() {
     setAllowedToSubmitContactInfo(true);
     setIsOpen(false);
 
-    toast.success('Ihre Nachricht wurde erfolgreich gesendet!');
+    const result = await submit(formData);
+
+    if (!result) {
+      toast.error('Beim senden Ihrer Nachricht ist ein Fehler aufgetreten. Bitte versuchen Sie es später erneut.');
+    }else{
+      toast.success('Ihre Nachricht wurde erfolgreich gesendet!');
+    }
+
     setFormData({ name: '', email: '', subject: '', message: '' });
   }
 
@@ -43,9 +51,7 @@ export function ContactForm() {
     message: '',
   });
 
-  Modal.setAppElement('#root'); // Setzt das App-Element für die Modal-Komponente
-
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     openModal(); // Öffnet das Modal nach dem Absenden des Formulars

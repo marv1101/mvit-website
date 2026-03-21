@@ -5,6 +5,7 @@ import { HomePage } from './components/HomePage';
 import { Impressum } from './components/Impressum';
 import { Datenschutz } from './components/Datenschutz';
 import { ProductInfo } from './components/ProductInfo';
+import  Modal from 'react-modal';
 import {
   BrowserRouter as Router,
   Routes,
@@ -20,6 +21,9 @@ export default function App() {
     </Router>
   );
 }
+
+
+Modal.setAppElement('#root'); // Setzt das App-Element für die Modal-Komponente
 
 function Main() {
   const navigate = useNavigate();
