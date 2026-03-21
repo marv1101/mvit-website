@@ -13,7 +13,7 @@ const __dirname = dirname(__filename);
 import indexRouter from './routes/index.js';
 import usersRouter from './routes/users.js';
 import offeringsRouter from './routes/offerings.js';
-import contactRouter from './routes/contact.js';
+import contactsRouter from './routes/contacts.js';
 
 const app = express();
 
@@ -27,7 +27,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/api/', indexRouter);
 app.use('/api/users', usersRouter);
 app.use('/api/offerings', offeringsRouter);
-app.use('/api/contacts', contactRouter);
+app.use('/api/contacts', contactsRouter);
 
 // catch 404 and forward to error handler
 app.use((req: Request, res: Response, next: NextFunction) => {
