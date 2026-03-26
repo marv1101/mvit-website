@@ -74,9 +74,22 @@ const initialOfferings: Product[] = [
   },
 ];
 
+const initialBlogPosts: BlogPost[] = [
+  {
+    id: '1',
+    title: 'Die Zukunft der IT: Trends und Entwicklungen',
+    excerpt: 'Entdecken Sie die neuesten Trends und Entwicklungen in der IT-Branche, von Künstlicher Intelligenz bis hin zu Cloud Computing.',
+    date: '2024-05-01',
+    readTime: '5 min Lesezeit',
+    category: 'Trends',
+    imageUrl: '/blog1.jpg',
+  },
+];
+
 export function HomePage() {
 
   const [offerings, setOfferings] = useState<Product[]>(initialOfferings);
+  const [blogPosts, setBlogPosts] = useState<BlogPost[]>(initialBlogPosts);
 
   useEffect(() => {
     let mounted = true;
@@ -139,14 +152,19 @@ export function HomePage() {
       </section>
       
       {/* Blog Section */}
-      <section hidden id="blog" className="py-20 px-4 sm:px-6 lg:px-8">
+      <section id="blog" className="py-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-12">
             <h2 className="mb-4">Aktuelles aus unserem Blog</h2>
             <p className="text-muted-foreground max-w-2xl mx-auto">
-              Bleiben Sie auf dem Laufenden mit den neuesten Trends, 
-              Tutorials und Best Practices aus der Software-Entwicklung.
+              Bleiben Sie auf dem Laufenden mit Projekten im Bereich der Digitalisierung und Automatisierung von Geschäftsprozessen.
             </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {blogPosts.map((blogpost) => (
+              <BlogCard key={blogpost.id} post={blogpost} />
+            ))}
           </div>
           
           <div className="text-center mt-12">
