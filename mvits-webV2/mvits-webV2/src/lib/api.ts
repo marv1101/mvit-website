@@ -7,6 +7,7 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
   const res = await fetch(`${BASE_URL}${path}`, {
     credentials: "omit",
     ...init,
+    headers,
   });
 
   if (!res.ok) {
@@ -23,8 +24,8 @@ export function get<T>(path: string) {
   return request<T>(path, { method: "GET" });
 }
 
-export function post<T>(path: string, payload?: unknown) {
-  return request<T>(path, { method: "POST", body: JSON.stringify(payload) });
+export async function post<T>(path: string, payload?: unknown) {
+  return await request<T>(path, { method: "POST", body: JSON.stringify(payload) });
 }
 
 export default { get, post };
