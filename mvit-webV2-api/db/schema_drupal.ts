@@ -1,7 +1,11 @@
-import { pgTable, index, bigserial, bigint, varchar, text, integer, serial, smallint, real, numeric, doublePrecision } from "drizzle-orm/pg-core"
+import { pgTable, index, bigserial, bigint, customType, varchar, text, integer, serial, smallint, real, numeric, doublePrecision } from "drizzle-orm/pg-core"
 import { sql } from "drizzle-orm"
 
-
+const bytea = customType<{ data: Buffer }>({
+  dataType() {
+    return "bytea";
+  },
+});
 
 export const watchdog = pgTable("watchdog", {
 	wid: bigserial({ mode: "bigint" }).notNull(),
@@ -10,7 +14,7 @@ export const watchdog = pgTable("watchdog", {
 	type: varchar({ length: 64 }).notNull(),
 	message: text().notNull(),
 	// TODO: failed to parse database type 'bytea'
-	variables: unknown("variables").notNull(),
+	variables: bytea("variables").notNull(),
 	severity: integer().notNull(),
 	link: text(),
 	location: text().notNull(),
@@ -91,14 +95,14 @@ export const config = pgTable("config", {
 	collection: varchar({ length: 255 }).notNull(),
 	name: varchar({ length: 255 }).notNull(),
 	// TODO: failed to parse database type 'bytea'
-	data: unknown("data"),
+	data: bytea("data"),
 });
 
 export const keyValue = pgTable("key_value", {
 	collection: varchar({ length: 128 }).notNull(),
 	name: varchar({ length: 128 }).notNull(),
 	// TODO: failed to parse database type 'bytea'
-	value: unknown("value").notNull(),
+	value: bytea("value").notNull(),
 });
 
 export const sequences = pgTable("sequences", {
@@ -110,7 +114,7 @@ export const batch = pgTable("batch", {
 	token: varchar({ length: 64 }).notNull(),
 	timestamp: integer().notNull(),
 	// TODO: failed to parse database type 'bytea'
-	batch: unknown("batch"),
+	batch: bytea("batch"),
 }, (table) => [
 	index("batch__token__idx").using("btree", table.token.asc().nullsLast().op("text_ops")),
 ]);
@@ -119,7 +123,7 @@ export const queue = pgTable("queue", {
 	itemId: serial("item_id").notNull(),
 	name: varchar({ length: 255 }).notNull(),
 	// TODO: failed to parse database type 'bytea'
-	data: unknown("data"),
+	data: bytea("data"),
 	// You can use { mode: "bigint" } if numbers are exceeding js number limitations
 	expire: bigint({ mode: "number" }).notNull(),
 	// You can use { mode: "bigint" } if numbers are exceeding js number limitations
@@ -130,7 +134,7 @@ export const queue = pgTable("queue", {
 ]);
 
 export const node = pgTable("node", {
-	nid: serial().notNull(),
+	nid: bigint({ mode: "number" }).notNull(),
 	// You can use { mode: "bigint" } if numbers are exceeding js number limitations
 	vid: bigint({ mode: "number" }),
 	type: varchar({ length: 32 }).notNull(),
@@ -148,7 +152,7 @@ export const sessions = pgTable("sessions", {
 	// You can use { mode: "bigint" } if numbers are exceeding js number limitations
 	timestamp: bigint({ mode: "number" }).notNull(),
 	// TODO: failed to parse database type 'bytea'
-	session: unknown("session"),
+	session: bytea("session"),
 }, (table) => [
 	index("sessions__timestamp__idx").using("btree", table.timestamp.asc().nullsLast().op("int8_ops")),
 	index("sessions__uid__idx").using("btree", table.uid.asc().nullsLast().op("int8_ops")),
@@ -273,7 +277,7 @@ export const usersData = pgTable("users_data", {
 	module: varchar({ length: 50 }).notNull(),
 	name: varchar({ length: 128 }).notNull(),
 	// TODO: failed to parse database type 'bytea'
-	value: unknown("value"),
+	value: bytea("value"),
 	serialized: integer(),
 }, (table) => [
 	index("users_data__module__idx").using("btree", table.module.asc().nullsLast().op("text_ops")),
@@ -549,7 +553,7 @@ export const commentCommentBody = pgTable("comment__comment_body", {
 export const cacheContainer = pgTable("cache_container", {
 	cid: varchar({ length: 255 }).notNull(),
 	// TODO: failed to parse database type 'bytea'
-	data: unknown("data"),
+	data: bytea("data"),
 	// You can use { mode: "bigint" } if numbers are exceeding js number limitations
 	expire: bigint({ mode: "number" }).notNull(),
 	created: numeric({ precision: 14, scale:  3 }).notNull(),
@@ -766,7 +770,7 @@ export const menuLinkContentData = pgTable("menu_link_content_data", {
 	linkUri: varchar("link__uri", { length: 2048 }),
 	linkTitle: varchar("link__title", { length: 255 }),
 	// TODO: failed to parse database type 'bytea'
-	linkOptions: unknown("link__options"),
+	linkOptions: bytea("link__options"),
 	external: smallint(),
 	rediscover: smallint(),
 	weight: integer(),
@@ -794,7 +798,7 @@ export const menuLinkContentFieldRevision = pgTable("menu_link_content_field_rev
 	linkUri: varchar("link__uri", { length: 2048 }),
 	linkTitle: varchar("link__title", { length: 255 }),
 	// TODO: failed to parse database type 'bytea'
-	linkOptions: unknown("link__options"),
+	linkOptions: bytea("link__options"),
 	external: smallint(),
 	changed: integer(),
 	defaultLangcode: smallint("default_langcode").notNull(),
@@ -831,7 +835,7 @@ export const shortcutFieldData = pgTable("shortcut_field_data", {
 	linkUri: varchar("link__uri", { length: 2048 }),
 	linkTitle: varchar("link__title", { length: 255 }),
 	// TODO: failed to parse database type 'bytea'
-	linkOptions: unknown("link__options"),
+	linkOptions: bytea("link__options"),
 	defaultLangcode: smallint("default_langcode").notNull(),
 }, (table) => [
 	index("drupal_ZRb0RrR9ucQ_abrsOj5OqJZ6JHhecUX6qMxhEeLHDSA_idx").using("btree", table.shortcutSet.asc().nullsLast().op("text_ops")),
@@ -845,7 +849,7 @@ export const router = pgTable("router", {
 	patternOutline: varchar("pattern_outline", { length: 255 }).notNull(),
 	fit: integer().notNull(),
 	// TODO: failed to parse database type 'bytea'
-	route: unknown("route"),
+	route: bytea("route"),
 	numberParts: smallint("number_parts").notNull(),
 }, (table) => [
 	index("router__pattern_outline_parts__idx").using("btree", table.patternOutline.asc().nullsLast().op("int2_ops"), table.numberParts.asc().nullsLast().op("int2_ops")),
@@ -859,22 +863,22 @@ export const menuTree = pgTable("menu_tree", {
 	routeName: varchar("route_name", { length: 255 }),
 	routeParamKey: varchar("route_param_key", { length: 255 }),
 	// TODO: failed to parse database type 'bytea'
-	routeParameters: unknown("route_parameters"),
+	routeParameters: bytea("route_parameters"),
 	url: varchar({ length: 255 }).notNull(),
 	// TODO: failed to parse database type 'bytea'
-	title: unknown("title"),
+	title: bytea("title"),
 	// TODO: failed to parse database type 'bytea'
-	description: unknown("description"),
+	description: bytea("description"),
 	class: text(),
 	// TODO: failed to parse database type 'bytea'
-	options: unknown("options"),
+	options: bytea("options"),
 	provider: varchar({ length: 50 }).notNull(),
 	enabled: smallint().notNull(),
 	discovered: smallint().notNull(),
 	expanded: smallint().notNull(),
 	weight: integer().notNull(),
 	// TODO: failed to parse database type 'bytea'
-	metadata: unknown("metadata"),
+	metadata: bytea("metadata"),
 	hasChildren: smallint("has_children").notNull(),
 	depth: smallint().notNull(),
 	// You can use { mode: "bigint" } if numbers are exceeding js number limitations
@@ -1046,7 +1050,7 @@ export const keyValueExpire = pgTable("key_value_expire", {
 	collection: varchar({ length: 128 }).notNull(),
 	name: varchar({ length: 128 }).notNull(),
 	// TODO: failed to parse database type 'bytea'
-	value: unknown("value").notNull(),
+	value: bytea("value").notNull(),
 	expire: integer().notNull(),
 }, (table) => [
 	index("key_value_expire__expire__idx").using("btree", table.expire.asc().nullsLast().op("int4_ops")),
@@ -1055,7 +1059,7 @@ export const keyValueExpire = pgTable("key_value_expire", {
 export const cacheConfig = pgTable("cache_config", {
 	cid: varchar({ length: 255 }).notNull(),
 	// TODO: failed to parse database type 'bytea'
-	data: unknown("data"),
+	data: bytea("data"),
 	// You can use { mode: "bigint" } if numbers are exceeding js number limitations
 	expire: bigint({ mode: "number" }).notNull(),
 	created: numeric({ precision: 14, scale:  3 }).notNull(),
@@ -1075,7 +1079,7 @@ export const cachetags = pgTable("cachetags", {
 export const cacheData = pgTable("cache_data", {
 	cid: varchar({ length: 255 }).notNull(),
 	// TODO: failed to parse database type 'bytea'
-	data: unknown("data"),
+	data: bytea("data"),
 	// You can use { mode: "bigint" } if numbers are exceeding js number limitations
 	expire: bigint({ mode: "number" }).notNull(),
 	created: numeric({ precision: 14, scale:  3 }).notNull(),
@@ -1090,7 +1094,7 @@ export const cacheData = pgTable("cache_data", {
 export const cacheBootstrap = pgTable("cache_bootstrap", {
 	cid: varchar({ length: 255 }).notNull(),
 	// TODO: failed to parse database type 'bytea'
-	data: unknown("data"),
+	data: bytea("data"),
 	// You can use { mode: "bigint" } if numbers are exceeding js number limitations
 	expire: bigint({ mode: "number" }).notNull(),
 	created: numeric({ precision: 14, scale:  3 }).notNull(),
@@ -1105,7 +1109,7 @@ export const cacheBootstrap = pgTable("cache_bootstrap", {
 export const cacheDiscovery = pgTable("cache_discovery", {
 	cid: varchar({ length: 255 }).notNull(),
 	// TODO: failed to parse database type 'bytea'
-	data: unknown("data"),
+	data: bytea("data"),
 	// You can use { mode: "bigint" } if numbers are exceeding js number limitations
 	expire: bigint({ mode: "number" }).notNull(),
 	created: numeric({ precision: 14, scale:  3 }).notNull(),
@@ -1120,7 +1124,7 @@ export const cacheDiscovery = pgTable("cache_discovery", {
 export const cacheAccessPolicy = pgTable("cache_access_policy", {
 	cid: varchar({ length: 255 }).notNull(),
 	// TODO: failed to parse database type 'bytea'
-	data: unknown("data"),
+	data: bytea("data"),
 	// You can use { mode: "bigint" } if numbers are exceeding js number limitations
 	expire: bigint({ mode: "number" }).notNull(),
 	created: numeric({ precision: 14, scale:  3 }).notNull(),
@@ -1135,7 +1139,7 @@ export const cacheAccessPolicy = pgTable("cache_access_policy", {
 export const cacheDefault = pgTable("cache_default", {
 	cid: varchar({ length: 255 }).notNull(),
 	// TODO: failed to parse database type 'bytea'
-	data: unknown("data"),
+	data: bytea("data"),
 	// You can use { mode: "bigint" } if numbers are exceeding js number limitations
 	expire: bigint({ mode: "number" }).notNull(),
 	created: numeric({ precision: 14, scale:  3 }).notNull(),
@@ -1159,7 +1163,7 @@ export const semaphore = pgTable("semaphore", {
 export const cacheRender = pgTable("cache_render", {
 	cid: varchar({ length: 255 }).notNull(),
 	// TODO: failed to parse database type 'bytea'
-	data: unknown("data"),
+	data: bytea("data"),
 	// You can use { mode: "bigint" } if numbers are exceeding js number limitations
 	expire: bigint({ mode: "number" }).notNull(),
 	created: numeric({ precision: 14, scale:  3 }).notNull(),
@@ -1174,7 +1178,7 @@ export const cacheRender = pgTable("cache_render", {
 export const cacheMenu = pgTable("cache_menu", {
 	cid: varchar({ length: 255 }).notNull(),
 	// TODO: failed to parse database type 'bytea'
-	data: unknown("data"),
+	data: bytea("data"),
 	// You can use { mode: "bigint" } if numbers are exceeding js number limitations
 	expire: bigint({ mode: "number" }).notNull(),
 	created: numeric({ precision: 14, scale:  3 }).notNull(),
@@ -1189,7 +1193,7 @@ export const cacheMenu = pgTable("cache_menu", {
 export const cacheEntity = pgTable("cache_entity", {
 	cid: varchar({ length: 255 }).notNull(),
 	// TODO: failed to parse database type 'bytea'
-	data: unknown("data"),
+	data: bytea("data"),
 	// You can use { mode: "bigint" } if numbers are exceeding js number limitations
 	expire: bigint({ mode: "number" }).notNull(),
 	created: numeric({ precision: 14, scale:  3 }).notNull(),
@@ -1204,7 +1208,7 @@ export const cacheEntity = pgTable("cache_entity", {
 export const cacheDynamicPageCache = pgTable("cache_dynamic_page_cache", {
 	cid: varchar({ length: 255 }).notNull(),
 	// TODO: failed to parse database type 'bytea'
-	data: unknown("data"),
+	data: bytea("data"),
 	// You can use { mode: "bigint" } if numbers are exceeding js number limitations
 	expire: bigint({ mode: "number" }).notNull(),
 	created: numeric({ precision: 14, scale:  3 }).notNull(),

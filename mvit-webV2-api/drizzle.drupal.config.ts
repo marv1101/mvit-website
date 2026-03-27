@@ -3,7 +3,7 @@ import { defineConfig } from 'drizzle-kit';
 
 export default defineConfig({
     out: './drizzle/drupal',
-    schema: './db/drizzle/drupal/schema.ts',
+    schema: './db/schema_drupal.ts',
     dialect: 'postgresql',
     dbCredentials: {
         url: process.env.DRUPAL_DB_URL!,
