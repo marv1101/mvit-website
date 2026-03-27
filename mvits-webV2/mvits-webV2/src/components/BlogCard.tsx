@@ -1,5 +1,6 @@
 import { Calendar, Clock, ArrowRight } from 'lucide-react';
 import { ImageWithFallback } from './figma/ImageWithFallback';
+import type { Blogpost } from '@/types/Blogpost';
 
 export interface BlogPost {
   id: string;
@@ -11,8 +12,10 @@ export interface BlogPost {
   imageUrl: string;
 }
 
+const imageUrl = "test.jpg";
+
 interface BlogCardProps {
-  post: BlogPost;
+  post: Blogpost;
 }
 
 export function BlogCard({ post }: BlogCardProps) {
@@ -20,7 +23,7 @@ export function BlogCard({ post }: BlogCardProps) {
     <article className="bg-card rounded-lg border border-border overflow-hidden hover:shadow-lg transition-all duration-300 group">
       <div className="aspect-video overflow-hidden">
         <ImageWithFallback
-          src={post.imageUrl}
+          src={imageUrl}
           alt={post.title}
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
         />
@@ -29,7 +32,7 @@ export function BlogCard({ post }: BlogCardProps) {
       <div className="p-6">
         <div className="flex items-center gap-2 mb-3">
           <span className="inline-block px-3 py-1 bg-secondary text-secondary-foreground rounded-full text-sm">
-            {post.category}
+            {post.langcode}
           </span>
         </div>
         
@@ -38,17 +41,17 @@ export function BlogCard({ post }: BlogCardProps) {
         </h3>
         
         <p className="text-muted-foreground mb-4">
-          {post.excerpt}
+          {post.summary}
         </p>
         
         <div className="flex items-center gap-4 text-sm text-muted-foreground mb-4">
           <div className="flex items-center gap-1">
             <Calendar className="w-4 h-4" />
-            <span>{post.date}</span>
+            <span>{post.created}</span>
           </div>
           <div className="flex items-center gap-1">
             <Clock className="w-4 h-4" />
-            <span>{post.readTime}</span>
+            <span>{post.changed}</span>
           </div>
         </div>
         

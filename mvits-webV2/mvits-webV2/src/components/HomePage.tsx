@@ -5,6 +5,7 @@ import { BlogCard, type BlogPost } from './BlogCard';
 import { ContactForm } from './ContactForm';
 import { Code, Database, Cloud, DatabaseZap, LucideFilter, MonitorCog, Server } from 'lucide-react';
 import api from '../lib/api';
+import type { Blogpost } from '@/types/Blogpost';
 
 const initialOfferings: Product[] = [
   {
@@ -74,22 +75,23 @@ const initialOfferings: Product[] = [
   },
 ];
 
-const initialBlogPosts: BlogPost[] = [
+const initialBlogPosts: Blogpost[] = [
   {
-    id: '1',
+    nid: 1,
+    vid: 1,
     title: 'Die Zukunft der IT: Trends und Entwicklungen',
-    excerpt: 'Entdecken Sie die neuesten Trends und Entwicklungen in der IT-Branche, von Künstlicher Intelligenz bis hin zu Cloud Computing.',
-    date: '2024-05-01',
-    readTime: '5 min Lesezeit',
-    category: 'Trends',
-    imageUrl: '/blog1.jpg',
+    summary: 'Entdecken Sie die neuesten Trends und Entwicklungen in der IT-Branche, von Künstlicher Intelligenz bis hin zu Cloud Computing.',
+    created: 123456789,
+    changed: 123456789,
+    langcode: 'de',
+    content: '',
   },
 ];
 
 export function HomePage() {
 
   const [offerings, setOfferings] = useState<Product[]>(initialOfferings);
-  const [blogPosts, setBlogPosts] = useState<BlogPost[]>(initialBlogPosts);
+  const [blogposts, setBlogposts] = useState<Blogpost[]>(initialBlogPosts);
 
   useEffect(() => {
     let mounted = true;
@@ -100,6 +102,19 @@ export function HomePage() {
       })
       .catch((err) => {
          console.error('Failed to load offerings', err);
+      });
+    return () => { mounted = false; };
+  }, []);
+
+  useEffect(() => {
+    let mounted = true;
+    api.get<Blogpost[]>('/blogposts/')
+      .then((data) => {
+        if (!mounted) return;
+        if (Array.isArray(data)) setBlogposts(data);
+      })
+      .catch((err) => {
+         console.error('Failed to load blogposts', err);
       });
     return () => { mounted = false; };
   }, []);
@@ -162,8 +177,8 @@ export function HomePage() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {blogPosts.map((blogpost) => (
-              <BlogCard key={blogpost.id} post={blogpost} />
+            {blogposts.map((blogpost) => (
+              <BlogCard key={blogpost.nid} post={blogpost} />
             ))}
           </div>
           
