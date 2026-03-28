@@ -23,10 +23,11 @@ export function BlogCard({ post }: BlogCardProps) {
     <article className="bg-card rounded-lg border border-border overflow-hidden hover:shadow-lg transition-all duration-300 group">
       <div className="aspect-video overflow-hidden">
         <ImageWithFallback
-          src={imageUrl}
+          src={post.title_image_url}
           alt={post.title}
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
         />
+        <p>{post.title_image_url}</p>
       </div>
       
       <div className="p-6">

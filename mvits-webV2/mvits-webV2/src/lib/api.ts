@@ -1,4 +1,6 @@
-const BASE_URL = "http://localhost:11011/api";
+import { CONFIG } from "../utils/ConfigLoader";
+
+const BASE_URL = CONFIG.API_BASE_URL;
 
 async function request<T>(path: string, init?: RequestInit): Promise<T> {
   const headers = new Headers(init?.headers as HeadersInit);

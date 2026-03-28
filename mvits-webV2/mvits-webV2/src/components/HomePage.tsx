@@ -3,7 +3,7 @@ import { ProductCard } from './ProductCard';
 import type { Product } from '../types/Product';
 import { BlogCard, type BlogPost } from './BlogCard';
 import { ContactForm } from './ContactForm';
-import { Code, Database, Cloud, DatabaseZap, LucideFilter, MonitorCog, Server } from 'lucide-react';
+import { replaceDrupalImgTagsWithSrc, getFirstImageUrlFromHtml } from '../utils/DrupalImageTools';
 import api from '../lib/api';
 import type { Blogpost } from '@/types/Blogpost';
 
@@ -83,6 +83,7 @@ const initialBlogPosts: Blogpost[] = [
     summary: 'Entdecken Sie die neuesten Trends und Entwicklungen in der IT-Branche, von Künstlicher Intelligenz bis hin zu Cloud Computing.',
     created: 123456789,
     changed: 123456789,
+    title_image_url: undefined,
     langcode: 'de',
     content: '',
   },
@@ -111,7 +112,20 @@ export function HomePage() {
     api.get<Blogpost[]>('/blogposts/')
       .then((data) => {
         if (!mounted) return;
-        if (Array.isArray(data)) setBlogposts(data);
+        if (Array.isArray(data)){
+
+          const modifiedData = data.map((post) => {
+            return {
+              ...post,
+              content: post.content ? replaceDrupalImgTagsWithSrc(post.content) : "",
+              title_image_url: post.content ? getFirstImageUrlFromHtml(post.content) : undefined,
+            };
+          });
+
+          console.log(modifiedData);
+
+          setBlogposts(modifiedData);
+        }
       })
       .catch((err) => {
          console.error('Failed to load blogposts', err);
