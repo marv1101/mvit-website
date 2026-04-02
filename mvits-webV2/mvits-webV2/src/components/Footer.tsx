@@ -22,14 +22,8 @@ export function Footer({ onNavigate }: FooterProps) {
               Wir entwickeln maßgeschneiderte Produkte, die Ihre Arbeit effizienter machen.
             </p>
             <div className="flex items-center gap-4">
-              <a href="#" className="text-muted-foreground hover:text-primary transition-colors">
+              <a href="https://github.com/marv1101" target="_blank" className="text-muted-foreground hover:text-primary transition-colors">
                 <Github className="w-5 h-5" />
-              </a>
-              <a href="#" className="text-muted-foreground hover:text-primary transition-colors">
-                <Linkedin className="w-5 h-5" />
-              </a>
-              <a href="#" className="text-muted-foreground hover:text-primary transition-colors">
-                <Twitter className="w-5 h-5" />
               </a>
             </div>
           </div>

@@ -122,8 +122,6 @@ export function HomePage() {
             };
           });
 
-          console.log(modifiedData);
-
           setBlogposts(modifiedData);
         }
       })
