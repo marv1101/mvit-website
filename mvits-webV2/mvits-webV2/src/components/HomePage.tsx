@@ -4,6 +4,7 @@ import type { Product } from '../types/Product';
 import { BlogCard, type BlogPost } from './BlogCard';
 import { ContactForm } from './ContactForm';
 import { replaceDrupalImgTagsWithSrc, getFirstImageUrlFromHtml } from '../utils/DrupalImageTools';
+import { CONFIG } from '../utils/ConfigLoader';
 import api from '../lib/api';
 import type { Blogpost } from '@/types/Blogpost';
 
@@ -195,7 +196,7 @@ export function HomePage() {
           </div>
           
           <div className="text-center mt-12">
-            <button className="px-8 py-3 border-2 border-primary text-primary rounded-lg hover:bg-primary hover:text-primary-foreground transition-all">
+            <button onClick={() => window.location.href=CONFIG.DRUPAL_BASE_URL} className="px-8 py-3 border-2 border-primary text-primary rounded-lg hover:bg-primary hover:text-primary-foreground transition-all">
               Alle Artikel anzeigen
             </button>
           </div>
