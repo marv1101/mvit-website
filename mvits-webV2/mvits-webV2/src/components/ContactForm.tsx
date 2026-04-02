@@ -89,7 +89,7 @@ export function ContactForm() {
                   </div>
                   <div>
                     <h4 className="mb-1">E-Mail</h4>
-                    <p className="text-muted-foreground">contact@mvit-solutions.de</p>
+                    <p className="text-muted-foreground">marvphoto@web.de</p>
                   </div>
                 </div>
 
@@ -120,7 +120,7 @@ export function ContactForm() {
             <div className="bg-gradient-to-br from-primary to-accent p-8 rounded-lg text-primary-foreground">
               <h4 className="mb-3">Schnell los legen!</h4>
               <p className="opacity-90">
-                Wir antworten in der Regel innerhalb von 48 Stunden auf alle Anfragen. 
+                Wir antworten in der Regel innerhalb von 48 Stunden auf Anfragen. 
                 Bei dringenden Anliegen rufen Sie uns bitte direkt an.
               </p>
             </div>
