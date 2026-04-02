@@ -81,6 +81,11 @@ export function Datenschutz({ onBack }: DatenschutzProps) {
             <p className="text-muted-foreground">
               Wir hosten die Inhalte unserer Website bei folgendem Anbieter:
             </p>
+            <p className="text-muted-foreground mt-4">
+              IONOS SE <br />
+              Elgendorfer Str. 57 <br /> 
+              56410 Montabaur
+            </p>
             
             <h4 className="mb-3 mt-6">Externes Hosting</h4>
             <p className="text-muted-foreground">
@@ -119,14 +124,12 @@ export function Datenschutz({ onBack }: DatenschutzProps) {
               Die verantwortliche Stelle für die Datenverarbeitung auf dieser Website ist:
             </p>
             <p className="text-muted-foreground mt-4">
-              DevSolutions GmbH<br />
-              Musterstraße 123<br />
-              12345 Berlin<br />
-              Deutschland
+              mvit<br />
+              <br />
+              <br />
             </p>
             <p className="text-muted-foreground mt-4">
-              Telefon: +49 (0) 123 456789<br />
-              E-Mail: info@devsolutions.de
+              E-Mail: marvphoto@web.de
             </p>
             <p className="text-muted-foreground mt-4">
               Verantwortliche Stelle ist die natürliche oder juristische Person, die allein oder 
@@ -250,16 +253,12 @@ export function Datenschutz({ onBack }: DatenschutzProps) {
               Einwilligungen wenden Sie sich bitte an:
             </p>
             <p className="text-muted-foreground mt-4">
-              DevSolutions GmbH<br />
-              Datenschutzbeauftragter<br />
-              Musterstraße 123<br />
-              12345 Berlin<br />
-              E-Mail: datenschutz@devsolutions.de
+              marvphoto@web.de
             </p>
           </section>
 
           <p className="text-sm text-muted-foreground mt-8">
-            Stand: Dezember 2024
+            Stand: April 2026
           </p>
         </div>
       </div>
