@@ -82,7 +82,7 @@ export function Footer({ onNavigate }: FooterProps) {
                 className="flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors"
               >
                 <Mail className="w-4 h-4" />
-                <span>contact@mvit-solutions.de</span>
+                <span>marvphoto@web.de</span>
               </a>
             </div>
           </div>

@@ -22,9 +22,7 @@ export function Impressum({ onBack }: ImpressumProps) {
           <section>
             <h3 className="mb-4">Angaben gemäß § 5 TMG</h3>
             <p>
-              DevSolutions GmbH<br />
-              Musterstraße 123<br />
-              12345 Berlin<br />
+              mvit<br />
               Deutschland
             </p>
           </section>
@@ -32,18 +30,15 @@ export function Impressum({ onBack }: ImpressumProps) {
           <section>
             <h3 className="mb-4">Vertreten durch</h3>
             <p>
-              Geschäftsführer: Max Mustermann<br />
-              Handelsregister: HRB 12345<br />
-              Registergericht: Amtsgericht Berlin
+              Marian<br />
             </p>
           </section>
 
           <section>
             <h3 className="mb-4">Kontakt</h3>
             <p>
-              Telefon: +49 (0) 123 456789<br />
-              E-Mail: info@devsolutions.de<br />
-              Website: www.devsolutions.de
+              E-Mail: marvphoto@web.de<br />
+              Website: www.mvit.de
             </p>
           </section>
 
@@ -51,16 +46,14 @@ export function Impressum({ onBack }: ImpressumProps) {
             <h3 className="mb-4">Umsatzsteuer-ID</h3>
             <p>
               Umsatzsteuer-Identifikationsnummer gemäß § 27 a Umsatzsteuergesetz:<br />
-              DE123456789
+              n.a.
             </p>
           </section>
 
           <section>
             <h3 className="mb-4">Verantwortlich für den Inhalt nach § 55 Abs. 2 RStV</h3>
             <p>
-              Max Mustermann<br />
-              Musterstraße 123<br />
-              12345 Berlin
+              Marian<br />
             </p>
           </section>
 
