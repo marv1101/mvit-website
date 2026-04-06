@@ -8,3 +8,4 @@ mvit-webV2-api/node_modules*
 mvit-webV2-api/package-lock.json
 bun.lock
 mvits-webV2/mvits-webV2/package-lock.json
+KeepassDB.kdbx
