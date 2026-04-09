@@ -1,4 +1,4 @@
 export const CONFIG = {
-    API_BASE_URL: "http://localhost:11011/api",
-    DRUPAL_BASE_URL: "http://localhost:8081/",
+    API_BASE_URL: "https://mphion.de/api",
+    DRUPAL_BASE_URL: "https://mphion.de/drupal",
 };

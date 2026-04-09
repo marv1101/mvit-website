@@ -37,6 +37,72 @@ services:
       - /var/www/html/sites
     restart: unless-stopped
 
+  # Backend API
+  api:
+    build:
+      context: ../mvit-webV2-api
+      dockerfile: Dockerfile
+    container_name: mvit-api
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - project_network
+
+  # Frontend Application
+  frontend:
+    build:
+      context: ../mvits-webV2/mvits-webV2
+      dockerfile: Dockerfile
+    container_name: mvit-frontend
+    environment:
+      - NODE_ENV=production
+      - PORT=3001
+    depends_on:
+      - api
+    restart: unless-stopped
+    networks:
+      - project_network
+
+  # Certbot for SSL Certificates
+  certbot:
+    build:
+      context: ./certbot
+      dockerfile: Dockerfile
+    container_name: certbot
+    volumes:
+      - letsencrypt_volume:/etc/letsencrypt:z
+      - certbot_www:/var/www/certbot:z
+    depends_on:
+      - nginx
+    restart: unless-stopped
+    networks:
+      - project_network
+
+  # Nginx Reverse Proxy
+  nginx:
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+    container_name: nginx
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - letsencrypt_volume:/etc/letsencrypt:ro,z
+      - certbot_www:/var/www/certbot:z
+    depends_on:
+      - api
+      - frontend
+    restart: unless-stopped
+    networks:
+      - project_network
+
 networks:
   project_network:
     driver: bridge
@@ -46,4 +112,9 @@ volumes:
     driver: local
   pgadmin_volume:
     driver: local
+  letsencrypt_volume:
+    driver: local
+  certbot_www:
+    driver: local
+
 
