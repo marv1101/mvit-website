@@ -6,6 +6,13 @@ COPY nginx.conf /etc/nginx/nginx.conf
 # Create certbot validation directory
 RUN mkdir -p /var/www/certbot
 
+# Create dummy certificates for initial startup
+RUN mkdir -p /etc/letsencrypt/live/mphion.de && \
+    openssl req -x509 -nodes -days 1 -newkey rsa:2048 \
+    -keyout /etc/letsencrypt/live/mphion.de/privkey.pem \
+    -out /etc/letsencrypt/live/mphion.de/fullchain.pem \
+    -subj "/C=DE/ST=State/L=City/O=Organization/CN=mphion.de"
+
 # Expose ports
 EXPOSE 80 443
 

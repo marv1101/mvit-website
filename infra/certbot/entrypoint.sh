@@ -30,4 +30,4 @@ fi
 
 echo "Starting renewal daemon..."
 # Renewal daemon: check twice daily
-exec certbot renew --quiet --no-eff-email --post-hook "wget -q -O /dev/null http://localhost/api/health"
+exec certbot renew --quiet --no-eff-email --post-hook "docker exec nginx nginx -s reload"
