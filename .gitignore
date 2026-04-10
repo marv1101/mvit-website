@@ -2,12 +2,8 @@
 .env.development.local
 mvits-webV2/infra/postgres/init-scripts/init.sql
 mvit-webV2-backend/node_modules*
-mvit-webV2-backend/package-lock.json
 .gitignore
 mvit-webV2-api/node_modules*
-mvit-webV2-api/package-lock.json
-bun.lock
-mvits-webV2/mvits-webV2/package-lock.json
 KeepassDB.kdbx
 infra/.env.example
 .continue/prompts/new-prompt.md
