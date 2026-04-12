@@ -80,7 +80,7 @@ services:
       dockerfile: Dockerfile
     container_name: certbot
     volumes:
-      - letsencrypt_volume:/etc/letsencrypt:z
+      - ./nginx/certbot/conf:/etc/letsencrypt:z
       - certbot_www:/var/www/certbot:z
     depends_on:
       - nginx
@@ -98,7 +98,7 @@ services:
       - 80:80
       - 443:443
     volumes:
-      - letsencrypt_volume:/etc/letsencrypt:ro,z
+      - ./nginx/certbot/conf:/etc/letsencrypt:z
       - certbot_www:/var/www/certbot:z
     depends_on:
       - api
@@ -115,8 +115,6 @@ volumes:
   pg_volume:
     driver: local
   pgadmin_volume:
-    driver: local
-  letsencrypt_volume:
     driver: local
   certbot_www:
     driver: local
