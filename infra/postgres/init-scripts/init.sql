@@ -31,16 +31,6 @@ CREATE ROLE drupal_user WITH
   NOBYPASSRLS
   ENCRYPTED PASSWORD 'SCRAM-SHA-256$4096:WyHsFiYPrm4qma0ucRx1EA==$osnIivQlLh4kO+3711XGg4MZxDBkFgVIGAFCxZrc6Qc=:e5zOhyEHE3ci1ncMhXNz1I+JAyLt+7lNBaU6jov/8QM=';
 
-CREATE ROLE drupal_user WITH
-  LOGIN
-  NOSUPERUSER
-  INHERIT
-  NOCREATEDB
-  NOCREATEROLE
-  NOREPLICATION
-  NOBYPASSRLS
-  ENCRYPTED PASSWORD 'SCRAM-SHA-256$4096:WyHsFiYPrm4qma0ucRx1EA==$osnIivQlLh4kO+3711XGg4MZxDBkFgVIGAFCxZrc6Qc=:e5zOhyEHE3ci1ncMhXNz1I+JAyLt+7lNBaU6jov/8QM=';
-
 CREATE DATABASE "dev-mvit"
     WITH
     OWNER = "mvit-admin"
@@ -65,8 +55,6 @@ GRANT USAGE ON TYPES TO "mvit-dev-rw";
 --
 -- PostgreSQL database dump
 --
-
-\restrict BPpwpEZ4qWUo9fhNfXERKPM67TViNljKzV22EmOcG2hPSr95Om09Q3igJC3gAZk
 
 -- Dumped from database version 16.12 (Debian 16.12-1.pgdg13+1)
 -- Dumped by pg_dump version 18.3
