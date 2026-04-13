@@ -75,17 +75,11 @@ services:
 
   # Certbot for SSL Certificates
   certbot:
-    build:
-      context: ./certbot
-      dockerfile: Dockerfile
-    container_name: certbot
+    image: certbot/certbot
     volumes:
-      - ./nginx/certbot/conf:/etc/letsencrypt:z
-      - ./certbot/www:/var/www/certbot:z
-      - /var/run/docker.sock:/var/run/docker.sock
-    depends_on:
-      - nginx
-    restart: unless-stopped
+      - ./nginx/certbot/conf:/etc/letsencrypt
+      - ./certbot/www:/var/www/certbot
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"  # Renew certificates every 12 hours
     networks:
       - project_network
 

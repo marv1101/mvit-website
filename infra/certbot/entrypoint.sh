@@ -30,4 +30,5 @@ fi
 
 echo "Starting renewal daemon..."
 # Renewal daemon: check twice daily
-exec certbot renew --quiet --no-eff-email --post-hook "docker exec nginx nginx -s reload"
+
+certbot renew --quiet --no-eff-email --post-hook "docker exec nginx nginx -s reload"
