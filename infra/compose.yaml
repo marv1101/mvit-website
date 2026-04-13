@@ -81,7 +81,7 @@ services:
     container_name: certbot
     volumes:
       - ./nginx/certbot/conf:/etc/letsencrypt:z
-      - certbot_www:/var/www/certbot:z
+      - ./certbot/www:/var/www/certbot:z
     depends_on:
       - nginx
     restart: unless-stopped
@@ -99,7 +99,7 @@ services:
       - 443:443
     volumes:
       - ./nginx/certbot/conf:/etc/letsencrypt:z
-      - certbot_www:/var/www/certbot:z
+      - ./certbot/www:/var/www/certbot:z
     depends_on:
       - api
       - frontend
@@ -115,8 +115,6 @@ volumes:
   pg_volume:
     driver: local
   pgadmin_volume:
-    driver: local
-  certbot_www:
     driver: local
 
 
