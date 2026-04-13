@@ -2,6 +2,7 @@ FROM certbot/certbot:latest
 
 # Install additional tools
 RUN apk add --no-cache wget curl bash
+RUN apk add --no-cache docker-cli
 
 # Copy entrypoint script
 COPY entrypoint.sh /

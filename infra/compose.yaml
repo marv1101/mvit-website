@@ -82,6 +82,7 @@ services:
     volumes:
       - ./nginx/certbot/conf:/etc/letsencrypt:z
       - ./certbot/www:/var/www/certbot:z
+      - /var/run/docker.sock:/var/run/docker.sock
     depends_on:
       - nginx
     restart: unless-stopped
