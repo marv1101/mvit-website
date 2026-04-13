@@ -101,6 +101,7 @@ services:
     depends_on:
       - api
       - frontend
+      - drupal
     restart: unless-stopped
     networks:
       - project_network
