@@ -52,6 +52,8 @@ GRANT SELECT ON SEQUENCES TO "mvit-dev-rw";
 ALTER DEFAULT PRIVILEGES FOR ROLE postgres
 GRANT USAGE ON TYPES TO "mvit-dev-rw";
 
+\c "dev-mvit"
+
 CREATE TABLE public.contact (
     id integer NOT NULL,
     name character varying(255) NOT NULL,
