@@ -2,7 +2,7 @@ import {integer, pgTable, varchar, text, json, pgSchema } from "drizzle-orm/pg-c
 
 export const mvitSchema = pgSchema('mvit');
 
-export const offering = mvitSchema.table('offering', {
+export const offering = pgTable('offering', {
     id: integer().primaryKey().generatedAlwaysAsIdentity(),
     title: varchar({ length: 255 }).notNull(),
     description: varchar({ length: 1024 }).notNull(),
@@ -13,13 +13,13 @@ export const offering = mvitSchema.table('offering', {
     price: integer().notNull(),
 });
 
-export const offering_category = mvitSchema.table('offering_category', {
+export const offering_category = pgTable('offering_category', {
     id: integer().primaryKey().generatedAlwaysAsIdentity(),
     name: varchar({ length: 255 }).notNull(),
     description: varchar({ length: 1024 }),
 });
 
-export const contact = mvitSchema.table('contact', {
+export const contact = pgTable('contact', {
     id: integer().primaryKey().generatedAlwaysAsIdentity(),
     name: varchar({ length: 255 }).notNull(),
     email: varchar({ length: 255 }).notNull(),
