@@ -183,6 +183,20 @@ ALTER DEFAULT PRIVILEGES FOR ROLE "mvit-admin" GRANT ALL ON TYPES TO "mvit-dev-r
 ALTER DEFAULT PRIVILEGES FOR ROLE "mvit-admin" GRANT SELECT,INSERT,UPDATE ON TABLES TO "mvit-dev-rw";
 
 
+GRANT SELECT, UPDATE ON SEQUENCE public.contact_id_seq TO "mvit-dev-rw";
+
+GRANT SELECT, UPDATE ON SEQUENCE public.offering_category_id_seq TO "mvit-dev-rw";
+
+GRANT SELECT, UPDATE ON SEQUENCE public.offering_id_seq TO "mvit-dev-rw";
+
+GRANT SELECT, UPDATE, INSERT ON TABLE public.contact TO "mvit-dev-rw";
+
+GRANT SELECT, UPDATE, INSERT ON TABLE public.offering TO "mvit-dev-rw";
+
+GRANT SELECT, UPDATE, INSERT ON TABLE public.offering_category TO "mvit-dev-rw";
+
+
+
 -- Database: drupal
 
 CREATE DATABASE drupal
@@ -50642,3 +50656,4 @@ GRANT SELECT ON TABLE public.users_field_data TO drupal_read;
 GRANT ALL ON TABLE public.watchdog TO drupal_user;
 
 GRANT SELECT ON TABLE public.watchdog TO drupal_read;
+
