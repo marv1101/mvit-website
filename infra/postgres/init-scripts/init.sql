@@ -50318,3 +50318,327 @@ GRANT SELECT ON TABLE public.node__body TO drupal_read;
 --
 
 GRANT SELECT ON TABLE public.node_field_data TO drupal_read;
+
+GRANT ALL ON TABLE public.ban_ip TO drupal_user;
+
+GRANT SELECT ON TABLE public.ban_ip TO drupal_read;
+
+GRANT ALL ON TABLE public.batch TO drupal_user;
+
+GRANT SELECT ON TABLE public.batch TO drupal_read;
+
+GRANT ALL ON TABLE public.block_content TO drupal_user;
+
+GRANT SELECT ON TABLE public.block_content TO drupal_read;
+
+GRANT ALL ON TABLE public.block_content__body TO drupal_user;
+
+GRANT SELECT ON TABLE public.block_content__body TO drupal_read;
+
+GRANT ALL ON TABLE public.block_content_field_data TO drupal_user;
+
+GRANT SELECT ON TABLE public.block_content_field_data TO drupal_read;
+
+GRANT ALL ON TABLE public.block_content_field_revision TO drupal_user;
+
+GRANT SELECT ON TABLE public.block_content_field_revision TO drupal_read;
+
+GRANT ALL ON TABLE public.block_content_revision TO drupal_user;
+
+GRANT SELECT ON TABLE public.block_content_revision TO drupal_read;
+
+GRANT ALL ON TABLE public.block_content_revision__body TO drupal_user;
+
+GRANT SELECT ON TABLE public.block_content_revision__body TO drupal_read;
+
+GRANT ALL ON TABLE public.cache_access_policy TO drupal_user;
+
+GRANT SELECT ON TABLE public.cache_access_policy TO drupal_read;
+
+GRANT ALL ON TABLE public.cache_bootstrap TO drupal_user;
+
+GRANT SELECT ON TABLE public.cache_bootstrap TO drupal_read;
+
+GRANT ALL ON TABLE public.cache_config TO drupal_user;
+
+GRANT SELECT ON TABLE public.cache_config TO drupal_read;
+
+GRANT ALL ON TABLE public.cache_container TO drupal_user;
+
+GRANT SELECT ON TABLE public.cache_container TO drupal_read;
+
+GRANT ALL ON TABLE public.cache_data TO drupal_user;
+
+GRANT SELECT ON TABLE public.cache_data TO drupal_read;
+
+GRANT ALL ON TABLE public.cache_default TO drupal_user;
+
+GRANT SELECT ON TABLE public.cache_default TO drupal_read;
+
+GRANT ALL ON TABLE public.cache_discovery TO drupal_user;
+
+GRANT SELECT ON TABLE public.cache_discovery TO drupal_read;
+
+GRANT ALL ON TABLE public.cache_dynamic_page_cache TO drupal_user;
+
+GRANT SELECT ON TABLE public.cache_dynamic_page_cache TO drupal_read;
+
+GRANT ALL ON TABLE public.cache_entity TO drupal_user;
+
+GRANT SELECT ON TABLE public.cache_entity TO drupal_read;
+
+GRANT ALL ON TABLE public.cache_menu TO drupal_user;
+
+GRANT SELECT ON TABLE public.cache_menu TO drupal_read;
+
+GRANT ALL ON TABLE public.cache_page TO drupal_user;
+
+GRANT SELECT ON TABLE public.cache_page TO drupal_read;
+
+GRANT ALL ON TABLE public.cache_render TO drupal_user;
+
+GRANT SELECT ON TABLE public.cache_render TO drupal_read;
+
+GRANT ALL ON TABLE public.cachetags TO drupal_user;
+
+GRANT SELECT ON TABLE public.cachetags TO drupal_read;
+
+GRANT ALL ON TABLE public.comment TO drupal_user;
+
+GRANT SELECT ON TABLE public.comment TO drupal_read;
+
+GRANT ALL ON TABLE public.comment__comment_body TO drupal_user;
+
+GRANT SELECT ON TABLE public.comment__comment_body TO drupal_read;
+
+GRANT ALL ON TABLE public.comment_entity_statistics TO drupal_user;
+
+GRANT SELECT ON TABLE public.comment_entity_statistics TO drupal_read;
+
+GRANT ALL ON TABLE public.comment_field_data TO drupal_user;
+
+GRANT SELECT ON TABLE public.comment_field_data TO drupal_read;
+
+GRANT ALL ON TABLE public.config TO drupal_user;
+
+GRANT SELECT ON TABLE public.config TO drupal_read;
+
+GRANT ALL ON TABLE public.file_managed TO drupal_user;
+
+GRANT SELECT ON TABLE public.file_managed TO drupal_read;
+
+GRANT ALL ON TABLE public.file_usage TO drupal_user;
+
+GRANT SELECT ON TABLE public.file_usage TO drupal_read;
+
+GRANT ALL ON TABLE public.help_search_items TO drupal_user;
+
+GRANT SELECT ON TABLE public.help_search_items TO drupal_read;
+
+GRANT ALL ON TABLE public.history TO drupal_user;
+
+GRANT SELECT ON TABLE public.history TO drupal_read;
+
+GRANT ALL ON TABLE public.inline_block_usage TO drupal_user;
+
+GRANT SELECT ON TABLE public.inline_block_usage TO drupal_read;
+
+GRANT ALL ON TABLE public.key_value TO drupal_user;
+
+GRANT SELECT ON TABLE public.key_value TO drupal_read;
+
+GRANT ALL ON TABLE public.key_value_expire TO drupal_user;
+
+GRANT SELECT ON TABLE public.key_value_expire TO drupal_read;
+
+GRANT ALL ON TABLE public.locale_file TO drupal_user;
+
+GRANT SELECT ON TABLE public.locale_file TO drupal_read;
+
+GRANT ALL ON TABLE public.locales_location TO drupal_user;
+
+GRANT SELECT ON TABLE public.locales_location TO drupal_read;
+
+GRANT ALL ON TABLE public.locales_source TO drupal_user;
+
+GRANT SELECT ON TABLE public.locales_source TO drupal_read;
+
+GRANT ALL ON TABLE public.locales_target TO drupal_user;
+
+GRANT SELECT ON TABLE public.locales_target TO drupal_read;
+
+GRANT ALL ON TABLE public.menu_link_content TO drupal_user;
+
+GRANT SELECT ON TABLE public.menu_link_content TO drupal_read;
+
+GRANT ALL ON TABLE public.menu_link_content_data TO drupal_user;
+
+GRANT SELECT ON TABLE public.menu_link_content_data TO drupal_read;
+
+GRANT ALL ON TABLE public.menu_link_content_field_revision TO drupal_user;
+
+GRANT SELECT ON TABLE public.menu_link_content_field_revision TO drupal_read;
+
+GRANT ALL ON TABLE public.menu_link_content_revision TO drupal_user;
+
+GRANT SELECT ON TABLE public.menu_link_content_revision TO drupal_read;
+
+GRANT ALL ON TABLE public.menu_tree TO drupal_user;
+
+GRANT SELECT ON TABLE public.menu_tree TO drupal_read;
+
+GRANT ALL ON TABLE public.node TO drupal_user;
+
+GRANT SELECT ON TABLE public.node TO drupal_read;
+
+GRANT ALL ON TABLE public.node__body TO drupal_user;
+
+GRANT SELECT ON TABLE public.node__body TO drupal_read;
+
+GRANT ALL ON TABLE public.node__comment TO drupal_user;
+
+GRANT SELECT ON TABLE public.node__comment TO drupal_read;
+
+GRANT ALL ON TABLE public.node__field_image TO drupal_user;
+
+GRANT SELECT ON TABLE public.node__field_image TO drupal_read;
+
+GRANT ALL ON TABLE public.node__field_tags TO drupal_user;
+
+GRANT SELECT ON TABLE public.node__field_tags TO drupal_read;
+
+GRANT ALL ON TABLE public.node_access TO drupal_user;
+
+GRANT SELECT ON TABLE public.node_access TO drupal_read;
+
+GRANT ALL ON TABLE public.node_field_data TO drupal_user;
+
+GRANT SELECT ON TABLE public.node_field_data TO drupal_read;
+
+GRANT ALL ON TABLE public.node_field_revision TO drupal_user;
+
+GRANT SELECT ON TABLE public.node_field_revision TO drupal_read;
+
+GRANT ALL ON TABLE public.node_revision TO drupal_user;
+
+GRANT SELECT ON TABLE public.node_revision TO drupal_read;
+
+GRANT ALL ON TABLE public.node_revision__body TO drupal_user;
+
+GRANT SELECT ON TABLE public.node_revision__body TO drupal_read;
+
+GRANT ALL ON TABLE public.node_revision__comment TO drupal_user;
+
+GRANT SELECT ON TABLE public.node_revision__comment TO drupal_read;
+
+GRANT ALL ON TABLE public.node_revision__field_image TO drupal_user;
+
+GRANT SELECT ON TABLE public.node_revision__field_image TO drupal_read;
+
+GRANT ALL ON TABLE public.node_revision__field_tags TO drupal_user;
+
+GRANT SELECT ON TABLE public.node_revision__field_tags TO drupal_read;
+
+GRANT ALL ON TABLE public.path_alias TO drupal_user;
+
+GRANT SELECT ON TABLE public.path_alias TO drupal_read;
+
+GRANT ALL ON TABLE public.path_alias_revision TO drupal_user;
+
+GRANT SELECT ON TABLE public.path_alias_revision TO drupal_read;
+
+GRANT ALL ON TABLE public.queue TO drupal_user;
+
+GRANT SELECT ON TABLE public.queue TO drupal_read;
+
+GRANT ALL ON TABLE public.router TO drupal_user;
+
+GRANT SELECT ON TABLE public.router TO drupal_read;
+
+GRANT ALL ON TABLE public.search_dataset TO drupal_user;
+
+GRANT SELECT ON TABLE public.search_dataset TO drupal_read;
+
+GRANT ALL ON TABLE public.search_index TO drupal_user;
+
+GRANT SELECT ON TABLE public.search_index TO drupal_read;
+
+GRANT ALL ON TABLE public.search_total TO drupal_user;
+
+GRANT SELECT ON TABLE public.search_total TO drupal_read;
+
+GRANT ALL ON TABLE public.semaphore TO drupal_user;
+
+GRANT SELECT ON TABLE public.semaphore TO drupal_read;
+
+GRANT ALL ON TABLE public.sequences TO drupal_user;
+
+GRANT SELECT ON TABLE public.sequences TO drupal_read;
+
+GRANT ALL ON TABLE public.sessions TO drupal_user;
+
+GRANT SELECT ON TABLE public.sessions TO drupal_read;
+
+GRANT ALL ON TABLE public.shortcut TO drupal_user;
+
+GRANT SELECT ON TABLE public.shortcut TO drupal_read;
+
+GRANT ALL ON TABLE public.shortcut_field_data TO drupal_user;
+
+GRANT SELECT ON TABLE public.shortcut_field_data TO drupal_read;
+
+GRANT ALL ON TABLE public.shortcut_set_users TO drupal_user;
+
+GRANT SELECT ON TABLE public.shortcut_set_users TO drupal_read;
+
+GRANT ALL ON TABLE public.taxonomy_index TO drupal_user;
+
+GRANT SELECT ON TABLE public.taxonomy_index TO drupal_read;
+
+GRANT ALL ON TABLE public.taxonomy_term__parent TO drupal_user;
+
+GRANT SELECT ON TABLE public.taxonomy_term__parent TO drupal_read;
+
+GRANT ALL ON TABLE public.taxonomy_term_data TO drupal_user;
+
+GRANT SELECT ON TABLE public.taxonomy_term_data TO drupal_read;
+
+GRANT ALL ON TABLE public.taxonomy_term_field_data TO drupal_user;
+
+GRANT SELECT ON TABLE public.taxonomy_term_field_data TO drupal_read;
+
+GRANT ALL ON TABLE public.taxonomy_term_field_revision TO drupal_user;
+
+GRANT SELECT ON TABLE public.taxonomy_term_field_revision TO drupal_read;
+
+GRANT ALL ON TABLE public.taxonomy_term_revision TO drupal_user;
+
+GRANT SELECT ON TABLE public.taxonomy_term_revision TO drupal_read;
+
+GRANT ALL ON TABLE public.taxonomy_term_revision__parent TO drupal_user;
+
+GRANT SELECT ON TABLE public.taxonomy_term_revision__parent TO drupal_read;
+
+GRANT ALL ON TABLE public.user__roles TO drupal_user;
+
+GRANT SELECT ON TABLE public.user__roles TO drupal_read;
+
+GRANT ALL ON TABLE public.user__user_picture TO drupal_user;
+
+GRANT SELECT ON TABLE public.user__user_picture TO drupal_read;
+
+GRANT ALL ON TABLE public.users TO drupal_user;
+
+GRANT SELECT ON TABLE public.users TO drupal_read;
+
+GRANT ALL ON TABLE public.users_data TO drupal_user;
+
+GRANT SELECT ON TABLE public.users_data TO drupal_read;
+
+GRANT ALL ON TABLE public.users_field_data TO drupal_user;
+
+GRANT SELECT ON TABLE public.users_field_data TO drupal_read;
+
+GRANT ALL ON TABLE public.watchdog TO drupal_user;
+
+GRANT SELECT ON TABLE public.watchdog TO drupal_read;
