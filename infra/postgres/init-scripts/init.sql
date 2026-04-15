@@ -1,4 +1,4 @@
--- Database: dev-mvit
+-- Database: mvit
 
 
 CREATE ROLE "mvit-dev-rw" WITH
@@ -31,7 +31,7 @@ CREATE ROLE drupal_user WITH
   NOBYPASSRLS
   ENCRYPTED PASSWORD 'SCRAM-SHA-256$4096:WyHsFiYPrm4qma0ucRx1EA==$osnIivQlLh4kO+3711XGg4MZxDBkFgVIGAFCxZrc6Qc=:e5zOhyEHE3ci1ncMhXNz1I+JAyLt+7lNBaU6jov/8QM=';
 
-CREATE DATABASE "dev-mvit"
+CREATE DATABASE "mvit"
     WITH
     OWNER = "mvit-admin"
     ENCODING = 'UTF8'
@@ -42,9 +42,9 @@ CREATE DATABASE "dev-mvit"
     CONNECTION LIMIT = -1
     IS_TEMPLATE = False;
 
-GRANT ALL ON DATABASE "dev-mvit" TO "mvit-admin";
+GRANT ALL ON DATABASE "mvit" TO "mvit-admin";
 
-GRANT TEMPORARY, CONNECT ON DATABASE "dev-mvit" TO "mvit-dev-rw";
+GRANT TEMPORARY, CONNECT ON DATABASE "mvit" TO "mvit-dev-rw";
 
 ALTER DEFAULT PRIVILEGES FOR ROLE "mvit-admin"
 GRANT SELECT ON SEQUENCES TO "mvit-dev-rw";
@@ -52,7 +52,7 @@ GRANT SELECT ON SEQUENCES TO "mvit-dev-rw";
 ALTER DEFAULT PRIVILEGES FOR ROLE "mvit-admin"
 GRANT USAGE ON TYPES TO "mvit-dev-rw";
 
-\c "dev-mvit"
+\c "mvit"
 
 CREATE TABLE public.contact (
     id integer NOT NULL,
