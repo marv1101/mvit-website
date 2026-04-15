@@ -161,26 +161,26 @@ GRANT ALL ON SCHEMA public TO "mvit-dev-rw";
 
 --
 -- TOC entry 2049 (class 826 OID 18943)
--- Name: DEFAULT PRIVILEGES FOR SEQUENCES; Type: DEFAULT ACL; Schema: -; Owner: postgres
+-- Name: DEFAULT PRIVILEGES FOR SEQUENCES; Type: DEFAULT ACL; Schema: -; Owner: mvit-admin
 --
 
-ALTER DEFAULT PRIVILEGES FOR ROLE postgres GRANT SELECT ON SEQUENCES TO "mvit-dev-rw";
+ALTER DEFAULT PRIVILEGES FOR ROLE "mvit-admin" GRANT SELECT ON SEQUENCES TO "mvit-dev-rw";
 
 
 --
 -- TOC entry 2050 (class 826 OID 18944)
--- Name: DEFAULT PRIVILEGES FOR TYPES; Type: DEFAULT ACL; Schema: -; Owner: postgres
+-- Name: DEFAULT PRIVILEGES FOR TYPES; Type: DEFAULT ACL; Schema: -; Owner: mvit-admin
 --
 
-ALTER DEFAULT PRIVILEGES FOR ROLE postgres GRANT ALL ON TYPES TO "mvit-dev-rw";
+ALTER DEFAULT PRIVILEGES FOR ROLE "mvit-admin" GRANT ALL ON TYPES TO "mvit-dev-rw";
 
 
 --
 -- TOC entry 2048 (class 826 OID 18942)
--- Name: DEFAULT PRIVILEGES FOR TABLES; Type: DEFAULT ACL; Schema: -; Owner: postgres
+-- Name: DEFAULT PRIVILEGES FOR TABLES; Type: DEFAULT ACL; Schema: -; Owner: mvit-admin
 --
 
-ALTER DEFAULT PRIVILEGES FOR ROLE postgres GRANT SELECT,INSERT,UPDATE ON TABLES TO "mvit-dev-rw";
+ALTER DEFAULT PRIVILEGES FOR ROLE "mvit-admin" GRANT SELECT,INSERT,UPDATE ON TABLES TO "mvit-dev-rw";
 
 
 -- Database: drupal
