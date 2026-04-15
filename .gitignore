@@ -8,3 +8,4 @@ KeepassDB.kdbx
 infra/.env.example
 .continue/prompts/new-prompt.md
 .continue/agents/new-config.yaml
+test2.sql
