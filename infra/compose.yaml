@@ -29,6 +29,8 @@ services:
     image: drupal:10.5.8-php8.3-apache-trixie
     ports:
       - 8081:80
+    environment:
+      - APACHE_SERVER_NAME=mphion.de/drupal
     volumes:
       - drupal_data:/var/www/html
     restart: unless-stopped
