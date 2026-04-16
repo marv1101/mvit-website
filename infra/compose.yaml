@@ -30,13 +30,7 @@ services:
     ports:
       - 8081:80
     volumes:
-      - ./drupal/modules:/var/www/html/modules
-      - ./drupal/profiles:/var/www/html/profiles
-      - ./drupal/themes:/var/www/html/themes
-      # this takes advantage of the feature in Docker that a new anonymous
-      # volume (which is what we're creating here) will be initialized with the
-      # existing content of the image at the same location
-      - ./drupal/sites:/var/www/html/sites
+      - drupal_data:/var/www/html
     restart: unless-stopped
     networks:
       - project_network
@@ -113,6 +107,8 @@ volumes:
   pg_volume:
     driver: local
   pgadmin_volume:
+    driver: local
+  drupal_data:
     driver: local
 
 
