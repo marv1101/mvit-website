@@ -30,8 +30,7 @@ services:
     ports:
       - 8081:80
     volumes:
-      - ./drupal:/var/www/html
-    user: "1000:109"
+      - drupal_data:/var/www/html
     restart: unless-stopped
     networks:
       - project_network
