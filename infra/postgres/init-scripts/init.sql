@@ -87,48 +87,6 @@ ALTER TABLE public.offering OWNER TO "mvit-dev-rw";
 
 ALTER TABLE public.offering_category OWNER TO "mvit-dev-rw";
 
---
--- TOC entry 3281 (class 2606 OID 16523)
--- Name: contact contact_pkey; Type: CONSTRAINT; Schema: public; Owner: mvit-dev-rw
---
-
-ALTER TABLE ONLY public.contact
-    ADD CONSTRAINT contact_pkey PRIMARY KEY (id);
-
-
---
--- TOC entry 3283 (class 2606 OID 16539)
--- Name: offering_category offering_category_pkey; Type: CONSTRAINT; Schema: public; Owner: mvit-dev-rw
---
-
-ALTER TABLE ONLY public.offering_category
-    ADD CONSTRAINT offering_category_pkey PRIMARY KEY (id);
-
-
---
--- TOC entry 3285 (class 2606 OID 18676)
--- Name: offering offering_pkey; Type: CONSTRAINT; Schema: public; Owner: mvit-dev-rw
---
-
-ALTER TABLE ONLY public.offering
-    ADD CONSTRAINT offering_pkey PRIMARY KEY (id);
-
-
---
--- TOC entry 3286 (class 2606 OID 18677)
--- Name: offering offering_category_offering_category_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: mvit-dev-rw
---
-
-ALTER TABLE ONLY public.offering
-    ADD CONSTRAINT offering_category_offering_category_id_fk FOREIGN KEY (category) REFERENCES public.offering_category(id);
-
-
---
--- TOC entry 3441 (class 0 OID 0)
--- Dependencies: 5
--- Name: SCHEMA public; Type: ACL; Schema: -; Owner: mvit-web-admin
---
-
 GRANT ALL ON SCHEMA public TO "mvit-dev-rw";
 
 
