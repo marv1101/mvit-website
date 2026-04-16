@@ -54,65 +54,38 @@ GRANT USAGE ON TYPES TO "mvit-dev-rw";
 
 \c "mvit"
 
-CREATE TABLE public.contact (
-    id integer NOT NULL,
-    name character varying(255) NOT NULL,
-    email character varying(255) NOT NULL,
-    subject character varying(255) NOT NULL,
-    message text NOT NULL
+CREATE TABLE "contact" (
+	"id" integer PRIMARY KEY GENERATED ALWAYS AS IDENTITY (sequence name "contact_id_seq" INCREMENT BY 1 MINVALUE 1 MAXVALUE 2147483647 START WITH 1 CACHE 1),
+	"name" varchar(255) NOT NULL,
+	"email" varchar(255) NOT NULL,
+	"subject" varchar(255) NOT NULL,
+	"message" text NOT NULL
 );
-
+--> statement-breakpoint
+CREATE TABLE "offering" (
+	"id" integer PRIMARY KEY GENERATED ALWAYS AS IDENTITY (sequence name "offering_id_seq" INCREMENT BY 1 MINVALUE 1 MAXVALUE 2147483647 START WITH 1 CACHE 1),
+	"title" varchar(255) NOT NULL,
+	"description" varchar(1024) NOT NULL,
+	"description_page" text,
+	"icon" text NOT NULL,
+	"category" integer NOT NULL,
+	"features" json,
+	"price" integer NOT NULL
+);
+--> statement-breakpoint
+CREATE TABLE "offering_category" (
+	"id" integer PRIMARY KEY GENERATED ALWAYS AS IDENTITY (sequence name "offering_category_id_seq" INCREMENT BY 1 MINVALUE 1 MAXVALUE 2147483647 START WITH 1 CACHE 1),
+	"name" varchar(255) NOT NULL,
+	"description" varchar(1024)
+);
+--> statement-breakpoint
+ALTER TABLE "offering" ADD CONSTRAINT "offering_category_offering_category_id_fk" FOREIGN KEY ("category") REFERENCES "public"."offering_category"("id") ON DELETE no action ON UPDATE no action;
 
 ALTER TABLE public.contact OWNER TO "mvit-dev-rw";
 
-ALTER TABLE public.contact ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
-    SEQUENCE NAME public.contact_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1
-);
-
-CREATE TABLE public.offering (
-    id integer NOT NULL,
-    title character varying(255) NOT NULL,
-    description character varying(1024) NOT NULL,
-    description_page text,
-    icon text NOT NULL,
-    category integer NOT NULL,
-    features json,
-    price integer NOT NULL
-);
-
-
 ALTER TABLE public.offering OWNER TO "mvit-dev-rw";
 
-CREATE TABLE public.offering_category (
-    id integer NOT NULL,
-    name character varying(255) NOT NULL,
-    description character varying(1024)
-);
-
 ALTER TABLE public.offering_category OWNER TO "mvit-dev-rw";
-
-ALTER TABLE public.offering_category ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
-    SEQUENCE NAME public.offering_category_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1
-);
-
-ALTER TABLE public.offering ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
-    SEQUENCE NAME public.offering_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1
-);
 
 --
 -- TOC entry 3281 (class 2606 OID 16523)

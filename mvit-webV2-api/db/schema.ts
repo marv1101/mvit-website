@@ -1,6 +1,4 @@
-import {integer, pgTable, varchar, text, json, pgSchema } from "drizzle-orm/pg-core";
-
-export const mvitSchema = pgSchema('mvit');
+import {integer, pgTable, varchar, text, json} from "drizzle-orm/pg-core";
 
 export const offering = pgTable('offering', {
     id: integer().primaryKey().generatedAlwaysAsIdentity(),
