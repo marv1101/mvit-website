@@ -9,7 +9,7 @@ COPY tsconfig.json ./
 
 # Install dependencies
 RUN npm install
-RUN npm audit fix --force
+RUN npm audit fix ; exit 0
 
 # Copy source code
 COPY . .
