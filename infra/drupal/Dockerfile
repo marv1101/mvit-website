@@ -9,5 +9,10 @@ RUN echo " \n\
 \$settings['trusted_host_patterns'] = ['^mphion\.de$', '^localhost$', '^nginx$']; \n\
 " >> /var/www/html/sites/default/default.settings.php
 
+RUN echo "if (isset(\$_SERVER['HTTP_X_FORWARDED_PREFIX'])) { \n\
+  \$_SERVER['SCRIPT_NAME'] = \$_SERVER['HTTP_X_FORWARDED_PREFIX'] . '/index.php'; \n\
+  \$_SERVER['REQUEST_URI'] = \$_SERVER['HTTP_X_FORWARDED_PREFIX'] . \$_SERVER['REQUEST_URI']; \n\
+}" >> /var/www/html/sites/default/default.settings.php
+
 # Falls du die Base-URL auch fest verdrahten willst (optional):
 RUN echo "\$base_url = 'https://mphion.de/drupal';" >> /var/www/html/sites/default/default.settings.php
