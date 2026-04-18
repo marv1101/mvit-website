@@ -30,7 +30,9 @@ services:
     ports:
       - 8081:80
     volumes:
-      - ./drupal:/var/www/html
+      - drupal_data:/var/www/html
+      # Hier wird die lokale Konfiguration eingebunden:
+      - ./drupal/drupal.conf.php:/var/www/html/sites/default/settings.php:ro
     restart: unless-stopped
     networks:
       - project_network
@@ -107,6 +109,8 @@ volumes:
   pg_volume:
     driver: local
   pgadmin_volume:
+    driver: local
+  drupal_data:
     driver: local
 
 
