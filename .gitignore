@@ -9,3 +9,4 @@ infra/.env.example
 .continue/prompts/new-prompt.md
 .continue/agents/new-config.yaml
 test2.sql
+infra/drupal/drupal.conf.php
