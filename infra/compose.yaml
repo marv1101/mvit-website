@@ -32,7 +32,7 @@ services:
     volumes:
       - drupal_data:/var/www/html
       # Hier wird die lokale Konfiguration eingebunden:
-      - ./drupal/drupal.conf.php:/var/www/html/sites/default/settings.php:ro
+      - ./drupal/drupal.conf.php:/var/www/html/sites/default/settings.php:rw,z
     restart: unless-stopped
     networks:
       - project_network
