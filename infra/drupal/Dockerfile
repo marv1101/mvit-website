@@ -1,19 +1,18 @@
 FROM drupal:10-apache
 
-# 1. RewriteBase in der .htaccess aktivieren
-RUN sed -i 's/# RewriteBase \//RewriteBase \/drupal/' /var/www/html/.htaccess
+# Wir erstellen einen Symlink, damit Apache den Ordner /drupal/ tatsächlich sieht
+# /var/www/html/drupal -> zeigt auf /var/www/html
+RUN ln -s . /var/www/html/drupal
 
-# 2. Den Code für die settings.php vorbereiten
-# Wir nutzen hier eine robustere Methode, um die Pfade zu korrigieren
+# Jetzt die Konfiguration für die settings.php (via Autostart-Script oder direkt)
+# Wir nutzen hier den 'Request'-Stack von Symfony, um den Pfad sauber zu setzen.
 RUN echo " \n\
-// --- Reverse Proxy & Subpath Fix --- \n\
-\$settings['reverse_proxy'] = TRUE; \n\
-\$settings['reverse_proxy_addresses'] = [\$_SERVER['REMOTE_ADDR']]; \n\
-\n\
-if (isset(\$_SERVER['HTTP_X_FORWARDED_PREFIX'])) { \n\
-    // Das hier zwingt Drupal, den Unterordner in alle URLs einzubauen \n\
+if (isset(\$_SERVER['HTTP_X_FORWARDED_PREFIX']) && \$_SERVER['HTTP_X_FORWARDED_PREFIX'] == '/drupal') { \n\
+    \$settings['reverse_proxy'] = TRUE; \n\
+    \$settings['reverse_proxy_addresses'] = [\$_SERVER['REMOTE_ADDR']]; \n\
+    \n\
+    // Das zwingt Drupal, alle Links mit /drupal zu generieren \n\
     \$GLOBALS['base_path'] = '/drupal/'; \n\
-    \$GLOBALS['base_url'] = 'https://' . \$_SERVER['HTTP_HOST'] . '/drupal'; \n\
     \$_SERVER['SCRIPT_NAME'] = '/drupal/index.php'; \n\
     \$_SERVER['REQUEST_URI'] = '/drupal' . \$_SERVER['REQUEST_URI']; \n\
 } \n\
