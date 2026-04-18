@@ -26,7 +26,9 @@ services:
       - project_network
 
   drupal:
-    image: drupal:10.5.8-php8.3-apache-trixie
+    build:
+      context: ./drupal
+      dockerfile: Dockerfile
     ports:
       - 8081:80
     volumes:
