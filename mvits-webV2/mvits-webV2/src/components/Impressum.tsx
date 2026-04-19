@@ -38,7 +38,7 @@ export function Impressum({ onBack }: ImpressumProps) {
             <h3 className="mb-4">Kontakt</h3>
             <p>
               E-Mail: marvphoto@web.de<br />
-              Website: www.mvit.de
+              Website: <a href="https://www.mphion.de" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">mphion.de</a>
             </p>
           </section>
 
