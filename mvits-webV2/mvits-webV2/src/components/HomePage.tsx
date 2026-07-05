@@ -10,6 +10,20 @@ import type { Blogpost } from '@/types/Blogpost';
 
 const initialOfferings: Product[] = [
   {
+    id: '2',
+    name: 'PlanBar',
+    description: 'Intelligente Dienstplanung für Apotheken. Optimieren Sie Ihre Schichtpläne mit KI-gestützter Automatisierung.',
+    category: 'Software',
+    price: '',
+    features: [
+      'Mitarbeiterverwaltung mit Arbeitszeiten & Pausen',
+      'KI-gestützte Schichtoptimierung',
+      'Mitarbeiterwunsch-Verwaltung',
+      'Dashboard mit Echtzeit-Statistiken',
+    ],
+    icon: "CalendarDays",
+  },
+  {
     id: '1',
     name: 'Cloud migration',
     description: 'Die Cloud hat sich zu einem zentralen Bestandteil der modernen IT-Infrastuktur entwickelt. Wir helfen ihnen diese effektiv zu nutzen.',
@@ -21,19 +35,6 @@ const initialOfferings: Product[] = [
       'IT-Beratungsleistungen',
     ],
     icon: "Cloud",
-  },
-  {
-    id: '2',
-    name: 'IT-Beratung',
-    description: 'Umfassende Analyse ihrer Systeme und Optimierung mittels individueller Software',
-    category: 'Beratung',
-    price: '',
-    features: [
-      'erste Analyse - kostenfrei',
-      'Optimierung der Systemlandschaft',
-      'Prozessautomatisierung',
-    ],
-    icon: "MonitorCog",
   },
   {
     id: '3',
@@ -119,7 +120,7 @@ export function HomePage() {
             return {
               ...post,
               content: post.content ? replaceDrupalImgTagsWithSrc(post.content) : "",
-              title_image_url: post.content ? getFirstImageUrlFromHtml(post.content) : undefined,
+              title_image_url: post.title_image_url ?? (post.content ? getFirstImageUrlFromHtml(post.content) : undefined),
             };
           });
 

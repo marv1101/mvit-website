@@ -5,6 +5,7 @@ export type blogpostObject = {
     content: string;
     summary: string | null;
     title: string;
+    title_image_url: string | null;
     created: number;
     changed: number;
 }

@@ -27,7 +27,6 @@ export function BlogCard({ post }: BlogCardProps) {
           alt={post.title}
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
         />
-        <p>{post.title_image_url}</p>
       </div>
       
       <div className="p-6">
@@ -48,11 +47,11 @@ export function BlogCard({ post }: BlogCardProps) {
         <div className="flex items-center gap-4 text-sm text-muted-foreground mb-4">
           <div className="flex items-center gap-1">
             <Calendar className="w-4 h-4" />
-            <span>{post.created}</span>
+            <span>{new Date(post.created * 1000).toLocaleDateString('de-DE')}</span>
           </div>
           <div className="flex items-center gap-1">
             <Clock className="w-4 h-4" />
-            <span>{post.changed}</span>
+            <span>{new Date(post.changed * 1000).toLocaleDateString('de-DE')}</span>
           </div>
         </div>
         

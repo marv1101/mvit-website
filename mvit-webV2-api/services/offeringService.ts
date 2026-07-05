@@ -14,11 +14,11 @@ type OfferingResponse = {
     price: number
 };
 
-async function getCategoriesForOfferingByOfferingId(offeringId: number): Promise<any> {
+async function getCategoryById(categoryId: number): Promise<any> {
     return db
                 .select()
                 .from(offering_category)
-                .where(eq(offering_category.id, offeringId));
+                .where(eq(offering_category.id, categoryId));
 }
 
 async function getAllOfferings(offset = 0, limit = 10): Promise<OfferingResponse[]> {
@@ -27,7 +27,7 @@ async function getAllOfferings(offset = 0, limit = 10): Promise<OfferingResponse
     // fetch categories for all offerings in parallel
     const offeringResponses: OfferingResponse[] = await Promise.all(
         offerings.map(async (off) => {
-            const categories = await getCategoriesForOfferingByOfferingId(off.id);
+            const categories = await getCategoryById(off.category);
             return {
                 id: off.id,
                 title: off.title,
@@ -48,12 +48,12 @@ async function getOfferingById(id: number): Promise<OfferingResponse> {
 
     //get single offering by ID
     const foundOffering: offeringObject = await db.select().from(offering).where(eq(offering.id, id)).limit(1).then(results => results[0]);
-    const categories = await getCategoriesForOfferingByOfferingId(id);
 
     if (!foundOffering) {
         throw new Error('Offering not found');
-
     }
+
+    const categories = await getCategoryById(foundOffering.category);
 
     const responseObject: OfferingResponse = {
         id: foundOffering.id,

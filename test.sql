@@ -149,6 +149,7 @@ COPY public.contact (id, name, email, subject, message) FROM stdin;
 
 COPY public.offering (id, title, description, description_page, icon, category, features, price) FROM stdin;
 1	Test	Gute Leistung	<p> Testtext aus der <b>Datenbank</b> für meine Seite </p>	Cloud	1	["test", "123", "und noch was"]	0
+2	PlanBar	Intelligente Dienstplanung für Apotheken. Optimieren Sie Ihre Schichtpläne mit KI-gestützter Automatisierung.	<div class="space-y-12"><div class="bg-gradient-to-br from-primary/10 to-accent/10 rounded-2xl p-8 md:p-12"><h2 class="text-3xl font-bold mb-4">Dienstplanung neu gedacht</h2><p class="text-lg text-muted-foreground max-w-3xl">PlanBar ist die moderne Cloud-Lösung für Ihre Apotheke.</p></div><div><h2 class="text-2xl font-bold mb-8">Alle Funktionen im Überblick</h2><div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"><div class="bg-card border border-border rounded-xl p-6"><h3 class="font-semibold text-lg mb-2">Mitarbeiterverwaltung</h3><p class="text-muted-foreground">Verwalten Sie Stammdaten, Arbeitszeiten und Pausenregelungen.</p></div><div class="bg-card border border-border rounded-xl p-6"><h3 class="font-semibold text-lg mb-2">KI-gestützte Optimierung</h3><p class="text-muted-foreground">Intelligenter Algorithmus für optimale Schichtpläne.</p></div></div></div></div>	CalendarDays	2	["Mitarbeiterverwaltung","KI-gestützte Schichtoptimierung","Mitarbeiterwunsch-Verwaltung","Dashboard"]	0
 \.
 
 
@@ -160,6 +161,7 @@ COPY public.offering (id, title, description, description_page, icon, category, 
 
 COPY public.offering_category (id, name, description) FROM stdin;
 1	Cloud	Die Cloud bietet Unternehmen die Möglichkeit enorme Leistung von globaler IT-Infrastruktur zu nutzen.
+2	Software	Eigene und Drittanbieter-Softwareprodukte.
 \.
 
 
@@ -178,7 +180,7 @@ SELECT pg_catalog.setval('public.contact_id_seq', 2, true);
 -- Name: offering_category_id_seq; Type: SEQUENCE SET; Schema: public; Owner: mvit-dev-rw
 --
 
-SELECT pg_catalog.setval('public.offering_category_id_seq', 1, true);
+SELECT pg_catalog.setval('public.offering_category_id_seq', 2, true);
 
 
 --
@@ -187,7 +189,7 @@ SELECT pg_catalog.setval('public.offering_category_id_seq', 1, true);
 -- Name: offering_id_seq; Type: SEQUENCE SET; Schema: public; Owner: mvit-dev-rw
 --
 
-SELECT pg_catalog.setval('public.offering_id_seq', 1, true);
+SELECT pg_catalog.setval('public.offering_id_seq', 2, true);
 
 
 --

@@ -1,18 +1,53 @@
 import { blogService } from '../services/blogService.js';
 import { drupalDb } from '../db/db.js';
 
+const { mockQueryBuilder } = vi.hoisted(() => {
+  const qb = {
+    innerJoin: vi.fn().mockReturnThis(),
+    leftJoin: vi.fn().mockReturnThis(),
+    where: vi.fn().mockReturnThis(),
+    offset: vi.fn().mockReturnThis(),
+    limit: vi.fn(),
+  };
+  return { mockQueryBuilder: qb };
+});
+
 // Mock the database
 vi.mock('../db/db.js', () => ({
   drupalDb: {
-    select: vi.fn().mockReturnThis(),
-    from: vi.fn().mockReturnThis(),
-    innerJoin: vi.fn().mockReturnThis(),
-    where: vi.fn().mockReturnThis(),
-    offset: vi.fn().mockReturnThis(),
-    limit: vi.fn().mockReturnThis(),
-    eq: vi.fn(),
+    select: vi.fn(() => ({ from: vi.fn(() => mockQueryBuilder) })),
   },
 }));
+
+function makeRawRow(overrides: Record<string, unknown> = {}) {
+  return {
+    nid: 1,
+    vid: 1,
+    langcode: 'en',
+    content: 'Content 1',
+    summary: 'Summary 1',
+    title: 'Title 1',
+    fileUri: null,
+    created: 123456,
+    changed: 123456,
+    ...overrides,
+  };
+}
+
+function makeExpectedRow(overrides: Record<string, unknown> = {}) {
+  return {
+    nid: 1,
+    vid: 1,
+    langcode: 'en',
+    content: 'Content 1',
+    summary: 'Summary 1',
+    title: 'Title 1',
+    title_image_url: null,
+    created: 123456,
+    changed: 123456,
+    ...overrides,
+  };
+}
 
 describe('Blog Service', () => {
   beforeEach(() => {
@@ -21,45 +56,41 @@ describe('Blog Service', () => {
 
   describe('getAllBlogposts', () => {
     it('should return blogposts', async () => {
-      const mockBlogposts = [
-        { nid: 1, vid: 1, langcode: 'en', content: 'Content 1', summary: 'Summary 1', title: 'Title 1', created: 123456, changed: 123456 },
-      ];
-
-      vi.mocked(drupalDb.select).mockReturnValue(mockBlogposts);
-      vi.mocked(drupalDb.from).mockReturnValue({
-        innerJoin: vi.fn().mockReturnThis(),
-        where: vi.fn().mockReturnThis(),
-        offset: vi.fn().mockReturnThis(),
-        limit: vi.fn().mockResolvedValue(mockBlogposts),
-      });
+      const rawRows = [makeRawRow()];
+      const expected = [makeExpectedRow()];
+      mockQueryBuilder.limit.mockResolvedValue(rawRows);
 
       const result = await blogService.getAllBlogposts(0, 10);
-      expect(result).toEqual(mockBlogposts);
+      expect(result).toEqual(expected);
+    });
+
+    it('should convert fileUri to title_image_url', async () => {
+      const rawRows = [
+        makeRawRow({ fileUri: 'public://2025-07/image.jpg' }),
+      ];
+      const expected = [
+        makeExpectedRow({
+          title_image_url: 'https://mphion.de/drupal/sites/default/files/2025-07/image.jpg',
+        }),
+      ];
+      mockQueryBuilder.limit.mockResolvedValue(rawRows);
+
+      const result = await blogService.getAllBlogposts(0, 10);
+      expect(result).toEqual(expected);
     });
   });
 
   describe('getBlogpostById', () => {
     it('should return blogpost by id', async () => {
-      const mockBlogpost = { nid: 1, vid: 1, langcode: 'en', content: 'Content 1', summary: 'Summary 1', title: 'Title 1', created: 123456, changed: 123456 };
-
-      vi.mocked(drupalDb.select).mockReturnValue([mockBlogpost]);
-      vi.mocked(drupalDb.from).mockReturnValue({
-        innerJoin: vi.fn().mockReturnThis(),
-        where: vi.fn().mockReturnThis(),
-        limit: vi.fn().mockResolvedValue([mockBlogpost]),
-      });
+      const rawRows = [makeRawRow()];
+      mockQueryBuilder.limit.mockResolvedValue(rawRows);
 
       const result = await blogService.getBlogpostById(1);
-      expect(result).toEqual(mockBlogpost);
+      expect(result).toEqual(makeExpectedRow());
     });
 
     it('should return null if not found', async () => {
-      vi.mocked(drupalDb.select).mockReturnValue([]);
-      vi.mocked(drupalDb.from).mockReturnValue({
-        innerJoin: vi.fn().mockReturnThis(),
-        where: vi.fn().mockReturnThis(),
-        limit: vi.fn().mockResolvedValue([]),
-      });
+      mockQueryBuilder.limit.mockResolvedValue([]);
 
       const result = await blogService.getBlogpostById(999);
       expect(result).toBeNull();

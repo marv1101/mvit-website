@@ -1,10 +1,11 @@
-import { Code, Database, Cloud, DatabaseZap, LucideFilter, MonitorCog, Server, type LucideProps } from 'lucide-react';
+import { CalendarDays, Code, Database, Cloud, DatabaseZap, LucideFilter, MonitorCog, Server, type LucideProps } from 'lucide-react';
 import type { ForwardRefExoticComponent, RefAttributes } from 'react';
 
 
 const iconMap = new Map<string, ForwardRefExoticComponent<Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>>>();
 
 function initIconMap() {
+    iconMap.set('CalendarDays', CalendarDays);
     iconMap.set('Code', Code);
     iconMap.set('Database', Database);
     iconMap.set('Cloud', Cloud);
