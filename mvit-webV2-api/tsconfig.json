@@ -12,10 +12,6 @@
     "resolveJsonModule": true,
     "allowJs": true,
     "noEmit": true,
-    "baseUrl": "./",
-    "paths": {
-      "*": ["node_modules/*"]
-    },
     "types": ["vitest/globals"],
     "isolatedModules": true,
     "ignoreDeprecations": "6.0"
