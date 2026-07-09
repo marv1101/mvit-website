@@ -1,0 +1,88 @@
+# ───────────────────────────────────────────────────────────────────────────
+# CI: Lint + Tests (Frontend/Backend)
+# Trigger: push auf main, Pull Requests
+# ───────────────────────────────────────────────────────────────────────────
+name: CI – Tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-tests-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test-api:
+    name: API Tests (vitest)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: mvit-webV2-api
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: mvit-webV2-api/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Type-check
+        run: npx tsc --noEmit
+
+      - name: Tests
+        run: npm test -- --run
+        env:
+          CI: "true"
+
+      - name: Audit (nicht-blockierend)
+        run: npm audit --omit=dev || true
+
+  test-frontend:
+    name: Frontend Build (Bun)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: mvits-webV2/mvits-webV2
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Build
+        run: bun run build
+        env:
+          NODE_ENV: production
+
+  validate-infra:
+    name: Infra validieren (compose/Caddy)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Compose-Prod syntax check
+        working-directory: infra
+        run: |
+          cp .env.example .env
+          docker compose -f compose-prod.yaml config --quiet
+
+      - name: Caddyfile syntax check
+        run: |
+          docker run --rm \
+            -v "$PWD/infra/Caddyfile:/Caddyfile:ro" \
+            caddy:2-alpine caddy validate --config /Caddyfile --adapter caddyfile

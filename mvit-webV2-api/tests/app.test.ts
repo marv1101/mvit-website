@@ -32,7 +32,7 @@ vi.mock('../services/blogService.js', () => ({
 
 vi.mock('../services/contactService.js', () => ({
   contactService: {
-    createContact: vi.fn(),
+    createContactRequest: vi.fn(),
     getAllContacts: vi.fn(),
   },
 }));

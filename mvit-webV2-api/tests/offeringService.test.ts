@@ -5,13 +5,7 @@ import { offering, offering_category } from '../db/schema.js';
 // Mock the database
 vi.mock('../db/db.js', () => ({
   db: {
-    select: vi.fn(() => ({
-      from: vi.fn(() => ({
-        offset: vi.fn(() => ({
-          limit: vi.fn(),
-        })),
-      })),
-    })),
+    select: vi.fn(),
   },
 }));
 
@@ -33,17 +27,15 @@ describe('Offering Service', () => {
 
       const mockCategories = [{ name: 'Category 1' }];
 
-      // Mock the chain
+      // Simulate db chain: select -> from -> offset -> limit (outer getAllOfferings)
+      // plus:                             -> where   (inner getCategoryById)
       const mockLimit = vi.fn().mockResolvedValue(mockOfferings);
       const mockOffset = vi.fn(() => ({ limit: mockLimit }));
-      const mockFrom = vi.fn(() => ({ offset: mockOffset }));
+      const mockWhere = vi.fn().mockResolvedValue(mockCategories);
+      const mockFrom = vi.fn(() => ({ offset: mockOffset, where: mockWhere }));
       const mockSelect = vi.fn(() => ({ from: mockFrom }));
 
       vi.mocked(db.select).mockImplementation(mockSelect);
-
-      // Mock getCategoriesForOfferingByOfferingId
-      const getCategoriesMock = vi.fn().mockResolvedValue(mockCategories);
-      (global as any).getCategoriesForOfferingByOfferingId = getCategoriesMock;
 
       const result = await offeringService.getAllOfferings(0, 10);
 
@@ -59,14 +51,22 @@ describe('Offering Service', () => {
       const mockCategories = [{ name: 'Category 1' }];
 
       const mockLimit = vi.fn().mockResolvedValue([mockOffering]);
-      const mockWhere = vi.fn(() => ({ limit: mockLimit }));
-      const mockFrom = vi.fn(() => ({ where: mockWhere }));
+      const mockWhereCategory = vi.fn().mockResolvedValue(mockCategories);
+      const mockWhereId = vi.fn(() => ({ limit: mockLimit }));
+      const mockFrom = vi.fn(() => ({ where: mockWhereId, offset: vi.fn() }));
       const mockSelect = vi.fn(() => ({ from: mockFrom }));
 
       vi.mocked(db.select).mockImplementation(mockSelect);
-
-      const getCategoriesMock = vi.fn().mockResolvedValue(mockCategories);
-      (global as any).getCategoriesForOfferingByOfferingId = getCategoriesMock;
+      // Also mock the select() call for getCategoryById
+      // The second call to db.select() also goes through the same mockSelect chain,
+      // but getCategoryById does .where() directly after .from() → mockWhereCategory
+      // We bind a separate mock for the "where" path used by getCategoryById
+      const mockFrom2 = vi.fn(() => ({ where: mockWhereCategory }));
+      const mockSelect2 = vi.fn(() => ({ from: mockFrom2 }));
+      // After the first select() call (getOfferingById), second select() call should use categories mock
+      vi.mocked(db.select)
+        .mockImplementationOnce(mockSelect)  // call 1: getOfferingById
+        .mockImplementationOnce(mockSelect2); // call 2: getCategoryById
 
       const result = await offeringService.getOfferingById(1);
       expect(result).toEqual({

@@ -1,0 +1,26 @@
+# ───────────────────────────────────────────────────────────────────────────
+# MVIT-Website – Staging-Config
+# Unterschiede zu Prod:
+#   - Domain:  stage.mphion.de
+#   - Staging-Zertifikat: Let's Encrypt Staging-CA (rate-limit-schonend)
+#   - Außer Port 8080/8443, um Parallelbetrieb mit Prod zu erlauben
+#
+# Aufruf:
+#   docker compose -f compose-prod.yaml -f compose.staging.yaml up -d
+# ───────────────────────────────────────────────────────────────────────────
+services:
+  caddy:
+    environment:
+      - CADDY_DOMAIN=stage.mphion.de
+      - ACME_CA=https://acme-staging-v02.api.letsencrypt.org/directory
+    ports: !override
+      - "8080:80"
+      - "8443:443"
+      - "8443:443/udp"
+    volumes: !override
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_staging_data:/data
+      - caddy_config:/config
+
+volumes:
+  caddy_staging_data:

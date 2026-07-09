@@ -1,0 +1,71 @@
+# ───────────────────────────────────────────────────────────────────────────
+# MVIT-Website – Caddyfile (Production)
+# Ersetzt Nginx + Certbot: automatisches HTTPS via Let's Encrypt.
+# ───────────────────────────────────────────────────────────────────────────
+
+{
+	# Globale Optionen
+	email {$SSL_EMAIL:marvphoto@web.de}
+
+	# Log-Format (JSON für einfache maschinelle Verarbeitung)
+	log {
+		output stdout
+		format json
+		level INFO
+	}
+
+	# Maximale Request-Body-Größe (entspricht nginx client_max_body_size 20M)
+	# Wird pro Site unten über `request_body max_size 20MB` gesetzt.
+}
+
+# ─── Haupt-Domain mphion.de ────────────────────────────────────────────────────
+mphion.de, www.mphion.de {
+	encode gzip zstd
+
+	# Security Headers
+	header {
+		Strict-Transport-Security "max-age=31536000; includeSubDomains"
+		X-Frame-Options "SAMEORIGIN"
+		X-Content-Type-Options "nosniff"
+		Referrer-Policy "no-referrer-when-downgrade"
+		# Caddy sendet von sich keine X-XSS-Protection, nachgebildet:
+		X-XSS-Protection "1; mode=block"
+		# Verhindert das Ausliefern von Dotfiles (.git, .env, ...)
+		-Server
+	}
+
+	# Request-Body Limit (für Uploads)
+	request_body {
+		max_size 20MB
+	}
+
+	# Logs pro Site
+	log {
+		output stdout
+		format json
+	}
+
+	# API-Backend
+	@api path /api/*
+	handle @api {
+		reverse_proxy mvit-api:3000
+	}
+
+	# Drupal-CMS (Pfad wird an Backend unverändert weitergereicht -
+	# der Drupal-Container symlinkt /var/www/html/drupal -> /var/www/html)
+	@drupal path /drupal/*
+	handle @drupal {
+		reverse_proxy drupal:80
+	}
+
+	# Frontend (Catch-all: alle übrigen Pfade)
+	handle {
+		reverse_proxy mvit-frontend:3001
+	}
+}
+
+# ─── Status-Seite (optional, nur intern) ──────────────────────────────────────
+# Erlaubt einfache Uptime-Prüfung ohne echte Domain-Validierung.
+:18080 {
+	respond "ok"
+}

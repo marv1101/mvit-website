@@ -4,8 +4,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "start": "npx tsx ./bin/www.ts",
-    "dev": "npx tsx --env-file=.env --watch ./bin/www.ts",
+    "start": "tsx ./bin/www.ts",
+    "dev": "tsx --env-file=.env --watch ./bin/www.ts",
     "test": "vitest",
     "test:coverage": "vitest --coverage"
   },
@@ -35,7 +35,6 @@
     "drizzle-kit": "^0.18.1",
     "eslint": "^10.2.1",
     "supertest": "^7.0.0",
-    "tsx": "^4.21.0",
     "vitest": "^4.1.4"
   }
 }

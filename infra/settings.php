@@ -893,14 +893,14 @@ $settings['migrate_node_migrate_type_classic'] = FALSE;
 #   include $app_root . '/' . $site_path . '/settings.local.php';
 # }
 $databases['default']['default'] = array (
-  'database' => 'drupal',
-  'username' => 'drupal_user',
-  'password' => 'zh0U5okha6EKo9e4KOSlQr0mAUICe8VdPEUsiP9nMSzKhGl7sr54mWxWMtNpa3sN',
+  'database' => getenv('DRUPAL_DB_NAME') ?: 'drupal',
+  'username' => getenv('DRUPAL_DB_USER') ?: 'drupal_user',
+  'password' => getenv('DRUPAL_DB_PASSWORD') ?: 'zh0U5okha6EKo9e4KOSlQr0mAUICe8VdPEUsiP9nMSzKhGl7sr54mWxWMtNpa3sN',
   'prefix' => '',
-  'host' => 'postgres',
-  'port' => '5432',
+  'host' => getenv('DRUPAL_DB_HOST') ?: 'db',
+  'port' => getenv('DRUPAL_DB_PORT') ?: '5432',
   'driver' => 'pgsql',
   'namespace' => 'Drupal\\pgsql\\Driver\\Database\\pgsql',
-  'autoload' => 'core/modules/pgsql/src/Driver/Database/pgsql/',
+  'autoload' => 'core/modules/pgsql/src/Driver\\Database\\pgsql/',
 );
 $settings['config_sync_directory'] = 'sites/default/files/config_9VDOjqNiBr03qxTVqRayIh12GWwiPMxc8AknvoKm-XAzd2hVPw5fYG2nXT-WiidPgz7BfyJcjQ/sync';

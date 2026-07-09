@@ -1,0 +1,29 @@
+# ════════════════════════════════════════════════════════════════════════════
+# MVIT-Website – Server-Setup (Provisionierung)
+# Bereitet einen VPS wiederholbar vor: Updates, Docker, Firewall, Fail2ban,
+# Deploy-User, Logrotate, fail-safe Limits.
+#
+# Aufruf:
+#   ansible-playbook -i inventory.yml playbooks/setup-server.yml
+# ════════════════════════════════════════════════════════════════════════════
+- name: Basis-Einrichtung des VPS für mvit-website
+  hosts: prod
+  become: true
+  gather_facts: true
+
+  pre_tasks:
+    - name: System aktualisieren
+      ansible.builtin.apt:
+        update_cache: true
+        upgrade: dist
+        autoremove: true
+
+  roles:
+    - role: docker
+    - role: security
+    - role: deploy_user
+
+  post_tasks:
+    - name: Status ausgeben
+      ansible.builtin.debug:
+        msg: "Server provisioniert.接下来: infra/setup.sh als {{ deploy_user }} ausführen."

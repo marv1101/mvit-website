@@ -1,168 +1,129 @@
-# MVIT-Website Stack mit Nginx & SSL/TLS
+# MVIT-Website – Production Stack mit Caddy
 
-Diese Docker Compose Konfiguration errichtet einen vollständigen Production-Ready Stack mit:
-- **PostgreSQL** Database
-- **Backend API** (Node.js/Express mit TypeScript)
-- **Frontend** (React mit Bun)
-- **Nginx** Reverse Proxy mit SSL/TLS
-- **Certbot** SSL-Zertifikat Management (Let's Encrypt)
-- **Drupal** CMS (optional)
+Vollständiger Production-Ready Stack auf dem VPS (`mphion.de`):
 
-## Vorbereitung
+- **Caddy** Reverse Proxy mit automatischem HTTPS (Let's Encrypt) – ersetzt Nginx + Certbot
+- **PostgreSQL 16** Datenbank
+- **Backend API** (Node.js/Express + Drizzle, TypeScript)
+- **Frontend** (React + Bun)
+- **Drupal 10** CMS (optional)
 
-### 1. DNS-Einträge vorbereiten
-Stelle sicher, dass deine Domain `mphion.de` auf die IP-Adresse des Servers zeigt:
-```
-A Record: mphion.de    → server_ip
-A Record: www.mphion.de → server_ip
-```
+## One-Liner-Deployment auf dem VPS
 
-### 2. Umgebungsvariablen konfigurieren
+> Der VPS muss über die Domain `mphion.de` erreichbar sein (A-Record auf die Server-IP).
+
 ```bash
-cd infra
-nano .env
+curl -fsSL https://raw.githubusercontent.com/marv1101/mvit-website/main/infra/setup.sh | bash
 ```
 
-### 3. Ports freigeben (Firewall)
+Das Skript erledigt:
+1. Docker & Compose-Plugin installieren (falls nicht vorhanden)
+2. Repo nach `~/mvit-website` klonen
+3. `.env` aus Vorlage anlegen (interaktiv auszufüllen)
+4. UFW-Firewall freigeben (22, 80, 443 TCP + UDP)
+5. Images bauen & Stack starten (Caddy bezieht Zertifikat automatisch)
+
+Alternativ Schritt-für-Schritt:
+
 ```bash
-sudo ufw allow 80/tcp
-sudo ufw allow 443/tcp
-sudo ufw allow 4242/tcp  # PostgreSQL (nur intern!)
+git clone https://github.com/marv1101/mvit-website.git ~/mvit-website
+cd ~/mvit-website/infra
+cp .env.example .env
+$EDITOR .env           # Secrets eintragen!
+docker compose -f compose-prod.yaml up -d --build --wait
 ```
 
-## Deployment
+## Update (nach Änderungen auf main)
 
-### Stack starten (ersten Mal mit SSL-Setup)
 ```bash
-cd infra
-docker-compose up --build -d
+bash ~/mvit-website/infra/deploy.sh
 ```
 
-Die folgenden Schritte finden automatisch statt:
-1. Nginx startet und wartet auf Zertifikat
-2. Certbot generiert automatisch SSL-Zertifikate von Let's Encrypt
-3. Nginx wird mit SSL-Konfiguration neu geladen
-4. API und Frontend sind über die Domain erreichbar
-
-### Status überprüfen
-```bash
-docker-compose ps
-docker-compose logs -f nginx
-docker-compose logs -f certbot
-```
+Oder via CI/CD: bei Push auf `main` baut GitHub Actions die Images und pusht
+sie in GHCR; das `deploy.yml`-Workflow SSHt auf den VPS und führt ein
+`docker compose pull && up -d` aus.
 
 ## Zugang nach Deployment
 
-- **Frontend**: https://mphion.de
-- **API**: https://mphion.de/api/
-- **Drupal**: https://mphion.de/drupal/ (falls aktiviert)
+| Service  | URL                              |
+|----------|----------------------------------|
+|Frontend  | https://mphion.de                |
+| API      | https://mphion.de/api/           |
+| Health   | https://mphion.de/api/health     |
+| Drupal   | https://mphion.de/drupal/        |
 
-> ⚠️ Nutze HTTP (Port 80) wird automatisch zu HTTPS (Port 443) umgeleitet
+HTTP → HTTPS-Umleitung übernimmt Caddy automatisch.
 
-## SSL-Zertifikat Management
+## CI/CD-Pipeline
 
-### Zertifikat-Status prüfen
+| Workflow                  | Datei                          | Zweck                         |
+|---------------------------|--------------------------------|------------------------------|
+| CI – Tests                | `.github/workflows/test.yml`   | Lint, vitest, Frontend build, compose/caddy validate |
+| Build & Publish           | `.github/workflows/build.yml`  | Docker-Images nach GHCR pushen (api, frontend) |
+| Deploy                    | `.github/workflows/deploy.yml` | SSH auf VPS → pull & up        |
+
+Benötigte Repository Secrets (unter Settings → Secrets and variables → Actions):
+
+- `SSH_HOST` – VPS-Host (`mphion.de`)
+- `SSH_USER` – Benutzer (`mvit-deploy` bzw. root)
+- `SSH_PRIVATE_KEY` – privater Key ohne Passphrase
+- `SSH_PORT` *(optional, default 22)*
+
+## Ansible – Server wiederholbar provisionieren
+
 ```bash
-docker-compose exec certbot certbot certificates
+cd ansible
+# inventory.yml anpassen (VPS-IP/Domain, Repo-Dir)
+ansible-playbook -i inventory.yml playbooks/setup-server.yml
 ```
 
-### Manuelle Zertifikat-Erneuerung
+Installiert Docker, UFW, fail2ban, logrotate, richtet den `mvit-deploy`-User ein.
+
+## Monitoring (optional)
+
 ```bash
-docker-compose exec certbot certbot renew --dry-run
+docker compose -f compose-prod.yaml -f compose.monitoring.yaml up -d
 ```
 
-Die automatische Erneuerung läuft täglich um 2 Uhr morgens.
+Startet kilometerweit: Prometheus, cAdvisor, Node-Exporter, Loki, Promtail, Grafana.
+Grafana ist nur im internen Netzwerk erreichbar – via SSH-Tunnel zugreifen:
 
-## Nginx Konfiguration
-
-Die Nginx-Konfiguration (`nginx/nginx.conf`) enthält:
-- ✅ Automatische HTTP → HTTPS Umleitung
-- ✅ Rate Limiting (Frontend: 30 r/s, API: 10 r/s)
-- ✅ Gzip-Kompression
-- ✅ Security Headers (HSTS, X-Frame-Options, etc.)
-- ✅ Reverse Proxy für API, Frontend & Drupal
-
-### Routes
-- `/` → Frontend (React App)
-- `/api/` → Backend API
-- `/drupal/` → Drupal CMS
-
-## Troubleshooting
-
-### Certbot Fehler: "Connection refused"
 ```bash
-# Certbot braucht Nginx zum Laufen. Stelle sicher Nginx läuft:
-docker-compose logs nginx
+ssh -L 3000:grafana:3000 user@mphion.de
+# dann http://localhost:3000 (admin / Passwort aus GRAFANA_ADMIN_PASSWORD in .env)
 ```
 
-### SSL Zertifikat wird nicht erstellt
-```bash
-# Überprüfe DNS Propagation:
-nslookup mphion.de
-dig mphion.de
+## Kommando-Übersicht
 
-# Schau in den Certbot Logs:
-docker-compose logs certbot
-```
-
-### Nginx gibt 502 Bad Gateway
 ```bash
-# API/Frontend nicht erreichbar
-docker-compose exec nginx curl -s http://api:3000/api/ | head
-docker-compose exec nginx curl -s http://frontend:3001/
+# Status
+docker compose -f compose-prod.yaml ps
+docker compose -f compose-prod.yaml logs -f caddy
+
+# Stack stoppen
+docker compose -f compose-prod.yaml down
+
+# Stack komplett löschen (VORSICHT – inkl. DB-Daten!)
+docker compose -f compose-prod.yaml down -v
+
+# Update via CI/CD images
+docker compose -f compose-prod.yaml pull && docker compose -f compose-prod.yaml up -d --wait
+
+# Erzwinge Caddy-Zertifikat-Renewal
+docker exec caddy caddy reload --config /etc/caddy/Caddyfile
 ```
 
 ## Sicherheit
 
-- ✅ SSL/TLS mit modernen Cipher Suites
-- ✅ HSTS aktiviert (Strict-Transport-Security)
-- ✅ X-Frame-Options: SAMEORIGIN
-- ✅ API & Frontend intern (nicht direkt exposed)
-- ✅ PostgreSQL nur auf localhost:4242
+- ✅ Automatisches HTTPS via Caddy / Let's Encrypt
+- ✅ HTTP/3 (QUIC) über Port 443/udp
+- ✅ HSTS, X-Frame-Options, X-Content-Type-Options, Referrer-Policy via Caddy
+- ✅ Container laufen als `no-new-privileges`
+- ✅ API/Frontend/Drupal intern (nicht direkt exposed – nur über Caddy)
+- ✅ PostgreSQL nur im internen Network
+- ✅ Realy-Limiting pro IP in Caddy (optional über Plugin)
 
-## Volumes
+## Kompatibilität
 
-| Volume | Zweck |
-|--------|-------|
-| `pg_volume` | PostgreSQL Datenbank |
-| `letsencrypt_volume` | SSL Zertifikate & Keys |
-| `certbot_www` | Certbot Validierungsverzeichnis |
-
-## Mit Podman statt Docker
-
-Falls du Podman nutzt:
-```bash
-podman-compose up --build -d
-```
-
-## Logs überwachen
-
-```bash
-# Alle Services
-docker-compose logs -f
-
-# Nur Nginx
-docker-compose logs -f nginx
-
-# Nur API
-docker-compose logs -f api
-
-# Mit Zeitstempel
-docker-compose logs -f --timestamps
-```
-
-## Stack stoppen
-
-```bash
-docker-compose down
-
-# Mit Volumes löschen (VORSICHT!)
-docker-compose down -v
-```
-
-## Support
-
-Für Fragen oder Probleme, überprüfe:
-- Docker Logs: `docker-compose logs [SERVICE]`
-- Zertifikat Status: `docker-compose exec certbot certbot certificates`
-- Nginx Status: `docker-compose exec nginx nginx -T`
+`compose.yaml` (mit Nginx + Certbot) ist weiterhin verfügbar, wird aber nicht mehr
+aktiv empfohlen – `compose-prod.yaml` (Caddy) ist der neue Production-Standard.

@@ -1,0 +1,33 @@
+- name: Deploy-Benutzer anlegen
+  ansible.builtin.user:
+    name: "{{ deploy_user }}"
+    shell: /bin/bash
+    groups: docker
+    append: true
+    create_home: true
+
+- name: SSH-Verzeichnis
+  ansible.builtin.file:
+    path: "/home/{{ deploy_user }}/.ssh"
+    state: directory
+    owner: "{{ deploy_user }}"
+    group: "{{ deploy_user }}"
+    mode: '0700'
+
+- name: Authorized-Keys Platzhalter
+  ansible.builtin.copy:
+    dest: "/home/{{ deploy_user }}/.ssh/authorized_keys"
+    content: |
+      # Trage hier den öffentlichen SSH-Key des Deployers ein.
+      # ssh-ed25519 AAAA...
+    owner: "{{ deploy_user }}"
+    group: "{{ deploy_user }}"
+    mode: '0600'
+    force: false
+
+- name: sudoers für {{ deploy_user }}
+  ansible.builtin.copy:
+    dest: "/etc/sudoers.d/{{ deploy_user }}"
+    content: "{{ deploy_user }} ALL=(ALL) NOPASSWD: /usr/bin/docker, /usr/bin/docker-compose, /usr/sbin/ufw\n"
+    mode: '0440'
+    validate: 'visudo -cf %s'
