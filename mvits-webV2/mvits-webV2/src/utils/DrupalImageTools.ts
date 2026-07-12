@@ -1,20 +1,26 @@
 import { CONFIG } from "./ConfigLoader";
 
 export function replaceDrupalImgTagsWithSrc(html: string): string {
-    
-    //replace relative image URLs with absolute URLs pointing to the Drupal site
-    let modifiedHtml = html.replaceAll("/sites/default/files/", CONFIG.DRUPAL_BASE_URL + "sites/default/files/");
-
-    return modifiedHtml;
+    // Replace relative image URLs in src attributes with absolute URLs pointing to the Drupal site.
+    return html.replace(
+        /src=(["'])\/sites\/default\/files\//gi,
+        `src=$1${CONFIG.DRUPAL_BASE_URL}/sites/default/files/`
+    );
 }
 
 export function getFirstImageUrlFromHtml(html: string): string | undefined {
     const imgTagRegex = /<img\s+[^>]*?src=(["'])(.*?)\1/i;
     const match = html.match(imgTagRegex);
 
-    if (match && match[0]) {
-        const URL = CONFIG.DRUPAL_BASE_URL + match[0].substring(match[0].indexOf('"')+1, match[0].lastIndexOf('"'));
-        return URL;
+    if (match && match[2]) {
+        const src = match[2].trim();
+        if (!src) return undefined;
+        // Already absolute URL - return as-is.
+        if (/^https?:\/\//i.test(src)) return src;
+        // Relative URL starting with "/" - prepend Drupal base URL.
+        if (src.startsWith('/')) return CONFIG.DRUPAL_BASE_URL + src;
+        // Relative URL without leading "/" - prepend Drupal base URL with separator.
+        return CONFIG.DRUPAL_BASE_URL + '/' + src;
     }
     return undefined;
 }
