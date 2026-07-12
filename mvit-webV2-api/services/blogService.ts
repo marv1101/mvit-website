@@ -1,7 +1,7 @@
 import { node, nodeBody, nodeFieldData, nodeFieldImage, fileManaged } from '../db/schema_drupal.js';
 import { drupalDb } from '../db/db.js';
 import { blogpostObject } from '../models/blogpost.js';
-import { eq, sql } from 'drizzle-orm';
+import { and, desc, eq, sql } from 'drizzle-orm';
 
 const DRUPAL_FILES_BASE = 'https://mphion.de/drupal/sites/default/files/';
 
@@ -23,11 +23,16 @@ async function getAllBlogposts(offset = 0, limit = 10): Promise<blogpostObject[]
         created: nodeFieldData.created,
         changed: nodeFieldData.changed,
     }).from(node)
-        .innerJoin(nodeBody, eq(node.nid, nodeBody.entityId) && eq(node.vid, nodeBody.revisionId))
-        .innerJoin(nodeFieldData, eq(node.nid, nodeFieldData.nid) && eq(node.vid, nodeFieldData.vid))
-        .leftJoin(nodeFieldImage, eq(node.nid, nodeFieldImage.entityId) && eq(node.vid, nodeFieldImage.revisionId))
+        .innerJoin(nodeBody, and(eq(node.nid, nodeBody.entityId), eq(node.vid, nodeBody.revisionId)))
+        .innerJoin(nodeFieldData, and(eq(node.nid, nodeFieldData.nid), eq(node.vid, nodeFieldData.vid)))
+        .leftJoin(nodeFieldImage, and(
+            eq(node.nid, nodeFieldImage.entityId),
+            eq(node.vid, nodeFieldImage.revisionId),
+            eq(nodeFieldImage.delta, 0)
+        ))
         .leftJoin(fileManaged, eq(nodeFieldImage.fieldImageTargetId, fileManaged.fid))
-        .where(eq(node.type, 'article'))
+        .where(and(eq(node.type, 'article'), eq(nodeFieldData.status, 1)))
+        .orderBy(desc(nodeFieldData.created))
         .offset(offset).limit(limit);
 
     return rawResults.map((row) => ({
@@ -55,11 +60,16 @@ async function getBlogpostById(id: number): Promise<blogpostObject | null> {
         created: nodeFieldData.created,
         changed: nodeFieldData.changed,
     }).from(node)
-        .innerJoin(nodeBody, eq(node.nid, nodeBody.entityId) && eq(node.vid, nodeBody.revisionId))
-        .innerJoin(nodeFieldData, eq(node.nid, nodeFieldData.nid) && eq(node.vid, nodeFieldData.vid))
-        .leftJoin(nodeFieldImage, eq(node.nid, nodeFieldImage.entityId) && eq(node.vid, nodeFieldImage.revisionId))
+        .innerJoin(nodeBody, and(eq(node.nid, nodeBody.entityId), eq(node.vid, nodeBody.revisionId)))
+        .innerJoin(nodeFieldData, and(eq(node.nid, nodeFieldData.nid), eq(node.vid, nodeFieldData.vid)))
+        .leftJoin(nodeFieldImage, and(
+            eq(node.nid, nodeFieldImage.entityId),
+            eq(node.vid, nodeFieldImage.revisionId),
+            eq(nodeFieldImage.delta, 0)
+        ))
         .leftJoin(fileManaged, eq(nodeFieldImage.fieldImageTargetId, fileManaged.fid))
-        .where(eq(node.type, 'article') && eq(node.nid, id))
+        .where(and(eq(node.type, 'article'), eq(nodeFieldData.status, 1), eq(node.nid, id)))
+        .orderBy(desc(nodeFieldData.created))
         .limit(1).then(results => results[0]) || null;
 
     if (!rawResult) return null;

@@ -1,11 +1,14 @@
 import { blogService } from '../services/blogService.js';
 import { drupalDb } from '../db/db.js';
+import { and, desc, eq } from 'drizzle-orm';
+import { node, nodeFieldData, nodeFieldImage } from '../db/schema_drupal.js';
 
 const { mockQueryBuilder } = vi.hoisted(() => {
   const qb = {
     innerJoin: vi.fn().mockReturnThis(),
     leftJoin: vi.fn().mockReturnThis(),
     where: vi.fn().mockReturnThis(),
+    orderBy: vi.fn().mockReturnThis(),
     offset: vi.fn().mockReturnThis(),
     limit: vi.fn(),
   };
@@ -94,6 +97,39 @@ describe('Blog Service', () => {
 
       const result = await blogService.getBlogpostById(999);
       expect(result).toBeNull();
+    });
+  });
+
+  describe('query structure', () => {
+    it('should filter published articles and order by created desc', async () => {
+      mockQueryBuilder.limit.mockResolvedValue([]);
+
+      await blogService.getAllBlogposts(0, 10);
+
+      expect(mockQueryBuilder.where).toHaveBeenCalledWith(
+        and(eq(node.type, 'article'), eq(nodeFieldData.status, 1))
+      );
+      expect(mockQueryBuilder.orderBy).toHaveBeenCalledWith(
+        desc(nodeFieldData.created)
+      );
+    });
+
+    it('should only join the first image (delta = 0)', async () => {
+      mockQueryBuilder.limit.mockResolvedValue([]);
+
+      await blogService.getAllBlogposts(0, 10);
+
+      const imageJoinCall = mockQueryBuilder.leftJoin.mock.calls.find(
+        (call) => call[0] === nodeFieldImage
+      );
+      expect(imageJoinCall).toBeDefined();
+      expect(imageJoinCall[1]).toEqual(
+        and(
+          eq(node.nid, nodeFieldImage.entityId),
+          eq(node.vid, nodeFieldImage.revisionId),
+          eq(nodeFieldImage.delta, 0)
+        )
+      );
     });
   });
 });
