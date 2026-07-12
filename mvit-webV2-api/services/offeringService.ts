@@ -4,14 +4,14 @@ import { db } from '../db/db.js';
 import { eq } from 'drizzle-orm';
 
 type OfferingResponse = {
-    id: number,
-    title: string,
+    id: string,
+    name: string,
     description: string,
     description_page: string | null,
     icon: string,
-    features: unknown,
+    features: string[],
     category: string,
-    price: number
+    price: string
 };
 
 async function getCategoryById(categoryId: number): Promise<any> {
@@ -29,14 +29,14 @@ async function getAllOfferings(offset = 0, limit = 10): Promise<OfferingResponse
         offerings.map(async (off) => {
             const categories = await getCategoryById(off.category);
             return {
-                id: off.id,
-                title: off.title,
+                id: off.id.toString(),
+                name: off.title,
                 description: off.description,
                 description_page: off.description_page,
                 icon: off.icon,
-                features: off.features,
+                features: (off.features as string[]) || [],
                 category: categories.length > 0 ? categories[0].name : 'Unbekannt',
-                price: off.price,
+                price: off.price.toString(),
             } as OfferingResponse;
         })
     );
@@ -56,14 +56,14 @@ async function getOfferingById(id: number): Promise<OfferingResponse> {
     const categories = await getCategoryById(foundOffering.category);
 
     const responseObject: OfferingResponse = {
-        id: foundOffering.id,
-        title: foundOffering.title,
+        id: foundOffering.id.toString(),
+        name: foundOffering.title,
         description: foundOffering.description,
         description_page: foundOffering.description_page,
         icon: foundOffering.icon,
-        features: foundOffering.features,
+        features: (foundOffering.features as string[]) || [],
         category: categories.length > 0 ? categories[0].name : 'Unbekannt',
-        price: foundOffering.price,
+        price: foundOffering.price.toString(),
     }
 
     return responseObject;
