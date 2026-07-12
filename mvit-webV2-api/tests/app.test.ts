@@ -140,6 +140,17 @@ describe('API Integration Tests', () => {
       const response = await request(app).get('/api/blogposts/1');
       expect(response.status).toBe(200);
       expect(response.body).toEqual(mockBlogpost);
+      expect(vi.mocked(blogService).getBlogpostById).toHaveBeenCalledWith(1);
+    });
+
+    it('should parse multi-digit ids correctly', async () => {
+      const mockBlogpost = { nid: 123, title: 'Test Blog', content: 'Content' };
+      vi.mocked(blogService).getBlogpostById.mockResolvedValue(mockBlogpost);
+
+      const response = await request(app).get('/api/blogposts/123');
+      expect(response.status).toBe(200);
+      expect(response.body).toEqual(mockBlogpost);
+      expect(vi.mocked(blogService).getBlogpostById).toHaveBeenCalledWith(123);
     });
 
     it('should return 404 if blogpost not found', async () => {
