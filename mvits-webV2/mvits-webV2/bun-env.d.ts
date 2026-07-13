@@ -15,3 +15,10 @@ declare module "*.module.css" {
   const classes: { readonly [key: string]: string };
   export = classes;
 }
+
+declare namespace NodeJS {
+  interface ProcessEnv {
+    BUN_PUBLIC_API_BASE_URL?: string;
+    BUN_PUBLIC_DRUPAL_BASE_URL?: string;
+  }
+}
