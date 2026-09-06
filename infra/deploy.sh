@@ -7,7 +7,7 @@
 # ════════════════════════════════════════════════════════════════════════════
 set -euo pipefail
 
-REPO_DIR="${REPO_DIR:-$HOME/mvit-website}"
+REPO_DIR="${REPO_DIR:-$HOME/website/mvit-website}"
 BRANCH="${BRANCH:-main}"
 INFRA="$REPO_DIR/infra"
 COMPOSE="docker compose -f $INFRA/compose-prod.yaml"
