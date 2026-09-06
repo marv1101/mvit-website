@@ -159,37 +159,6 @@ services:
         max-size: "50m"
         max-file: "5"
 
-  # ─── Caddy (Reverse Proxy + automatisches HTTPS) ──────────────────────────
-  caddy:
-    <<: *restart-policy
-    image: caddy:2-alpine
-    container_name: caddy
-    ports:
-      - "80:80"
-      - "443:443"
-      - "443:443/udp"  # HTTP/3 (QUIC)
-    volumes:
-      - ./Caddyfile:/etc/caddy/Caddyfile:ro
-      - caddy_data:/data           # ACME-State, Certs (persistent!)
-      - caddy_config:/config       # Caddy-Konfigurations-Cache
-    networks:
-      - project_network
-    depends_on:
-      - api
-      - frontend
-      - drupal
-    healthcheck:
-      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:18080/"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 10s
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "100m"
-        max-file: "5"
-
 networks:
   project_network:
     driver: bridge
@@ -197,7 +166,7 @@ networks:
       com.docker.network.bridge.name: ma_bridge
     ipam:
       config:
-        - subnet: 172.20.0.0/16
+        - subnet: 172.21.0.0/16
 
 volumes:
   pg_volume:
