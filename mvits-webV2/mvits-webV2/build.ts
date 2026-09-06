@@ -129,9 +129,15 @@ const result = await Bun.build({
   minify: true,
   target: "browser",
   sourcemap: "linked",
+  // Nur BUN_PUBLIC_*-Vars ins Browser-Bundle inlinen (Bun-Konvention).
+  // Halte `process.env.BUN_PUBLIC_*` in ConfigLoader statisch, sonst greift das nicht.
+  env: "BUN_PUBLIC_*",
   define: {
     "process.env.NODE_ENV": JSON.stringify("production"),
   },
+  // Fallback-Shim für Vendor-Code mit nacktem `process.*`-Zugriff im dist-Build.
+  // Im Serve-Pfad (`bun src/index.ts`) übernimmt das der Inline-Shim in index.html.
+  banner: "globalThis.process ??= { env: { NODE_ENV: \"production\" } };",
   ...cliConfig,
 });
 

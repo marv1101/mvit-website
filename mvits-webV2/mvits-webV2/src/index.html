@@ -9,6 +9,12 @@
   </head>
   <body>
     <div id="root"></div>
+    <script>
+      // Shim für Vendor-Code, der `process.env.*` im Browser erwartet.
+      // Muss vor dem Modul-Bundle laufen (Module sind deferred).
+      window.process = window.process || { env: { NODE_ENV: "production" } };
+      window.process.env = window.process.env || { NODE_ENV: "production" };
+    </script>
     <script type="module" src="./frontend.tsx"></script>
   </body>
 </html>

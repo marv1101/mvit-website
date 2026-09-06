@@ -124,6 +124,10 @@ services:
     environment:
       - NODE_ENV=production
       - PORT=3001
+      # Öffentliche Browser-URLs (Bun inlinet BUN_PUBLIC_* zur Serve-Zeit).
+      # Defaults = Prod-Domain; für Staging via .env überschreiben.
+      - BUN_PUBLIC_API_BASE_URL=${BUN_PUBLIC_API_BASE_URL:-https://mphion.de/api}
+      - BUN_PUBLIC_DRUPAL_BASE_URL=${BUN_PUBLIC_DRUPAL_BASE_URL:-https://mphion.de/drupal}
     depends_on:
       - api
     networks:
