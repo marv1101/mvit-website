@@ -7,9 +7,8 @@ WORKDIR /app
 COPY package*.json ./
 COPY tsconfig.json ./
 
-# Install dependencies
-RUN npm install
-RUN npm audit fix ; exit 0
+# Install dependencies (reproducible, must match package-lock.json)
+RUN npm ci
 
 # Copy source code
 COPY . .

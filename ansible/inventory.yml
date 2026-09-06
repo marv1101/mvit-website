@@ -1,0 +1,15 @@
+all:
+  children:
+    prod:
+      hosts:
+        mphion:
+          ansible_host: mphion.de
+          ansible_user: root
+          ansible_python_interpreter: /usr/bin/python3
+          repo_dir: /root/mvit-website
+          deploy_user: mvit-deploy
+    # staging:
+    #   hosts:
+    #     stage:
+    #       ansible_host: stage.mphion.de
+    #       ansible_user: root

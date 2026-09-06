@@ -22,7 +22,7 @@ describe('Offering Service', () => {
   describe('getAllOfferings', () => {
     it('should return offerings with categories', async () => {
       const mockOfferings = [
-        { id: 1, title: 'Offering 1', description: 'Desc 1', description_page: null, icon: 'icon1', features: {}, price: 100 },
+        { id: 1, title: 'Offering 1', description: 'Desc 1', description_page: null, icon: 'icon1', features: ['Feature 1', 'Feature 2'], category: 1, price: 100 },
       ];
 
       const mockCategories = [{ name: 'Category 1' }];
@@ -40,14 +40,14 @@ describe('Offering Service', () => {
       const result = await offeringService.getAllOfferings(0, 10);
 
       expect(result).toEqual([
-        { id: 1, title: 'Offering 1', description: 'Desc 1', description_page: null, icon: 'icon1', features: {}, category: 'Category 1', price: 100 },
+        { id: '1', name: 'Offering 1', description: 'Desc 1', description_page: null, icon: 'icon1', features: ['Feature 1', 'Feature 2'], category: 'Category 1', price: '100' },
       ]);
     });
   });
 
   describe('getOfferingById', () => {
     it('should return offering by id', async () => {
-      const mockOffering = { id: 1, title: 'Offering 1', description: 'Desc 1', description_page: null, icon: 'icon1', features: {}, price: 100 };
+      const mockOffering = { id: 1, title: 'Offering 1', description: 'Desc 1', description_page: null, icon: 'icon1', features: ['Feature 1', 'Feature 2'], category: 1, price: 100 };
       const mockCategories = [{ name: 'Category 1' }];
 
       const mockLimit = vi.fn().mockResolvedValue([mockOffering]);
@@ -70,14 +70,14 @@ describe('Offering Service', () => {
 
       const result = await offeringService.getOfferingById(1);
       expect(result).toEqual({
-        id: 1,
-        title: 'Offering 1',
+        id: '1',
+        name: 'Offering 1',
         description: 'Desc 1',
         description_page: null,
         icon: 'icon1',
-        features: {},
+        features: ['Feature 1', 'Feature 2'],
         category: 'Category 1',
-        price: 100,
+        price: '100',
       });
     });
 

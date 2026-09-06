@@ -1,0 +1,99 @@
+# ───────────────────────────────────────────────────────────────────────────
+# CD: Deploy auf den VPS (mphion.de)
+# Trigger: nach erfolgreichem Build (workflow_run) oder manuell
+# Setzt folgende Repository Secrets voraus:
+#   SSH_HOST       – mphion.de (oder IP)
+#   SSH_USER       – Server-Benutzer (z. B. deploy)
+#   SSH_PRIVATE_KEY – privater SSH-Key (entspricht deploy-Public-Key im ~/.ssh/authorized_keys)
+#   SSH_PORT       – (optional, default 22)
+# ───────────────────────────────────────────────────────────────────────────
+name: Deploy
+
+on:
+  workflow_run:
+    workflows: ["Build & Publish"]
+    types: [completed]
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Image-Tag zum Deployen (default: latest)"
+        required: false
+        default: latest
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy-prod
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: Deploy auf VPS (mphion.de)
+    runs-on: ubuntu-latest
+    if: |
+      github.event.workflow_run.conclusion == 'success' ||
+      github.event_name == 'workflow_dispatch'
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: SSH Setup
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          ssh-keyscan -p ${{ secrets.SSH_PORT || 22 }} -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Tag bestimmen
+        id: tag
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ -n "${{ github.event.inputs.tag }}" ]; then
+            echo "tag=${{ github.event.inputs.tag }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "tag=latest" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Auf VPS deployen
+        env:
+          SSH_USER: ${{ secrets.SSH_USER }}
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_PORT: ${{ secrets.SSH_PORT || 22 }}
+          TAG: ${{ steps.tag.outputs.tag }}
+        run: |
+          ssh -p "$SSH_PORT" "$SSH_USER@$SSH_HOST" bash -lc '
+            set -euo pipefail
+            cd "$HOME/mvit-website"
+            git fetch --quiet origin main
+            git checkout main
+            git reset --hard origin/main
+
+            # Tag in .env setzen, damit compose die richtigen Images pulled
+            if grep -q "^TAG=" infra/.env; then
+              sed -i "s|^TAG=.*|TAG='"'"'$TAG'"'"'|" infra/.env
+            else
+              echo "TAG=$TAG" >> infra/.env
+            fi
+
+            # DB-Migrationen vor dem Neustart
+            docker compose -f infra/compose-prod.yaml run --rm --no-deps api \
+              npx drizzle-kit migrate --config drizzle.config.ts || \
+              echo "WARN: migration step failed or no migrations configured"
+
+            # Images pullen & Stack aktualisieren
+            docker compose -f infra/compose-prod.yaml pull
+            docker compose -f infra/compose-prod.yaml up -d --wait
+            docker image prune -f
+          '
+
+      - name: Health-Check nach Deploy
+        env:
+          HOST: ${{ secrets.SSH_HOST }}
+        run: |
+          sleep 5
+          code=$(curl -s -o /dev/null -w "%{http_code}" "https://$HOST/api/health")
+          if [ "$code" != "200" ]; then
+            echo "::warning API health returned $code – bitte Logs prüfen"
+            exit 1
+          fi
+          echo "✅ API health OK ($code)"
