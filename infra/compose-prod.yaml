@@ -86,6 +86,8 @@ services:
       context: ../mvit-webV2-api
       dockerfile: Dockerfile
     container_name: mvit-api
+    ports:
+      - 3000:3000
     environment:
       - NODE_ENV=production
       - PORT=3000
@@ -117,6 +119,8 @@ services:
       context: ../mvits-webV2/mvits-webV2
       dockerfile: Dockerfile
     container_name: mvit-frontend
+    ports:
+      - 3001:3001
     environment:
       - NODE_ENV=production
       - PORT=3001
@@ -144,6 +148,8 @@ services:
       context: ./drupal
       dockerfile: Dockerfile
     container_name: drupal
+    ports:
+      - 8081:80
     env_file:
       - ./.env
     volumes:
