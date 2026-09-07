@@ -52,8 +52,10 @@ mphion.de, www.mphion.de {
 	}
 
 	# Drupal-CMS (Pfad wird an Backend unverändert weitergereicht -
-	# der Drupal-Container symlinkt /var/www/html/drupal -> /var/www/html)
-	@drupal path /drupal/*
+	# der Drupal-Container symlinkt /var/www/html/drupal -> /var/www/html).
+	# Bare /drupal bewusst eingeschlossen: wird direkt von Drupal beantwortet,
+	# fällt NICHT auf den Frontend-Catch-all und wird NICHT umgeleitet.
+	@drupal path /drupal /drupal/*
 	handle @drupal {
 		reverse_proxy drupal:80
 	}

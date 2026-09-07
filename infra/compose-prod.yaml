@@ -183,9 +183,3 @@ volumes:
     driver: local
   drupal_data:
     driver: local
-  caddy_data:
-    driver: local
-    labels:
-      - "com.docker.compose.volume=caddy_data"
-  caddy_config:
-    driver: local
