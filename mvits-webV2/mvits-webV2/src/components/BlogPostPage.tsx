@@ -79,22 +79,22 @@ export function BlogPostPage() {
         </button>
 
         <header className="mb-8">
-          <div className="flex items-center gap-4 mb-4">
-            <span className="inline-block px-3 py-1 bg-secondary text-secondary-foreground rounded-full text-sm">
+          <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-4">{post.title}</h1>
+          <div className="flex items-center gap-3 text-sm text-muted-foreground">
+            <span className="inline-block px-2.5 py-0.5 bg-secondary text-secondary-foreground rounded text-xs font-medium uppercase">
               {post.langcode}
             </span>
-            <div className="flex items-center gap-4 text-sm text-muted-foreground">
-              <div className="flex items-center gap-1">
-                <Calendar className="w-4 h-4" />
-                <span>{new Date(post.created * 1000).toLocaleDateString('de-DE')}</span>
-              </div>
-              <div className="flex items-center gap-1">
-                <Clock className="w-4 h-4" />
-                <span>{new Date(post.changed * 1000).toLocaleDateString('de-DE')}</span>
-              </div>
-            </div>
+            <time dateTime={new Date(post.created * 1000).toISOString()}>
+              {new Date(post.created * 1000).toLocaleDateString('de-DE', {
+                weekday: 'short',
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit',
+              })}
+            </time>
           </div>
-          <h1 className="text-4xl md:text-5xl mb-6">{post.title}</h1>
         </header>
 
         {post.title_image_url && (
