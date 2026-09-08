@@ -1,4 +1,4 @@
-import {integer, pgTable, varchar, text, json} from "drizzle-orm/pg-core";
+import {integer, pgTable, varchar, text, json, timestamp} from "drizzle-orm/pg-core";
 
 export const offering = pgTable('offering', {
     id: integer().primaryKey().generatedAlwaysAsIdentity(),
@@ -23,4 +23,21 @@ export const contact = pgTable('contact', {
     email: varchar({ length: 255 }).notNull(),
     subject: varchar({ length: 255 }).notNull(),
     message: text().notNull(),
+});
+
+export const adminUser = pgTable('admin_user', {
+    id: integer().primaryKey().generatedAlwaysAsIdentity(),
+    username: varchar({ length: 100 }).notNull().unique(),
+    password_hash: varchar({ length: 255 }).notNull(),
+    created_at: timestamp().defaultNow().notNull(),
+});
+
+export const pageVisit = pgTable('page_visit', {
+    id: integer().primaryKey().generatedAlwaysAsIdentity(),
+    visited_at: timestamp().defaultNow().notNull(),
+    path: varchar({ length: 2048 }).notNull(),
+    ip_hash: varchar({ length: 64 }).notNull(),
+    user_agent: text(),
+    referrer: varchar({ length: 2048 }),
+    device_type: varchar({ length: 50 }),
 });

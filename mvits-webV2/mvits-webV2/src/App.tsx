@@ -6,6 +6,10 @@ import { Impressum } from './components/Impressum';
 import { Datenschutz } from './components/Datenschutz';
 import { ProductInfo } from './components/ProductInfo';
 import { BlogPostPage } from './components/BlogPostPage';
+import { AdminLogin } from './components/AdminLogin';
+import { AdminDashboard } from './components/AdminDashboard';
+import { ProtectedRoute } from './components/ProtectedRoute';
+import { usePageView } from './hooks/usePageView';
 import  Modal from 'react-modal';
 import {
   BrowserRouter as Router,
@@ -30,6 +34,8 @@ function Main() {
   const navigate = useNavigate();
   const location = useLocation();
 
+  usePageView();
+
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [location.pathname]);
@@ -52,6 +58,15 @@ function Main() {
         <Route
           path="/datenschutz"
           element={<Datenschutz onBack={() => navigate('/')} />}
+        />
+        <Route path="/admin/login" element={<AdminLogin />} />
+        <Route
+          path="/admin"
+          element={
+            <ProtectedRoute>
+              <AdminDashboard />
+            </ProtectedRoute>
+          }
         />
       </Routes>
 

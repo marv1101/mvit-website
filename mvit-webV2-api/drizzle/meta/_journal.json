@@ -8,6 +8,13 @@
       "when": 1776342945781,
       "tag": "0000_thankful_white_tiger",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1788890829982,
+      "tag": "0001_glamorous_terror",
+      "breakpoints": true
     }
   ]
 }

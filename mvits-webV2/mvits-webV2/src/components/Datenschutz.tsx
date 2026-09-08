@@ -209,7 +209,35 @@ export function Datenschutz({ onBack }: DatenschutzProps) {
           </section>
 
           <section>
-            <h3 className="mb-4">5. Ihre Rechte</h3>
+            <h3 className="mb-4">5. Webanalyse / Besucherstatistik</h3>
+
+            <h4 className="mb-3 mt-6">Server-seitiges Tracking</h4>
+            <p className="text-muted-foreground">
+              Diese Website nutzt ein server-seitiges Besucherzähl-System (Visitor-Counter), um 
+              anonymisierte Statistiken über die Nutzung der Website zu erstellen. Dabei werden 
+              folgende Daten erfasst:
+            </p>
+            <ul className="list-disc list-inside text-muted-foreground mt-4 space-y-2">
+              <li>Die aufgerufene Seite (URL/Pfad)</li>
+              <li>Der Zeitpunkt des Seitenaufrufs</li>
+              <li>Ein anonymisierter Hash Ihrer IP-Adresse (SHA-256 mit Pepper, nicht rückverfolgbar)</li>
+              <li>Der Browsertyp (User-Agent), zur Unterscheidung zwischen Desktop, Mobile und Tablet</li>
+              <li>Die Herkunftsseite (Referrer), falls vorhanden</li>
+            </ul>
+            <p className="text-muted-foreground mt-4">
+              Es werden <strong>keine Cookies</strong> gesetzt und <strong>keine personenbezogenen Daten</strong> 
+              gespeichert. Die IP-Adresse wird unmittelbar nach dem Erhalt als SHA-256-Hash mit einem 
+              geheimen Pepper gespeichert und ist nicht rückverfolgbar. Die erhobenen Daten dienen 
+              ausschließlich der Optimierung der Website und werden nach 90 Tagen automatisch gelöscht.
+            </p>
+            <p className="text-muted-foreground mt-4">
+              Rechtsgrundlage für die Datenverarbeitung ist Art. 6 Abs. 1 lit. f DSGVO (berechtigtes 
+              Interesse an der Analyse und Optimierung unseres Online-Angebots).
+            </p>
+          </section>
+
+          <section>
+            <h3 className="mb-4">6. Ihre Rechte</h3>
             
             <p className="text-muted-foreground">
               Sie haben das Recht:
