@@ -109,7 +109,7 @@ export function BlogPostPage() {
 
         {post.content && (
           <div
-            className="prose prose-lg max-w-none prose-headings:text-foreground prose-p:text-muted-foreground prose-a:text-primary prose-strong:text-foreground"
+            className="blog-content max-w-none text-muted-foreground"
             dangerouslySetInnerHTML={{ __html: post.content }}
           />
         )}
