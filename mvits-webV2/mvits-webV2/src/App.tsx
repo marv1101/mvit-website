@@ -5,6 +5,7 @@ import { HomePage } from './components/HomePage';
 import { Impressum } from './components/Impressum';
 import { Datenschutz } from './components/Datenschutz';
 import { ProductInfo } from './components/ProductInfo';
+import { BlogPostPage } from './components/BlogPostPage';
 import  Modal from 'react-modal';
 import {
   BrowserRouter as Router,
@@ -39,6 +40,7 @@ function Main() {
 
       <Routes>
         <Route path="/" element={<HomePage />} />
+        <Route path="/blog/:id" element={<BlogPostPage />} />
         <Route
           path="/product/:id"
           element={<ProductInfo onBack={() => navigate('/')} />}

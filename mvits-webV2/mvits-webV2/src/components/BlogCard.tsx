@@ -1,4 +1,5 @@
 import { Calendar, Clock, ArrowRight } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { ImageWithFallback } from './figma/ImageWithFallback';
 import type { Blogpost } from '@/types/Blogpost';
 
@@ -19,6 +20,8 @@ interface BlogCardProps {
 }
 
 export function BlogCard({ post }: BlogCardProps) {
+  const navigate = useNavigate();
+
   return (
     <article className="bg-card rounded-lg border border-border overflow-hidden hover:shadow-lg transition-all duration-300 group">
       <div className="aspect-video overflow-hidden">
@@ -55,7 +58,10 @@ export function BlogCard({ post }: BlogCardProps) {
           </div>
         </div>
         
-        <button className="flex items-center gap-2 text-primary hover:gap-3 transition-all duration-200">
+        <button
+          onClick={() => navigate(`/blog/${post.nid}`)}
+          className="flex items-center gap-2 text-primary hover:gap-3 transition-all duration-200"
+        >
           Weiterlesen
           <ArrowRight className="w-4 h-4" />
         </button>
