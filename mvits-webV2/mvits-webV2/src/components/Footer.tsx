@@ -36,7 +36,7 @@ export function Footer({ onNavigate }: FooterProps) {
                 <button 
                   onClick={() => {
                     onNavigate('home');
-                    setTimeout(() => document.getElementById('products')?.scrollIntoView({ behavior: 'smooth' }), 100);
+                    setTimeout(() => document.getElementById('offerings')?.scrollIntoView({ behavior: 'smooth' }), 100);
                   }}
                   className="text-muted-foreground hover:text-primary transition-colors"
                 >

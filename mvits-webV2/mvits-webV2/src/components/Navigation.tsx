@@ -89,7 +89,7 @@ export function Navigation() {
         {isMenuOpen && (
           <div className="md:hidden pb-4 space-y-3">
             <button 
-              onClick={() => scrollToSection('products')}
+              onClick={() => scrollToSection('offerings')}
               className="block w-full text-left py-2 hover:text-primary transition-colors"
             >
               Produkte

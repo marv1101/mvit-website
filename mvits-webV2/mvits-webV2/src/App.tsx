@@ -8,6 +8,7 @@ import { ProductInfo } from './components/ProductInfo';
 import { BlogPostPage } from './components/BlogPostPage';
 import { AdminLogin } from './components/AdminLogin';
 import { AdminDashboard } from './components/AdminDashboard';
+import { ChangePassword } from './components/ChangePassword';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { usePageView } from './hooks/usePageView';
 import  Modal from 'react-modal';
@@ -60,6 +61,14 @@ function Main() {
           element={<Datenschutz onBack={() => navigate('/')} />}
         />
         <Route path="/admin/login" element={<AdminLogin />} />
+        <Route
+          path="/admin/change-password"
+          element={
+            <ProtectedRoute>
+              <ChangePassword onComplete={() => window.location.href = "/admin"} />
+            </ProtectedRoute>
+          }
+        />
         <Route
           path="/admin"
           element={

@@ -1,23 +1,41 @@
+import { eq } from "drizzle-orm";
 import { registerRequest } from "../models/adminUser.js";
 import { authService } from "../services/authService.js";
+import { db } from "../db/db.js";
+import { adminUser } from "../db/schema.js";
+
+function printBanner(username: string, password: string): void {
+    console.log("");
+    console.log("╔══════════════════════════════════════════════════════════════╗");
+    console.log("║                  ADMIN USER CREATED                          ║");
+    console.log("╠══════════════════════════════════════════════════════════════╣");
+    console.log(`║  Username: ${username.padEnd(46)} ║`);
+    console.log(`║  Password: ${password.padEnd(46)} ║`);
+    console.log("╠══════════════════════════════════════════════════════════════╣");
+    console.log("║  IMPORTANT: Please change this password after first login!  ║");
+    console.log("║  Navigate to /admin/login and use the credentials above.    ║");
+    console.log("╚══════════════════════════════════════════════════════════════╝");
+    console.log("");
+}
 
 async function setup() {
-    const username = process.env.ADMIN_DEFAULT_USERNAME;
-    const password = process.env.ADMIN_DEFAULT_PASSWORD;
+    const username = process.env.ADMIN_DEFAULT_USERNAME || "admin";
 
-    if (!username || !password) {
-        console.log("Set ADMIN_DEFAULT_USERNAME and ADMIN_DEFAULT_PASSWORD to create initial admin user");
+    const existing = await db.select().from(adminUser).where(eq(adminUser.username, username));
+    if (existing.length > 0) {
+        console.log(`Admin user '${username}' already exists. Skipping setup.`);
         process.exit(0);
     }
 
-    console.log(`Creating initial admin user: ${username}`);
+    const password = authService.generateSecurePassword(20);
     const data: registerRequest = { username, password };
-    const result = await authService.createAdminUser(data);
+    const result = await authService.createAdminUser(data, true);
 
     if (result) {
-        console.log("Admin user created successfully");
+        printBanner(username, password);
     } else {
-        console.log("Failed to create admin user (may already exist)");
+        console.error("Failed to create admin user");
+        process.exit(1);
     }
 
     process.exit(0);

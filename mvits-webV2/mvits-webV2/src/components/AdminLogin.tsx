@@ -15,9 +15,13 @@ export function AdminLogin() {
         setError("");
         setLoading(true);
 
-        const success = await login(username, password);
-        if (success) {
-            navigate("/admin");
+        const result = await login(username, password);
+        if (result.success) {
+            if (result.requirePasswordChange) {
+                navigate("/admin/change-password");
+            } else {
+                navigate("/admin");
+            }
         } else {
             setError("Ungültiger Benutzername oder Passwort");
         }

@@ -1,6 +1,5 @@
 import { authService } from '../services/authService.js';
 import { db } from '../db/db.js';
-import { adminUser } from '../db/schema.js';
 
 vi.mock('../db/db.js', () => ({
     db: {
@@ -10,6 +9,8 @@ vi.mock('../db/db.js', () => ({
         insert: vi.fn().mockReturnThis(),
         values: vi.fn().mockReturnThis(),
         returning: vi.fn().mockReturnThis(),
+        update: vi.fn().mockReturnThis(),
+        set: vi.fn().mockReturnThis(),
     },
 }));
 
@@ -20,6 +21,15 @@ vi.mock('jsonwebtoken', () => ({
     },
     sign: vi.fn().mockReturnValue('mock-token'),
     verify: vi.fn().mockReturnValue({ userId: 1, username: 'testuser' }),
+}));
+
+vi.mock('bcrypt', () => ({
+    default: {
+        hash: vi.fn().mockResolvedValue('hashed-password'),
+        compare: vi.fn().mockResolvedValue(true),
+    },
+    hash: vi.fn().mockResolvedValue('hashed-password'),
+    compare: vi.fn().mockResolvedValue(true),
 }));
 
 describe('Auth Service', () => {
@@ -79,6 +89,57 @@ describe('Auth Service', () => {
             const result = await authService.login({ username: 'nonexistent', password: 'password123' });
 
             expect(result).toBeNull();
+        });
+
+        it('should return requirePasswordChange flag', async () => {
+            vi.mocked(db.select).mockReturnValue({
+                from: vi.fn().mockReturnValue({
+                    where: vi.fn().mockResolvedValue([{
+                        id: 1,
+                        username: 'testadmin',
+                        password_hash: 'hashed',
+                        force_password_change: true,
+                    }]),
+                }),
+            } as any);
+
+            vi.mocked(db.update).mockReturnValue({
+                set: vi.fn().mockReturnValue({
+                    where: vi.fn().mockResolvedValue(undefined),
+                }),
+            } as any);
+
+            const result = await authService.login({ username: 'testadmin', password: 'password123' });
+
+            expect(result).not.toBeNull();
+            expect(result?.requirePasswordChange).toBe(true);
+        });
+    });
+
+    describe('changePassword', () => {
+        it('should change password successfully', async () => {
+            vi.mocked(db.update).mockReturnValue({
+                set: vi.fn().mockReturnValue({
+                    where: vi.fn().mockResolvedValue(undefined),
+                }),
+            } as any);
+
+            const result = await authService.changePassword(1, 'newpassword123');
+
+            expect(result).toBe(true);
+        });
+    });
+
+    describe('generateSecurePassword', () => {
+        it('should generate a password of correct length', () => {
+            const password = authService.generateSecurePassword(20);
+            expect(password.length).toBe(20);
+        });
+
+        it('should generate unique passwords', () => {
+            const p1 = authService.generateSecurePassword(20);
+            const p2 = authService.generateSecurePassword(20);
+            expect(p1).not.toBe(p2);
         });
     });
 

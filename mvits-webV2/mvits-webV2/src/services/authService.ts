@@ -6,6 +6,7 @@ export type authResponse = {
         id: number;
         username: string;
     };
+    requirePasswordChange: boolean;
 };
 
 const TOKEN_KEY = "admin_token";
@@ -13,6 +14,22 @@ const USER_KEY = "admin_user";
 
 export function login(username: string, password: string): Promise<authResponse> {
     return post<authResponse>("/auth/login", { username, password });
+}
+
+export async function changePassword(currentPassword: string, newPassword: string): Promise<void> {
+    const token = getToken();
+    const res = await fetch("/api/auth/change-password", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`,
+        },
+        body: JSON.stringify({ currentPassword, newPassword }),
+    });
+    if (!res.ok) {
+        const data = await res.json().catch(() => ({ error: "Failed to change password" }));
+        throw new Error(data.error || "Failed to change password");
+    }
 }
 
 export function logout(): void {

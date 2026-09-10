@@ -8,7 +8,9 @@
     "dev": "tsx --env-file=.env --watch ./bin/www.ts",
     "test": "vitest",
     "test:coverage": "vitest --coverage",
-    "setup-admin": "tsx --env-file=.env ./bin/setup-admin.ts"
+    "setup-admin": "tsx --env-file=.env ./bin/setup-admin.ts",
+    "generate-password": "tsx ./bin/generate-password.ts",
+    "migrate": "drizzle-kit migrate"
   },
   "dependencies": {
     "@types/express": "^5.0.6",

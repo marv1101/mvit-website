@@ -1,4 +1,4 @@
-import {integer, pgTable, varchar, text, json, timestamp} from "drizzle-orm/pg-core";
+import {integer, pgTable, varchar, text, json, timestamp, boolean} from "drizzle-orm/pg-core";
 
 export const offering = pgTable('offering', {
     id: integer().primaryKey().generatedAlwaysAsIdentity(),
@@ -29,6 +29,7 @@ export const adminUser = pgTable('admin_user', {
     id: integer().primaryKey().generatedAlwaysAsIdentity(),
     username: varchar({ length: 100 }).notNull().unique(),
     password_hash: varchar({ length: 255 }).notNull(),
+    force_password_change: boolean().default(false).notNull(),
     created_at: timestamp().defaultNow().notNull(),
 });
 
