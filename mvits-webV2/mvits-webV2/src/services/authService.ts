@@ -1,7 +1,7 @@
-import { post } from "../lib/api";
+import { CONFIG } from "../utils/ConfigLoader";
+import { get, post } from "../lib/api";
 
 export type authResponse = {
-    token: string;
     user: {
         id: number;
         username: string;
@@ -9,20 +9,34 @@ export type authResponse = {
     requirePasswordChange: boolean;
 };
 
-const TOKEN_KEY = "admin_token";
-const USER_KEY = "admin_user";
+const BASE_URL = CONFIG.API_BASE_URL;
 
 export function login(username: string, password: string): Promise<authResponse> {
     return post<authResponse>("/auth/login", { username, password });
 }
 
+export async function getMe(): Promise<authResponse | null> {
+    try {
+        return await get<authResponse>("/auth/me");
+    } catch {
+        return null;
+    }
+}
+
+export async function logout(): Promise<void> {
+    try {
+        await post("/auth/logout");
+    } catch {
+        return;
+    }
+}
+
 export async function changePassword(currentPassword: string, newPassword: string): Promise<void> {
-    const token = getToken();
-    const res = await fetch("/api/auth/change-password", {
+    const res = await fetch(`${BASE_URL}/auth/change-password`, {
         method: "POST",
+        credentials: "include",
         headers: {
             "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`,
         },
         body: JSON.stringify({ currentPassword, newPassword }),
     });
@@ -30,44 +44,4 @@ export async function changePassword(currentPassword: string, newPassword: strin
         const data = await res.json().catch(() => ({ error: "Failed to change password" }));
         throw new Error(data.error || "Failed to change password");
     }
-}
-
-export function logout(): void {
-    sessionStorage.removeItem(TOKEN_KEY);
-    sessionStorage.removeItem(USER_KEY);
-}
-
-export function getToken(): string | null {
-    return sessionStorage.getItem(TOKEN_KEY);
-}
-
-export function getUser(): { id: number; username: string } | null {
-    const data = sessionStorage.getItem(USER_KEY);
-    if (!data) return null;
-    try {
-        return JSON.parse(data);
-    } catch {
-        return null;
-    }
-}
-
-export function setAuth(token: string, user: { id: number; username: string }): void {
-    sessionStorage.setItem(TOKEN_KEY, token);
-    sessionStorage.setItem(USER_KEY, JSON.stringify(user));
-}
-
-export function isAuthenticated(): boolean {
-    return getToken() !== null;
-}
-
-export async function authFetch(path: string, init?: RequestInit): Promise<Response> {
-    const token = getToken();
-    const headers = new Headers(init?.headers as HeadersInit);
-    if (token) {
-        headers.set("Authorization", `Bearer ${token}`);
-    }
-    if (!headers.has("Content-Type") && init?.body) {
-        headers.set("Content-Type", "application/json");
-    }
-    return fetch(path, { ...init, headers });
 }

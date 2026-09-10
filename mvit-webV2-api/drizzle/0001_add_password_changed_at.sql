@@ -1,0 +1,1 @@
+ALTER TABLE "admin_user" ADD COLUMN "password_changed_at" timestamp;

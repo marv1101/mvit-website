@@ -1,12 +1,36 @@
 import express, { Request, Response } from "express";
+import rateLimit from "express-rate-limit";
 import { authService } from "../services/authService.js";
-import { loginRequest, registerRequest } from "../models/adminUser.js";
-import { validateLoginRequest, validateRegisterRequest } from "../validators/authValidator.js";
-import { authMiddleware, AuthRequest } from "../middleware/authMiddleware.js";
+import { loginRequest } from "../models/adminUser.js";
+import { validateLoginRequest } from "../validators/authValidator.js";
+import {
+    authMiddleware,
+    passwordChangeAuthMiddleware,
+    COOKIE_NAME,
+    AuthRequest,
+} from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
-router.post("/login", async (req: Request, res: Response): Promise<void> => {
+const COOKIE_MAX_AGE_MS = 24 * 60 * 60 * 1000;
+
+const cookieOptions = {
+    httpOnly: true,
+    sameSite: "lax" as const,
+    secure: process.env.NODE_ENV === "production",
+    maxAge: COOKIE_MAX_AGE_MS,
+    path: "/",
+};
+
+const loginLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000,
+    limit: 5,
+    standardHeaders: "draft-7",
+    legacyHeaders: false,
+    message: { error: "Too many login attempts. Try again later." },
+});
+
+router.post("/login", loginLimiter, async (req: Request, res: Response): Promise<void> => {
     try {
         const data: loginRequest = req.body;
 
@@ -22,37 +46,30 @@ router.post("/login", async (req: Request, res: Response): Promise<void> => {
             return;
         }
 
-        res.json(result);
+        res.cookie(COOKIE_NAME, result.token, cookieOptions);
+        res.json({
+            user: result.user,
+            requirePasswordChange: result.requirePasswordChange,
+        });
     } catch (error) {
         console.log("Error during login:", error);
         res.status(500).json({ error: "Login failed" });
     }
 });
 
-router.post("/register", async (req: Request, res: Response): Promise<void> => {
+router.get("/me", passwordChangeAuthMiddleware, async (req: AuthRequest, res: Response): Promise<void> => {
     try {
-        const data: registerRequest = req.body;
-
-        const validated = validateRegisterRequest(data);
-        if (!validated) {
-            res.status(400).json({ error: "Invalid registration data" });
-            return;
-        }
-
-        const result = await authService.createAdminUser(validated);
-        if (!result) {
-            res.status(409).json({ error: "Username already exists" });
-            return;
-        }
-
-        res.status(201).json(result);
+        res.json({
+            user: { id: req.userId, username: req.username },
+            requirePasswordChange: req.requirePasswordChange ?? false,
+        });
     } catch (error) {
-        console.log("Error during registration:", error);
-        res.status(500).json({ error: "Registration failed" });
+        console.log("Error fetching session:", error);
+        res.status(500).json({ error: "Failed to fetch session" });
     }
 });
 
-router.post("/change-password", authMiddleware, async (req: AuthRequest, res: Response): Promise<void> => {
+router.post("/change-password", passwordChangeAuthMiddleware, async (req: AuthRequest, res: Response): Promise<void> => {
     try {
         const { currentPassword, newPassword } = req.body;
 
@@ -72,17 +89,28 @@ router.post("/change-password", authMiddleware, async (req: AuthRequest, res: Re
             return;
         }
 
-        const success = await authService.changePassword(req.userId!, newPassword);
-        if (!success) {
+        const token = await authService.changePassword(req.userId!, newPassword);
+        if (!token) {
             res.status(500).json({ error: "Failed to change password" });
             return;
         }
 
+        res.cookie(COOKIE_NAME, token, cookieOptions);
         res.json({ message: "Password changed successfully" });
     } catch (error) {
         console.log("Error changing password:", error);
         res.status(500).json({ error: "Failed to change password" });
     }
+});
+
+router.post("/logout", (_req: Request, res: Response): void => {
+    res.clearCookie(COOKIE_NAME, {
+        httpOnly: true,
+        sameSite: "lax" as const,
+        secure: process.env.NODE_ENV === "production",
+        path: "/",
+    });
+    res.json({ message: "Logged out" });
 });
 
 export default router;

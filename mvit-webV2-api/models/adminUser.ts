@@ -14,11 +14,3 @@ export type registerRequest = {
     username: string;
     password: string;
 };
-
-export type authResponse = {
-    token: string;
-    user: {
-        id: number;
-        username: string;
-    };
-};

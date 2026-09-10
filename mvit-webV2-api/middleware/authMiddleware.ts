@@ -4,25 +4,52 @@ import { authService } from "../services/authService.js";
 export interface AuthRequest extends Request {
     userId?: number;
     username?: string;
+    requirePasswordChange?: boolean;
 }
 
-export function authMiddleware(req: AuthRequest, res: Response, next: NextFunction): void {
+const COOKIE_NAME = "admin_token";
+
+function extractToken(req: Request): string | null {
     const authHeader = req.headers.authorization;
-
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
-        res.status(401).json({ error: "Authentication required" });
-        return;
+    if (authHeader?.startsWith("Bearer ")) {
+        return authHeader.slice("Bearer ".length);
     }
-
-    const token = authHeader.split(" ")[1];
-    const decoded = authService.verifyToken(token);
-
-    if (!decoded) {
-        res.status(401).json({ error: "Invalid or expired token" });
-        return;
-    }
-
-    req.userId = decoded.userId;
-    req.username = decoded.username;
-    next();
+    return req.cookies?.[COOKIE_NAME] ?? null;
 }
+
+type AuthMiddlewareOptions = {
+    allowPasswordChangePending?: boolean;
+};
+
+function createAuthMiddleware(options: AuthMiddlewareOptions = {}) {
+    return async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
+        const token = extractToken(req);
+
+        if (!token) {
+            res.status(401).json({ error: "Authentication required" });
+            return;
+        }
+
+        const session = await authService.verifyToken(token);
+
+        if (!session) {
+            res.status(401).json({ error: "Invalid or expired token" });
+            return;
+        }
+
+        if (session.forcePasswordChange && !options.allowPasswordChangePending) {
+            res.status(403).json({ error: "Password change required before accessing this resource" });
+            return;
+        }
+
+        req.userId = session.id;
+        req.username = session.username;
+        req.requirePasswordChange = session.forcePasswordChange;
+        next();
+    };
+}
+
+export const authMiddleware = createAuthMiddleware();
+export const passwordChangeAuthMiddleware = createAuthMiddleware({ allowPasswordChangePending: true });
+
+export { COOKIE_NAME };

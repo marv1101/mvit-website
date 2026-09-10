@@ -31,14 +31,7 @@ function parseDeviceType(userAgent: string | null): string | null {
     return "desktop";
 }
 
-function getClientIp(req: { ip?: string; headers: Record<string, unknown> }): string {
-    const forwarded = req.headers["x-forwarded-for"];
-    if (typeof forwarded === "string") {
-        return forwarded.split(",")[0].trim();
-    }
-    if (Array.isArray(forwarded)) {
-        return forwarded[0];
-    }
+function getClientIp(req: { ip?: string }): string {
     return req.ip || "unknown";
 }
 

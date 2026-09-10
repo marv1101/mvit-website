@@ -1,5 +1,4 @@
 import { CONFIG } from "../utils/ConfigLoader";
-import { getToken } from "../services/authService";
 
 export type visitStats = {
     total: number;
@@ -29,12 +28,7 @@ export type deviceCount = {
 };
 
 async function fetchWithAuth(path: string): Promise<Response> {
-    const token = getToken();
-    const headers: Record<string, string> = { "Content-Type": "application/json" };
-    if (token) {
-        headers["Authorization"] = `Bearer ${token}`;
-    }
-    return fetch(`${CONFIG.API_BASE_URL}${path}`, { headers });
+    return fetch(`${CONFIG.API_BASE_URL}${path}`, { credentials: "include", headers: { "Content-Type": "application/json" } });
 }
 
 export async function getVisitStats(): Promise<visitStats> {

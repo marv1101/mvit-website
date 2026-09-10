@@ -1,5 +1,6 @@
 import { authService } from '../services/authService.js';
 import { db } from '../db/db.js';
+import jwt from 'jsonwebtoken';
 
 vi.mock('../db/db.js', () => ({
     db: {
@@ -61,8 +62,7 @@ describe('Auth Service', () => {
             const result = await authService.createAdminUser({ username: 'testadmin', password: 'password123' });
 
             expect(result).not.toBeNull();
-            expect(result?.user.username).toBe('testadmin');
-            expect(result?.token).toBe('mock-token');
+            expect(result?.username).toBe('testadmin');
         });
 
         it('should return null if username already exists', async () => {
@@ -99,6 +99,7 @@ describe('Auth Service', () => {
                         username: 'testadmin',
                         password_hash: 'hashed',
                         force_password_change: true,
+                        password_changed_at: null,
                     }]),
                 }),
             } as any);
@@ -117,16 +118,22 @@ describe('Auth Service', () => {
     });
 
     describe('changePassword', () => {
-        it('should change password successfully', async () => {
+        it('should change password and return a fresh token', async () => {
             vi.mocked(db.update).mockReturnValue({
                 set: vi.fn().mockReturnValue({
                     where: vi.fn().mockResolvedValue(undefined),
                 }),
             } as any);
 
+            vi.mocked(db.select).mockReturnValue({
+                from: vi.fn().mockReturnValue({
+                    where: vi.fn().mockResolvedValue([{ id: 1, username: 'testadmin' }]),
+                }),
+            } as any);
+
             const result = await authService.changePassword(1, 'newpassword123');
 
-            expect(result).toBe(true);
+            expect(result).toBe('mock-token');
         });
     });
 
@@ -144,11 +151,42 @@ describe('Auth Service', () => {
     });
 
     describe('verifyToken', () => {
-        it('should verify valid token', () => {
-            const result = authService.verifyToken('valid-token');
+        it('should verify valid token and return session info', async () => {
+            vi.mocked(db.select).mockReturnValue({
+                from: vi.fn().mockReturnValue({
+                    where: vi.fn().mockResolvedValue([{
+                        id: 1,
+                        username: 'testuser',
+                        force_password_change: false,
+                        password_changed_at: null,
+                    }]),
+                }),
+            } as any);
+
+            const result = await authService.verifyToken('valid-token');
 
             expect(result).not.toBeNull();
             expect(result?.username).toBe('testuser');
+            expect(result?.forcePasswordChange).toBe(false);
+        });
+
+        it('should reject tokens issued before the last password change', async () => {
+            vi.mocked(jwt.verify).mockReturnValue({ userId: 1, username: 'testuser', iat: 1234567 } as any);
+            const changedAt = new Date((1234567 * 1000) + 10_000);
+            vi.mocked(db.select).mockReturnValue({
+                from: vi.fn().mockReturnValue({
+                    where: vi.fn().mockResolvedValue([{
+                        id: 1,
+                        username: 'testuser',
+                        force_password_change: false,
+                        password_changed_at: changedAt,
+                    }]),
+                }),
+            } as any);
+
+            const result = await authService.verifyToken('stale-token');
+
+            expect(result).toBeNull();
         });
     });
 });

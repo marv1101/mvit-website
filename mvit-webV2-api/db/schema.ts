@@ -30,6 +30,7 @@ export const adminUser = pgTable('admin_user', {
     username: varchar({ length: 100 }).notNull().unique(),
     password_hash: varchar({ length: 255 }).notNull(),
     force_password_change: boolean().default(false).notNull(),
+    password_changed_at: timestamp(),
     created_at: timestamp().defaultNow().notNull(),
 });
 
