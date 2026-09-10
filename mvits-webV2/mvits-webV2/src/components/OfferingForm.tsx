@@ -21,6 +21,7 @@ import {
     type OfferingFormData,
     type OfferingCategory,
 } from "../services/offeringAdminService";
+import { getAvailableIcons } from "../utils/IconMapper";
 
 export function OfferingForm() {
     const navigate = useNavigate();
@@ -61,6 +62,12 @@ export function OfferingForm() {
                     }
                 } else if (cats.length > 0 && cats[0]) {
                     setCategoryId(cats[0].id);
+                }
+
+                const availableIcons = getAvailableIcons();
+                const firstIcon = availableIcons[0];
+                if (firstIcon && !icon) {
+                    setIcon(firstIcon);
                 }
             } catch (err) {
                 setError("Fehler beim Laden der Daten");
@@ -125,15 +132,15 @@ export function OfferingForm() {
 
     if (loading) {
         return (
-            <div className="min-h-screen flex items-center justify-center">
+            <div className="min-h-screen flex items-center justify-center pt-24">
                 <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
             </div>
         );
     }
 
     return (
-        <div className="min-h-screen bg-background p-6">
-            <div className="max-w-4xl mx-auto">
+        <div className="min-h-screen bg-background px-4 py-6 pt-24">
+            <div className="max-w-2xl mx-auto">
                 <div className="flex items-center gap-4 mb-6">
                     <Button variant="ghost" size="icon" onClick={() => navigate("/admin/offerings")}>
                         <ArrowLeft className="h-5 w-5" />
@@ -167,17 +174,22 @@ export function OfferingForm() {
                                     />
                                 </div>
                                 <div>
-                                    <Label htmlFor="icon">Icon-Name *</Label>
-                                    <Input
-                                        id="icon"
+                                    <Label htmlFor="icon">Icon *</Label>
+                                    <Select
                                         value={icon}
-                                        onChange={(e) => setIcon(e.target.value)}
-                                        placeholder="z.B. CloudUpload"
-                                        required
-                                    />
-                                    <p className="text-xs text-muted-foreground mt-1">
-                                        Lucide Icon Name (z.B. CloudUpload, Code, Database)
-                                    </p>
+                                        onValueChange={setIcon}
+                                    >
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="Icon wählen" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            {getAvailableIcons().map((iconName) => (
+                                                <SelectItem key={iconName} value={iconName}>
+                                                    {iconName}
+                                                </SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
                                 </div>
                             </div>
 

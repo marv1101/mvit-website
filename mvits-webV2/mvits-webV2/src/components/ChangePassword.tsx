@@ -38,7 +38,7 @@ export function ChangePassword({ onComplete }: ChangePasswordProps) {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-background">
+        <div className="min-h-screen flex items-center justify-center bg-background pt-20">
             <div className="w-full max-w-md p-8 rounded-lg border bg-card">
                 <h1 className="text-2xl font-bold text-center mb-2">Passwort ändern</h1>
                 <p className="text-muted-foreground text-center mb-6 text-sm">

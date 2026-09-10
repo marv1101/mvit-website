@@ -1,9 +1,12 @@
 import { Code2, Menu, X, Moon, Sun } from 'lucide-react';
 import { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 export function Navigation() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     // Check for saved theme preference or default to light mode
@@ -34,12 +37,20 @@ export function Navigation() {
       setIsMenuOpen(false);
     }
   };
+
+  const handleLogoClick = () => {
+    if (location.pathname === '/') {
+      scrollToSection('hero');
+    } else {
+      navigate('/');
+    }
+  };
   
   return (
     <nav className="fixed top-0 left-0 right-0 bg-card/80 backdrop-blur-lg border-b border-border z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
-          <div className="flex items-center gap-2 cursor-pointer" onClick={() => scrollToSection('hero')}>
+          <div className="flex items-center gap-2 cursor-pointer" onClick={handleLogoClick}>
             <Code2 className="w-8 h-8 text-primary" />
             <span className="text-lg">MVIT Solutions</span>
           </div>

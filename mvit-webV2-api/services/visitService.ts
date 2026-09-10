@@ -79,11 +79,14 @@ async function getStats(): Promise<visitStats> {
 }
 
 async function getDailyVisits(days: number): Promise<dailyVisits[]> {
+    const cutoffDate = new Date();
+    cutoffDate.setDate(cutoffDate.getDate() - days);
+
     const result = await db.select({
         date: sql<string>`to_char(${pageVisit.visited_at}, 'YYYY-MM-DD')`,
         count: sql<number>`count(*)`,
     }).from(pageVisit)
-        .where(sql`${pageVisit.visited_at} >= now() - interval '${days} days'`)
+        .where(sql`${pageVisit.visited_at} >= ${cutoffDate}`)
         .groupBy(sql`to_char(${pageVisit.visited_at}, 'YYYY-MM-DD')`)
         .orderBy(sql`to_char(${pageVisit.visited_at}, 'YYYY-MM-DD')`);
 
@@ -127,8 +130,11 @@ async function getDeviceBreakdown(): Promise<deviceCount[]> {
 }
 
 async function cleanupOldVisits(retentionDays: number): Promise<number> {
+    const cutoffDate = new Date();
+    cutoffDate.setDate(cutoffDate.getDate() - retentionDays);
+
     const result = await db.execute(
-        sql`DELETE FROM ${pageVisit} WHERE ${pageVisit.visited_at} < now() - interval '${retentionDays} days'`
+        sql`DELETE FROM ${pageVisit} WHERE ${pageVisit.visited_at} < ${cutoffDate}`
     );
     return result.rowCount || 0;
 }

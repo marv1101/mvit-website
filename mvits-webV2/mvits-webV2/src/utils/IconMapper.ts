@@ -21,3 +21,10 @@ export function getIconByName(name: string) {
     }
     return iconMap.get(name);
 }
+
+export function getAvailableIcons(): string[] {
+    if (iconMap.size === 0) {
+        initIconMap();
+    }
+    return Array.from(iconMap.keys());
+}

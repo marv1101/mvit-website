@@ -29,7 +29,7 @@ export function AdminLogin() {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-background">
+        <div className="min-h-screen flex items-center justify-center bg-background pt-20">
             <div className="w-full max-w-md p-8 rounded-lg border bg-card">
                 <h1 className="text-2xl font-bold text-center mb-6">Admin Login</h1>
                 <form onSubmit={handleSubmit} className="space-y-4">
