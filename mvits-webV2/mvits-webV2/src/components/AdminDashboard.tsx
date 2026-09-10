@@ -12,7 +12,10 @@ import {
     Pie,
     Cell,
 } from "recharts";
+import { Package, Tags } from "lucide-react";
 import { useAuth } from "../hooks/useAuth";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/card";
+import { Button } from "./ui/button";
 import {
     getVisitStats,
     getDailyVisits,
@@ -116,6 +119,27 @@ export function AdminDashboard() {
                         <StatCard label="Gesamt" value={stats.total} />
                     </div>
                 )}
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+                    <Card className="hover:shadow-md transition-shadow cursor-pointer" onClick={() => navigate("/admin/offerings")}>
+                        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                            <CardTitle className="text-sm font-medium">Leistungen verwalten</CardTitle>
+                            <Package className="h-4 w-4 text-muted-foreground" />
+                        </CardHeader>
+                        <CardContent>
+                            <CardDescription>Erstelle, bearbeite und lösche Leistungen</CardDescription>
+                        </CardContent>
+                    </Card>
+                    <Card className="hover:shadow-md transition-shadow cursor-pointer" onClick={() => navigate("/admin/categories")}>
+                        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                            <CardTitle className="text-sm font-medium">Kategorien verwalten</CardTitle>
+                            <Tags className="h-4 w-4 text-muted-foreground" />
+                        </CardHeader>
+                        <CardContent>
+                            <CardDescription>Erstelle und verwalte Kategorien für Leistungen</CardDescription>
+                        </CardContent>
+                    </Card>
+                </div>
 
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
                     <div className="p-6 rounded-lg border bg-card">

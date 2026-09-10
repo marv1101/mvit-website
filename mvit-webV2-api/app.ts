@@ -15,6 +15,7 @@ const __dirname = dirname(__filename);
 import indexRouter from './routes/index.js';
 import usersRouter from './routes/users.js';
 import offeringsRouter from './routes/offerings.js';
+import offeringCategoriesRouter from './routes/offeringCategories.js';
 import contactsRouter from './routes/contacts.js';
 import blogpostsRouter from './routes/blogposts.js';
 import authRouter from './routes/auth.js';
@@ -47,6 +48,7 @@ app.use('/api/health', (_req: Request, res: Response) => {
 });
 app.use('/api/users', usersRouter);
 app.use('/api/offerings', offeringsRouter);
+app.use('/api/offering-categories', offeringCategoriesRouter);
 app.use('/api/contacts', contactsRouter);
 app.use('/api/blogposts', blogpostsRouter);
 app.use('/api/auth', authRouter);

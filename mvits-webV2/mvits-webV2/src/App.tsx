@@ -10,6 +10,9 @@ import { AdminLogin } from './components/AdminLogin';
 import { AdminDashboard } from './components/AdminDashboard';
 import { ChangePassword } from './components/ChangePassword';
 import { ProtectedRoute } from './components/ProtectedRoute';
+import { OfferingManager } from './components/OfferingManager';
+import { OfferingForm } from './components/OfferingForm';
+import { CategoryManager } from './components/CategoryManager';
 import { usePageView } from './hooks/usePageView';
 import  Modal from 'react-modal';
 import {
@@ -74,6 +77,38 @@ function Main() {
           element={
             <ProtectedRoute>
               <AdminDashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/offerings"
+          element={
+            <ProtectedRoute>
+              <OfferingManager />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/offerings/new"
+          element={
+            <ProtectedRoute>
+              <OfferingForm />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/offerings/:id/edit"
+          element={
+            <ProtectedRoute>
+              <OfferingForm />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/categories"
+          element={
+            <ProtectedRoute>
+              <CategoryManager />
             </ProtectedRoute>
           }
         />
