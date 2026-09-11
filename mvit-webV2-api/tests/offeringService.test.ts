@@ -40,7 +40,7 @@ describe('Offering Service', () => {
       const result = await offeringService.getAllOfferings(0, 10);
 
       expect(result).toEqual([
-        { id: '1', name: 'Offering 1', description: 'Desc 1', description_page: null, icon: 'icon1', features: ['Feature 1', 'Feature 2'], category: 'Category 1', price: '100' },
+        { id: '1', name: 'Offering 1', description: 'Desc 1', description_page: null, icon: 'icon1', features: ['Feature 1', 'Feature 2'], category: 'Category 1', category_id: 1, price: '100' },
       ]);
     });
   });
@@ -77,6 +77,7 @@ describe('Offering Service', () => {
         icon: 'icon1',
         features: ['Feature 1', 'Feature 2'],
         category: 'Category 1',
+        category_id: 1,
         price: '100',
       });
     });
