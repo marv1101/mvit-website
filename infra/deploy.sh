@@ -32,17 +32,9 @@ git -C "$REPO_DIR" checkout "$BRANCH"
 git -C "$REPO_DIR" reset --hard "origin/$BRANCH"
 info "Repo auf Stand origin/$BRANCH."
 
-# ── 2. DB-Migrationen anwenden ───────────────────────────────────────────────
-# Wird NUR ausgeführt, wenn der migrations-Service in der CI/CD nicht bereits vorher
-# dran war. Fehlertolerant: falls keine ausstehenden Migrations vorhanden sind.
-step "Datenbank-Migrationen"
-if $COMPOSE run --rm --no-deps api npx drizzle-kit migrate; then
-  info "Migrationen angewendet."
-else
-  warn "Migrationen fehlgeschlagen – bitte Output oben prüfen."
-fi
-
-# ── 3. Images aktualisieren ──────────────────────────────────────────────────
+# ── 2. Images aktualisieren ──────────────────────────────────────────────────
+# Muss VOR den Migrationen laufen, damit der Migrations-Run das neue Image
+# (mit aktuellem Entrypoint und installiertem drizzle-kit) verwendet.
 step "Images aktualisieren"
 # Strategie: bei CI/CD-Push mit TAG in .env -> pull; sonst lokal bauen.
 if grep -qE '^TAG=[^l].*' "$INFRA/.env" 2>/dev/null; then
@@ -51,6 +43,16 @@ if grep -qE '^TAG=[^l].*' "$INFRA/.env" 2>/dev/null; then
 else
   $COMPOSE build --pull
   info "Images lokal neu gebaut."
+fi
+
+# ── 3. DB-Migrationen anwenden ───────────────────────────────────────────────
+# Wird NUR ausgeführt, wenn der migrations-Service in der CI/CD nicht bereits vorher
+# dran war. Fehlertolerant: falls keine ausstehenden Migrations vorhanden sind.
+step "Datenbank-Migrationen"
+if $COMPOSE run --rm --no-deps api npx drizzle-kit migrate; then
+  info "Migrationen angewendet."
+else
+  warn "Migrationen fehlgeschlagen – bitte Output oben prüfen."
 fi
 
 # ── 4. Stack neu starten (kein Down – kurzfristiger Rolling-Neustart) ─────────
