@@ -12,6 +12,9 @@ RUN bun install --frozen-lockfile
 # Copy source code
 COPY . .
 
+# Compile Tailwind CSS (output.css for static <link> inclusion)
+RUN bunx @tailwindcss/cli -i ./src/styles/globals.css -o ./src/output.css
+
 # Expose port
 EXPOSE 3001
 

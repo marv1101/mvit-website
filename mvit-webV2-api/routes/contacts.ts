@@ -1,12 +1,21 @@
 import express, { Request, Response } from 'express';
+import rateLimit from 'express-rate-limit';
 import { contactService } from '../services/contactService.js';
 import { contactObject } from "../models/contact.js";
 import { validateContactRequest } from '../validators/contactValidator.js';
 
 const router = express.Router();
 
+const contactLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000,
+    limit: 5,
+    standardHeaders: "draft-7",
+    legacyHeaders: false,
+    message: { error: "Too many contact submissions. Try again later." },
+});
+
 /* POST contact form submission. */
-router.post('/', async (req: Request, res: Response): Promise<void> => {
+router.post('/', contactLimiter, async (req: Request, res: Response): Promise<void> => {
     try {
         
         const contactData: contactObject = JSON.parse(JSON.stringify(req.body)) as contactObject;

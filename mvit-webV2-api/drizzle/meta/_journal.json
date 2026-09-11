@@ -5,8 +5,15 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1776342945781,
-      "tag": "0000_thankful_white_tiger",
+      "when": 1789058701712,
+      "tag": "0000_initial_schema",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1789059292824,
+      "tag": "0001_add_password_changed_at",
       "breakpoints": true
     }
   ]

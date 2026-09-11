@@ -11,6 +11,7 @@ type OfferingResponse = {
     icon: string,
     features: string[],
     category: string,
+    category_id: number,
     price: string
 };
 
@@ -24,7 +25,6 @@ async function getCategoryById(categoryId: number): Promise<any> {
 async function getAllOfferings(offset = 0, limit = 10): Promise<OfferingResponse[]> {
     const offerings: offeringObject[] = await db.select().from(offering).offset(offset).limit(limit);
 
-    // fetch categories for all offerings in parallel
     const offeringResponses: OfferingResponse[] = await Promise.all(
         offerings.map(async (off) => {
             const categories = await getCategoryById(off.category);
@@ -36,6 +36,7 @@ async function getAllOfferings(offset = 0, limit = 10): Promise<OfferingResponse
                 icon: off.icon,
                 features: (off.features as string[]) || [],
                 category: categories.length > 0 ? categories[0].name : 'Unbekannt',
+                category_id: off.category,
                 price: off.price.toString(),
             } as OfferingResponse;
         })
@@ -46,7 +47,6 @@ async function getAllOfferings(offset = 0, limit = 10): Promise<OfferingResponse
 
 async function getOfferingById(id: number): Promise<OfferingResponse> {
 
-    //get single offering by ID
     const foundOffering: offeringObject = await db.select().from(offering).where(eq(offering.id, id)).limit(1).then(results => results[0]);
 
     if (!foundOffering) {
@@ -63,6 +63,7 @@ async function getOfferingById(id: number): Promise<OfferingResponse> {
         icon: foundOffering.icon,
         features: (foundOffering.features as string[]) || [],
         category: categories.length > 0 ? categories[0].name : 'Unbekannt',
+        category_id: foundOffering.category,
         price: foundOffering.price.toString(),
     }
 
@@ -70,6 +71,67 @@ async function getOfferingById(id: number): Promise<OfferingResponse> {
 
 }
 
-const offeringService = { getAllOfferings, getOfferingById };
+async function createOffering(data: offeringObject): Promise<OfferingResponse> {
+    const [inserted] = await db.insert(offering).values({
+        title: data.title,
+        description: data.description,
+        description_page: data.description_page,
+        icon: data.icon,
+        category: data.category,
+        features: data.features,
+        price: data.price,
+    }).returning();
+
+    const categories = await getCategoryById(inserted.category);
+
+    return {
+        id: inserted.id.toString(),
+        name: inserted.title,
+        description: inserted.description,
+        description_page: inserted.description_page,
+        icon: inserted.icon,
+        features: (inserted.features as string[]) || [],
+        category: categories.length > 0 ? categories[0].name : 'Unbekannt',
+        category_id: inserted.category,
+        price: inserted.price.toString(),
+    };
+}
+
+async function updateOffering(id: number, data: offeringObject): Promise<OfferingResponse> {
+    const [updated] = await db.update(offering).set({
+        title: data.title,
+        description: data.description,
+        description_page: data.description_page,
+        icon: data.icon,
+        category: data.category,
+        features: data.features,
+        price: data.price,
+    }).where(eq(offering.id, id)).returning();
+
+    if (!updated) {
+        throw new Error('Offering not found');
+    }
+
+    const categories = await getCategoryById(updated.category);
+
+    return {
+        id: updated.id.toString(),
+        name: updated.title,
+        description: updated.description,
+        description_page: updated.description_page,
+        icon: updated.icon,
+        features: (updated.features as string[]) || [],
+        category: categories.length > 0 ? categories[0].name : 'Unbekannt',
+        category_id: updated.category,
+        price: updated.price.toString(),
+    };
+}
+
+async function deleteOffering(id: number): Promise<boolean> {
+    const result = await db.delete(offering).where(eq(offering.id, id)).returning();
+    return result.length > 0;
+}
+
+const offeringService = { getAllOfferings, getOfferingById, createOffering, updateOffering, deleteOffering };
 
 export { offeringService };

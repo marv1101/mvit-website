@@ -28,11 +28,16 @@ COPY --from=builder /app/routes ./routes
 COPY --from=builder /app/services ./services
 COPY --from=builder /app/models ./models
 COPY --from=builder /app/validators ./validators
+COPY --from=builder /app/middleware ./middleware
 COPY --from=builder /app/db ./db
 COPY --from=builder /app/drizzle ./drizzle
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/app.ts ./app.ts
 COPY --from=builder /app/tsconfig.json ./tsconfig.json
+
+# Copy entrypoint script
+COPY --from=builder /app/bin/docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 
 # Run as non-root user
 USER node
@@ -44,5 +49,5 @@ EXPOSE 3000
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
   CMD node -e "const req = require('http').get('http://localhost:3000/api/health', (r) => { process.exit(r.statusCode < 400 ? 0 : 1); }); req.on('error', () => process.exit(1));"
 
-# Start application
-CMD ["npm", "start"]
+# Start application via entrypoint (runs migrations + admin setup)
+ENTRYPOINT ["docker-entrypoint.sh"]

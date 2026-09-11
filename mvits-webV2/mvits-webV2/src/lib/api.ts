@@ -7,7 +7,7 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
   if (!headers.has("Content-Type")) headers.set("Content-Type", "application/json");
 
   const res = await fetch(`${BASE_URL}${path}`, {
-    credentials: "omit",
+    credentials: "include",
     ...init,
     headers,
   });
