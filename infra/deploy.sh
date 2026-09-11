@@ -36,10 +36,10 @@ info "Repo auf Stand origin/$BRANCH."
 # Wird NUR ausgeführt, wenn der migrations-Service in der CI/CD nicht bereits vorher
 # dran war. Fehlertolerant: falls keine ausstehenden Migrations vorhanden sind.
 step "Datenbank-Migrationen"
-if $COMPOSE run --rm --no-deps -v "$REPO_DIR/mvit-webV2-api/drizzle.config.ts:/app/drizzle.config.ts:ro" api npx drizzle-kit migrate --config drizzle.config.ts 2>/dev/null; then
+if $COMPOSE run --rm --no-deps api npx drizzle-kit migrate; then
   info "Migrationen angewendet."
 else
-  warn "Migrationen übersprungen oder nicht konfiguriert – bitte manuell prüfen."
+  warn "Migrationen fehlgeschlagen – bitte Output oben prüfen."
 fi
 
 # ── 3. Images aktualisieren ──────────────────────────────────────────────────
