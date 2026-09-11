@@ -87,10 +87,11 @@ services:
       dockerfile: Dockerfile
     container_name: mvit-api
     ports:
-      - 3000:3000
+      - 127.0.0.1:3000:3000
     environment:
       - NODE_ENV=production
       - PORT=3000
+      - TRUST_PROXY_HOPS=1
     env_file:
       - ./.env
     depends_on:
@@ -120,7 +121,7 @@ services:
       dockerfile: Dockerfile
     container_name: mvit-frontend
     ports:
-      - 3001:3001
+      - 127.0.0.1:3001:3001
     environment:
       - NODE_ENV=production
       - PORT=3001
@@ -153,7 +154,7 @@ services:
       dockerfile: Dockerfile
     container_name: drupal
     ports:
-      - 8081:80
+      - 127.0.0.1:8081:80
     env_file:
       - ./.env
     volumes:

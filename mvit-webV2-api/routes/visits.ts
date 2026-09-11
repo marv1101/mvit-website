@@ -1,16 +1,38 @@
 import express, { Request, Response } from "express";
+import rateLimit from "express-rate-limit";
 import { visitService } from "../services/visitService.js";
 import { authMiddleware } from "../middleware/authMiddleware.js";
 import { createVisitRequest } from "../models/visit.js";
 
 const router = express.Router();
 
-router.post("/", async (req: Request, res: Response): Promise<void> => {
+const MAX_PATH_LENGTH = 2048;
+const MAX_REFERRER_LENGTH = 512;
+
+const visitLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000,
+    limit: 120,
+    standardHeaders: "draft-7",
+    legacyHeaders: false,
+    message: { error: "Too many requests. Try again later." },
+});
+
+router.post("/", visitLimiter, async (req: Request, res: Response): Promise<void> => {
     try {
         const data: createVisitRequest = req.body;
 
         if (!data.path) {
             res.status(400).json({ error: "Path is required" });
+            return;
+        }
+
+        if (data.path.length > MAX_PATH_LENGTH) {
+            res.status(400).json({ error: "Path is too long" });
+            return;
+        }
+
+        if (data.referrer && data.referrer.length > MAX_REFERRER_LENGTH) {
+            res.status(400).json({ error: "Referrer is too long" });
             return;
         }
 
