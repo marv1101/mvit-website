@@ -53,15 +53,15 @@ ALTER DEFAULT PRIVILEGES FOR ROLE "mvit-admin"
 GRANT USAGE ON TYPES TO "mvit-dev-rw";
 
 \c "mvit"
--- ── Schema für drizzle-Migrationen ──────────────────────────────────────────
--- drizzle-kit legt hier sein Journal (__drizzle_migrations) ab. Der App-User
--- bewusst OHNE CREATE auf DB-Ebene -> Schema wird ihm direkt übereignet.
-CREATE SCHEMA IF NOT EXISTS drizzle AUTHORIZATION "mvit-dev-rw";
-
--- App-User darf im public-Schema Tabellen anlegen (drizzle-Migrationen).
+-- ── Rechte für drizzle-Migrationen ──────────────────────────────────────────
+-- drizzle-kit führt beim Migrieren `CREATE SCHEMA IF NOT EXISTS "drizzle"`
+-- aus (für sein Journal __drizzle_migrations). PostgreSQL prüft das
+-- CREATE-Privileg auf DB-Ebene dabei AUCH wenn das Schema schon existiert –
+-- daher braucht der App-User zwingend CREATE auf der Datenbank.
 -- Das Tabellen-Schema wird ausschließlich über Migrationen erzeugt
 -- (mvit-webV2-api/drizzle), NICHT hier. Seed-Daten: postgres/seed.sql
 -- (nach der ersten Migration einspielen).
+GRANT CREATE ON DATABASE "mvit" TO "mvit-dev-rw";
 GRANT ALL ON SCHEMA public TO "mvit-dev-rw";
 
 
