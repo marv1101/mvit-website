@@ -20,7 +20,7 @@
     "bun-plugin-tailwind": "^0.1.2",
     "class-variance-authority": "0.7.1",
     "cmdk": "^1.1.1",
-    "dompurify": "^3.4.0",
+    "dompurify": "^3.4.15",
     "embla-carousel-react": "8.6.0",
     "input-otp": "^1.4.2",
     "lucide-react": "0.487.0",
@@ -45,5 +45,10 @@
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",
     "@types/react-modal": "^3.16.3"
+  },
+  "overrides": {
+    "@toast-ui/editor": {
+      "dompurify": "^3.4.13"
+    }
   }
 }
