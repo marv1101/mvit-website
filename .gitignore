@@ -1,12 +1,13 @@
 .env
 .env.development.local
+.env.production.local
 mvits-webV2/infra/postgres/init-scripts/init.sql
 mvit-webV2-backend/node_modules*
 .gitignore
 mvit-webV2-api/node_modules*
 KeepassDB.kdbx
-infra/.env.example
 .continue/prompts/new-prompt.md
 .continue/agents/new-config.yaml
 test2.sql
 infra/drupal/drupal.conf.php
+mvits-webV2/mvits-webV2/node_modules/*
