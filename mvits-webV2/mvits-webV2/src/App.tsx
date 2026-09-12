@@ -13,6 +13,7 @@ import { ProtectedRoute } from './components/ProtectedRoute';
 import { OfferingManager } from './components/OfferingManager';
 import { OfferingForm } from './components/OfferingForm';
 import { CategoryManager } from './components/CategoryManager';
+import { ContactManager } from './components/ContactManager';
 import { usePageView } from './hooks/usePageView';
 import  Modal from 'react-modal';
 import {
@@ -101,6 +102,14 @@ function Main() {
           element={
             <ProtectedRoute>
               <OfferingForm />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/contacts"
+          element={
+            <ProtectedRoute>
+              <ContactManager />
             </ProtectedRoute>
           }
         />

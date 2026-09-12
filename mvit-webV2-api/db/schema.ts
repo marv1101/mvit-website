@@ -23,6 +23,8 @@ export const contact = pgTable('contact', {
     email: varchar({ length: 255 }).notNull(),
     subject: varchar({ length: 255 }).notNull(),
     message: text().notNull(),
+    created_at: timestamp({ withTimezone: true }).notNull().defaultNow(),
+    status: varchar({ length: 20 }).notNull().default('open'),
 });
 
 export const adminUser = pgTable('admin_user', {

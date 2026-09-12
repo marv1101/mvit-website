@@ -5,3 +5,10 @@ export type contactObject = {
     subject: string,
     message: string
 }
+
+export type contactStatus = 'open' | 'handled';
+
+export type contactRequestObject = contactObject & {
+    createdAt: string,
+    status: contactStatus
+}
