@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import DOMPurify from 'dompurify';
 import { ArrowLeft, Calendar, Clock } from 'lucide-react';
 import { ImageWithFallback } from './figma/ImageWithFallback';
 import { replaceDrupalImgTagsWithSrc } from '../utils/DrupalImageTools';
@@ -110,7 +111,7 @@ export function BlogPostPage() {
         {post.content && (
           <div
             className="blog-content max-w-none text-muted-foreground"
-            dangerouslySetInnerHTML={{ __html: post.content }}
+            dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(post.content) }}
           />
         )}
       </div>

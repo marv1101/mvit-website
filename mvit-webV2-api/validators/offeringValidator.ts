@@ -1,3 +1,4 @@
+import DOMPurify from "isomorphic-dompurify";
 import { offeringObject } from "../models/offering.js";
 
 export function validateOfferingRequest(data: {
@@ -28,7 +29,7 @@ export function validateOfferingRequest(data: {
         id: 0,
         title: data.title.trim(),
         description: data.description.trim(),
-        description_page: typeof data.description_page === "string" ? data.description_page : null,
+        description_page: typeof data.description_page === "string" ? DOMPurify.sanitize(data.description_page) : null,
         icon: data.icon.trim(),
         features: Array.isArray(data.features) ? data.features.filter((f): f is string => typeof f === "string") : null,
         category: data.category,
