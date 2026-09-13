@@ -11,6 +11,16 @@ export const offering = pgTable('offering', {
     price: integer().notNull(),
 });
 
+export const reference = pgTable('reference', {
+    id: integer().primaryKey().generatedAlwaysAsIdentity(),
+    company: varchar({ length: 255 }).notNull(),
+    company_url: varchar({ length: 2048 }),
+    logo_url: text(),
+    summary: varchar({ length: 1024 }).notNull(),
+    story: text().notNull(),
+    created_at: timestamp({ withTimezone: true }).notNull().defaultNow(),
+});
+
 export const offering_category = pgTable('offering_category', {
     id: integer().primaryKey().generatedAlwaysAsIdentity(),
     name: varchar({ length: 255 }).notNull(),

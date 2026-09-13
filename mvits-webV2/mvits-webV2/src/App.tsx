@@ -6,6 +6,9 @@ import { Impressum } from './components/Impressum';
 import { Datenschutz } from './components/Datenschutz';
 import { ProductInfo } from './components/ProductInfo';
 import { BlogPostPage } from './components/BlogPostPage';
+import { ReferenceInfo } from './components/ReferenceInfo';
+import { ReferenceManager } from './components/ReferenceManager';
+import { ReferenceForm } from './components/ReferenceForm';
 import { AdminLogin } from './components/AdminLogin';
 import { AdminDashboard } from './components/AdminDashboard';
 import { ChangePassword } from './components/ChangePassword';
@@ -57,6 +60,10 @@ function Main() {
           element={<ProductInfo onBack={() => navigate('/')} />}
         />
         <Route
+          path="/reference/:id"
+          element={<ReferenceInfo onBack={() => navigate('/')} />}
+        />
+        <Route
           path="/impressum"
           element={<Impressum onBack={() => navigate('/')} />}
         />
@@ -102,6 +109,30 @@ function Main() {
           element={
             <ProtectedRoute>
               <OfferingForm />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/references"
+          element={
+            <ProtectedRoute>
+              <ReferenceManager />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/references/new"
+          element={
+            <ProtectedRoute>
+              <ReferenceForm />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/references/:id/edit"
+          element={
+            <ProtectedRoute>
+              <ReferenceForm />
             </ProtectedRoute>
           }
         />

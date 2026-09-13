@@ -12,7 +12,7 @@ import {
     Pie,
     Cell,
 } from "recharts";
-import { Package, Tags, MessagesSquare } from "lucide-react";
+import { Package, Tags, MessagesSquare, Quote } from "lucide-react";
 import { useAuth } from "../hooks/useAuth";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/card";
 import { Button } from "./ui/button";
@@ -128,6 +128,15 @@ export function AdminDashboard() {
                         </CardHeader>
                         <CardContent>
                             <CardDescription>Erstelle, bearbeite und lösche Leistungen</CardDescription>
+                        </CardContent>
+                    </Card>
+                    <Card className="hover:shadow-md transition-shadow cursor-pointer" onClick={() => navigate("/admin/references")}>
+                        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                            <CardTitle className="text-sm font-medium">Referenzen verwalten</CardTitle>
+                            <Quote className="h-4 w-4 text-muted-foreground" />
+                        </CardHeader>
+                        <CardContent>
+                            <CardDescription>Erstelle, bearbeite und lösche Referenzen</CardDescription>
                         </CardContent>
                     </Card>
                     <Card className="hover:shadow-md transition-shadow cursor-pointer" onClick={() => navigate("/admin/contacts")}>

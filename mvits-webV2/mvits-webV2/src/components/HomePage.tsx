@@ -2,11 +2,13 @@ import { useEffect, useState } from 'react';
 import { ProductCard } from './ProductCard';
 import type { Product } from '../types/Product';
 import { BlogCard, type BlogPost } from './BlogCard';
+import { ReferenceCard } from './ReferenceCard';
 import { ContactForm } from './ContactForm';
 import { replaceDrupalImgTagsWithSrc, getFirstImageUrlFromHtml } from '../utils/DrupalImageTools';
 import { CONFIG } from '../utils/ConfigLoader';
 import api from '../lib/api';
 import type { Blogpost } from '@/types/Blogpost';
+import type { Reference } from '@/types/Reference';
 
 const initialOfferings: Product[] = [
   {
@@ -95,6 +97,7 @@ export function HomePage() {
 
   const [offerings, setOfferings] = useState<Product[]>(initialOfferings);
   const [blogposts, setBlogposts] = useState<Blogpost[]>(initialBlogPosts);
+  const [references, setReferences] = useState<Reference[]>([]);
 
   useEffect(() => {
     let mounted = true;
@@ -129,6 +132,19 @@ export function HomePage() {
       })
       .catch((err) => {
          console.error('Failed to load blogposts', err);
+      });
+    return () => { mounted = false; };
+  }, []);
+
+  useEffect(() => {
+    let mounted = true;
+    api.get<Reference[]>('/references/')
+      .then((data) => {
+        if (!mounted) return;
+        if (Array.isArray(data)) setReferences(data);
+      })
+      .catch((err) => {
+         console.error('Failed to load references', err);
       });
     return () => { mounted = false; };
   }, []);
@@ -180,6 +196,26 @@ export function HomePage() {
         </div>
       </section>
       
+      {/* References Section */}
+      {references.length > 0 && (
+        <section id="references" className="py-20 px-4 sm:px-6 lg:px-8">
+          <div className="max-w-7xl mx-auto">
+            <div className="text-center mb-12">
+              <h2 className="mb-4">Referenzen</h2>
+              <p className="text-muted-foreground max-w-2xl mx-auto">
+                Was unsere Kunden über die Zusammenarbeit mit uns sagen.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {references.map((reference) => (
+                <ReferenceCard key={reference.id} reference={reference} />
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* Blog Section */}
       <section id="blog" className="py-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
