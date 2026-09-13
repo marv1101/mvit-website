@@ -9,7 +9,7 @@ const router = express.Router();
 router.get('/', async (req: Request, res: Response): Promise<void> => {
     try {
         const offset = parseInt(req.query.offset as string) || 0;
-        const limit = parseInt(req.query.limit as string) || 10;
+        const limit = Math.min(parseInt(req.query.limit as string) || 10, 100);
 
         const references = await referenceService.getAllReferences(offset, limit);
 

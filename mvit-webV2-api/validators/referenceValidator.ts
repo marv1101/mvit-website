@@ -18,12 +18,17 @@ export function validateReferenceRequest(data: {
 
     if (data.company.length > 255) return null;
     if (data.summary.length > 1024) return null;
+    if (data.story.length > 100_000) return null;
     if (data.company_url !== undefined && data.company_url !== null) {
         if (typeof data.company_url !== "string") return null;
         if (data.company_url.length > 2048) return null;
         if (!data.company_url.startsWith("http://") && !data.company_url.startsWith("https://")) return null;
     }
-    if (data.logo_url !== undefined && data.logo_url !== null && typeof data.logo_url !== "string") return null;
+    if (data.logo_url !== undefined && data.logo_url !== null) {
+        if (typeof data.logo_url !== "string") return null;
+        if (data.logo_url.length > 2048) return null;
+        if (!data.logo_url.startsWith("http://") && !data.logo_url.startsWith("https://")) return null;
+    }
 
     return {
         id: 0,
