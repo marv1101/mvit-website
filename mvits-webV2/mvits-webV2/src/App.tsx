@@ -6,6 +6,9 @@ import { Impressum } from './components/Impressum';
 import { Datenschutz } from './components/Datenschutz';
 import { ProductInfo } from './components/ProductInfo';
 import { BlogPostPage } from './components/BlogPostPage';
+import { ReferenceInfo } from './components/ReferenceInfo';
+import { ReferenceManager } from './components/ReferenceManager';
+import { ReferenceForm } from './components/ReferenceForm';
 import { AdminLogin } from './components/AdminLogin';
 import { AdminDashboard } from './components/AdminDashboard';
 import { ChangePassword } from './components/ChangePassword';
@@ -14,6 +17,7 @@ import { OfferingManager } from './components/OfferingManager';
 import { OfferingForm } from './components/OfferingForm';
 import { CategoryManager } from './components/CategoryManager';
 import { ContactManager } from './components/ContactManager';
+import { NotFoundPage } from './components/NotFoundPage';
 import { usePageView } from './hooks/usePageView';
 import  Modal from 'react-modal';
 import {
@@ -55,6 +59,10 @@ function Main() {
         <Route
           path="/product/:id"
           element={<ProductInfo onBack={() => navigate('/')} />}
+        />
+        <Route
+          path="/reference/:id"
+          element={<ReferenceInfo onBack={() => navigate('/')} />}
         />
         <Route
           path="/impressum"
@@ -106,6 +114,30 @@ function Main() {
           }
         />
         <Route
+          path="/admin/references"
+          element={
+            <ProtectedRoute>
+              <ReferenceManager />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/references/new"
+          element={
+            <ProtectedRoute>
+              <ReferenceForm />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/references/:id/edit"
+          element={
+            <ProtectedRoute>
+              <ReferenceForm />
+            </ProtectedRoute>
+          }
+        />
+        <Route
           path="/admin/contacts"
           element={
             <ProtectedRoute>
@@ -121,6 +153,7 @@ function Main() {
             </ProtectedRoute>
           }
         />
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
 
       <Footer

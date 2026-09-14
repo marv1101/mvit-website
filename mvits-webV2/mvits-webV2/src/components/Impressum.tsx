@@ -1,10 +1,16 @@
 import { ArrowLeft } from 'lucide-react';
+import { useDocumentMeta, SITE_NAME } from '../hooks/useDocumentMeta';
 
 interface ImpressumProps {
   onBack: () => void;
 }
 
 export function Impressum({ onBack }: ImpressumProps) {
+  useDocumentMeta({
+    title: `Impressum | ${SITE_NAME}`,
+    description: 'Impressum von mvit Solutions mit Angaben zu Anbieter, Kontakt und rechtlichen Rahmenbedingungen.',
+  });
+
   return (
     <div className="min-h-screen pt-24 pb-20 px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl mx-auto">

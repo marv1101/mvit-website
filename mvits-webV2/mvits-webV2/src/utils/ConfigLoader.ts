@@ -10,4 +10,6 @@ g.process.env = g.process.env ?? {};
 export const CONFIG = {
     API_BASE_URL: process.env.BUN_PUBLIC_API_BASE_URL ?? "https://mphion.de/api",
     DRUPAL_BASE_URL: process.env.BUN_PUBLIC_DRUPAL_BASE_URL ?? "https://mphion.de/drupal",
+    SITE_URL: process.env.BUN_PUBLIC_SITE_URL ?? "https://mphion.de",
+    SITE_NAME: "mvit Solutions",
 };
