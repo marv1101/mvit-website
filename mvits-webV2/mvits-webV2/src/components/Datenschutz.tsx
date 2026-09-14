@@ -1,10 +1,16 @@
 import { ArrowLeft } from 'lucide-react';
+import { useDocumentMeta, SITE_NAME } from '../hooks/useDocumentMeta';
 
 interface DatenschutzProps {
   onBack: () => void;
 }
 
 export function Datenschutz({ onBack }: DatenschutzProps) {
+  useDocumentMeta({
+    title: `Datenschutz | ${SITE_NAME}`,
+    description: 'Informationen zum Datenschutz und zur Verarbeitung personenbezogener Daten bei mvit Solutions.',
+  });
+
   return (
     <div className="min-h-screen pt-24 pb-20 px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl mx-auto">

@@ -6,6 +6,7 @@ import { ImageWithFallback } from './figma/ImageWithFallback';
 import { replaceDrupalImgTagsWithSrc } from '../utils/DrupalImageTools';
 import api from '../lib/api';
 import type { Blogpost } from '@/types/Blogpost';
+import { useDocumentMeta, useJsonLd, SITE_URL, SITE_NAME } from '../hooks/useDocumentMeta';
 
 export function BlogPostPage() {
   const { id } = useParams<{ id: string }>();
@@ -13,6 +14,36 @@ export function BlogPostPage() {
   const [post, setPost] = useState<Blogpost | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  const baseDescription =
+    post?.content
+      ? post.content.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 155)
+      : 'Blogbeitrag der mvit Solutions.';
+
+  useDocumentMeta({
+    title: post ? `${post.title} | ${SITE_NAME}` : 'Blogbeitrag wird geladen | mvit Solutions',
+    description: baseDescription,
+    path: id ? `/blog/${id}` : undefined,
+    type: post ? 'article' : 'website',
+    imageUrl: post?.title_image_url,
+    publishedTime: post ? new Date(post.created * 1000).toISOString() : undefined,
+  });
+
+  useJsonLd(
+    'jsonld-blogpost',
+    post
+      ? {
+          '@context': 'https://schema.org',
+          '@type': 'BlogPosting',
+          headline: post.title,
+          image: post.title_image_url ? [post.title_image_url] : undefined,
+          datePublished: new Date(post.created * 1000).toISOString(),
+          author: { '@type': 'Organization', name: SITE_NAME, url: SITE_URL },
+          publisher: { '@type': 'Organization', name: SITE_NAME, url: SITE_URL },
+          mainEntityOfPage: `${SITE_URL}/blog/${post.nid}`,
+        }
+      : null,
+  );
 
   useEffect(() => {
     if (!id) {

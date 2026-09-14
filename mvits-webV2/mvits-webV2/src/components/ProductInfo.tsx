@@ -4,6 +4,7 @@ import { useParams } from 'react-router-dom';
 import DOMPurify from 'dompurify';
 import type { Product } from '../types/Product';
 import api from '../lib/api';
+import { useDocumentMeta, SITE_NAME } from '../hooks/useDocumentMeta';
 
 interface ProductPageProps {
   onBack: () => void;
@@ -15,6 +16,13 @@ export function ProductInfo({ onBack }: ProductPageProps) {
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  useDocumentMeta({
+    title: product ? `${product.name} | ${SITE_NAME}` : 'Produkt wird geladen | mvit Solutions',
+    description:
+      product?.description ??
+      'Lösung von mvit Solutions: individuelle IT-Dienstleistungen und Software zu fairen Konditionen.',
+  });
 
   useEffect(() => {
     if (!id) {

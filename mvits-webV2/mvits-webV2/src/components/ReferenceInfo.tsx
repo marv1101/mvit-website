@@ -4,6 +4,7 @@ import { useParams } from 'react-router-dom';
 import DOMPurify from 'dompurify';
 import type { Reference } from '../types/Reference';
 import api from '../lib/api';
+import { useDocumentMeta, SITE_NAME } from '../hooks/useDocumentMeta';
 
 interface ReferencePageProps {
   onBack: () => void;
@@ -15,6 +16,13 @@ export function ReferenceInfo({ onBack }: ReferencePageProps) {
   const [reference, setReference] = useState<Reference | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  useDocumentMeta({
+    title: reference ? `${reference.company} | ${SITE_NAME}` : 'Projekt wird geladen | mvit Solutions',
+    description:
+      reference?.summary ??
+      'Referenz von mvit Solutions: erfolgreiche IT-Projekte und individuelle Softwarelösungen.',
+  });
 
   useEffect(() => {
     if (!id) {

@@ -9,6 +9,23 @@ import { CONFIG } from '../utils/ConfigLoader';
 import api from '../lib/api';
 import type { Blogpost } from '@/types/Blogpost';
 import type { Reference } from '@/types/Reference';
+import { useDocumentMeta, useJsonLd, SITE_URL, SITE_NAME } from '../hooks/useDocumentMeta';
+
+const useHomeDocumentMeta = () => {
+  useDocumentMeta({
+    title: 'mvit Solutions – IT-Dienstleistungen & individuelle Software',
+    description:
+      'mvit Solutions entwickelt individuelle Softwarelösungen von der KI-gestützten Dienstplanung über Cloud-Migration bis zur IT-Beratung zu fairen Preis-Leistungs-Konditionen.',
+  });
+
+  useJsonLd('jsonld-organization', {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    name: SITE_NAME,
+    url: SITE_URL,
+    logo: `${SITE_URL}/res/icons/icon-512x512.png`,
+  });
+};
 
 const initialOfferings: Product[] = [
   {
@@ -94,6 +111,7 @@ const initialBlogPosts: Blogpost[] = [
 ];
 
 export function HomePage() {
+  useHomeDocumentMeta();
 
   const [offerings, setOfferings] = useState<Product[]>(initialOfferings);
   const [blogposts, setBlogposts] = useState<Blogpost[]>(initialBlogPosts);

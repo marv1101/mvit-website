@@ -17,6 +17,7 @@ import { OfferingManager } from './components/OfferingManager';
 import { OfferingForm } from './components/OfferingForm';
 import { CategoryManager } from './components/CategoryManager';
 import { ContactManager } from './components/ContactManager';
+import { NotFoundPage } from './components/NotFoundPage';
 import { usePageView } from './hooks/usePageView';
 import  Modal from 'react-modal';
 import {
@@ -152,6 +153,7 @@ function Main() {
             </ProtectedRoute>
           }
         />
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
 
       <Footer
