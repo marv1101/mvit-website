@@ -36,7 +36,7 @@ export function ContactModal({ modalIsOpen, onClose, onConsent, onNoConsent }: C
         
                 <h2>Vielen Dank für Ihre Nachricht!</h2>
                 <p> Aufgrund der DSGVO müssen sie hier bestätigen, dass wir ihre angegebenen Daten verarbeiten dürfen. Dies Betrifft ihren Namen, ihre E-Mail-Adresse und ihre Nachricht.</p>
-                <p> Für weitere Informationen kontaktieren Sie uns unter contact@mvit-solutions.de oder besuchen Sie unsere Datenschutz Seite. Diese finden sie unter <a href="/datenschutz" className="text-primary hover:underline">Datenschutz</a>.</p>
+                <p> Für weitere Informationen kontaktieren Sie uns unter marvphoto@web.de oder besuchen Sie unsere Datenschutz Seite. Diese finden sie unter <a href="/datenschutz" className="text-primary hover:underline">Datenschutz</a>.</p>
         
                 <button onClick={onConsent} className="mt-4 px-4 py-2 bg-primary text-white rounded hover:bg-primary-dark">
                   Ich stimme der Verarbeitung zu

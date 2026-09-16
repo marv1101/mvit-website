@@ -1,4 +1,4 @@
-import { Calendar, Clock, ArrowRight } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { ImageWithFallback } from './figma/ImageWithFallback';
 import type { Blogpost } from '@/types/Blogpost';
@@ -48,14 +48,13 @@ export function BlogCard({ post }: BlogCardProps) {
         </p>
         
         <div className="flex items-center gap-4 text-sm text-muted-foreground mb-4">
-          <div className="flex items-center gap-1">
-            <Calendar className="w-4 h-4" />
-            <span>{new Date(post.created * 1000).toLocaleDateString('de-DE')}</span>
-          </div>
-          <div className="flex items-center gap-1">
-            <Clock className="w-4 h-4" />
-            <span>{new Date(post.changed * 1000).toLocaleDateString('de-DE')}</span>
-          </div>
+          <time dateTime={new Date(post.created * 1000).toISOString()}>
+            Erstellt: {new Date(post.created * 1000).toLocaleDateString('de-DE')}
+          </time>
+          <span aria-hidden="true">·</span>
+          <time dateTime={new Date(post.changed * 1000).toISOString()}>
+            Aktualisiert: {new Date(post.changed * 1000).toLocaleDateString('de-DE')}
+          </time>
         </div>
         
         <button
