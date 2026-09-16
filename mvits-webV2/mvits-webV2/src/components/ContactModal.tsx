@@ -41,7 +41,7 @@ export function ContactModal({ modalIsOpen, onClose, onConsent, onNoConsent }: C
                 <button onClick={onConsent} className="mt-4 px-4 py-2 bg-primary text-white rounded hover:bg-primary-dark">
                   Ich stimme der Verarbeitung zu
                 </button>
-                <button onClick={onNoConsent} className="mt-4 ml-2 px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400">
+                <button onClick={onNoConsent} className="mt-4 ml-2 px-4 py-2 bg-muted text-muted-foreground rounded hover:bg-secondary hover:text-secondary-foreground">
                   Ich stimme der Verarbeitung nicht zu
                 </button>
               </Modal>
