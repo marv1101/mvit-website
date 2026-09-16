@@ -18,6 +18,7 @@ import { OfferingForm } from './components/OfferingForm';
 import { CategoryManager } from './components/CategoryManager';
 import { ContactManager } from './components/ContactManager';
 import { NotFoundPage } from './components/NotFoundPage';
+import { CursorGlow } from './components/CursorGlow';
 import { usePageView } from './hooks/usePageView';
 import  Modal from 'react-modal';
 import {
@@ -52,6 +53,7 @@ function Main() {
   return (
     <div className="min-h-screen">
       <Navigation />
+      <CursorGlow />
 
       <Routes>
         <Route path="/" element={<HomePage />} />

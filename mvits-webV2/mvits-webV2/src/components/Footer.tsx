@@ -78,7 +78,7 @@ export function Footer({ onNavigate }: FooterProps) {
             <h4 className="mb-4">Kontakt</h4>
             <div className="space-y-2">
               <a 
-                href="mailto:contact@mvit-solutions.de" 
+                href="mailto:marvphoto@web.de" 
                 className="flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors"
               >
                 <Mail className="w-4 h-4" />

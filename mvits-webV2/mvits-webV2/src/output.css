@@ -9,9 +9,6 @@
       "Courier New", monospace;
     --color-red-500: oklch(63.7% 0.237 25.331);
     --color-gray-100: oklch(96.7% 0.003 264.542);
-    --color-gray-300: oklch(87.2% 0.01 258.338);
-    --color-gray-400: oklch(70.7% 0.022 261.325);
-    --color-gray-700: oklch(37.3% 0.034 259.733);
     --color-black: #000;
     --color-white: #fff;
     --spacing: 0.25rem;
@@ -1428,9 +1425,6 @@
   .bg-gray-100 {
     background-color: var(--color-gray-100);
   }
-  .bg-gray-300 {
-    background-color: var(--color-gray-300);
-  }
   .bg-input-background {
     background-color: var(--input-background);
   }
@@ -1790,9 +1784,6 @@
   .text-foreground {
     color: var(--foreground);
   }
-  .text-gray-700 {
-    color: var(--color-gray-700);
-  }
   .text-muted-foreground {
     color: var(--muted-foreground);
   }
@@ -2128,6 +2119,9 @@
     --tw-ease: var(--ease-out);
     transition-timing-function: var(--ease-out);
   }
+  .will-change-transform {
+    will-change: transform;
+  }
   .outline-none {
     --tw-outline-style: none;
     outline-style: none;
@@ -2441,9 +2435,6 @@
         background-color: color-mix(in oklab, var(--destructive) 90%, transparent);
       }
     }
-    .hover\:bg-gray-400:hover {
-      background-color: var(--color-gray-400);
-    }
     .hover\:bg-muted:hover {
       background-color: var(--muted);
     }
@@ -2465,6 +2456,9 @@
       .hover\:bg-primary\/90:hover {
         background-color: color-mix(in oklab, var(--primary) 90%, transparent);
       }
+    }
+    .hover\:bg-secondary:hover {
+      background-color: var(--secondary);
     }
     .hover\:bg-secondary\/80:hover {
       background-color: var(--secondary);
@@ -2494,6 +2488,9 @@
     }
     .hover\:text-primary-foreground:hover {
       color: var(--primary-foreground);
+    }
+    .hover\:text-secondary-foreground:hover {
+      color: var(--secondary-foreground);
     }
     .hover\:text-sidebar-accent-foreground:hover {
       color: var(--sidebar-accent-foreground);
@@ -3610,38 +3607,57 @@
 .dark {
   --background: oklch(0.145 0 0);
   --foreground: oklch(0.985 0 0);
-  --card: oklch(0.145 0 0);
+  --card: oklch(0.185 0.01 255);
   --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.145 0 0);
+  --popover: oklch(0.185 0.01 255);
   --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.985 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
+  --primary: #3b82f6;
+  --primary-foreground: #ffffff;
+  --secondary: oklch(0.3 0.055 255);
+  --secondary-foreground: #bfdbfe;
   --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.396 0.141 25.723);
-  --destructive-foreground: oklch(0.637 0.237 25.331);
-  --border: oklch(0.269 0 0);
-  --input: oklch(0.269 0 0);
-  --ring: oklch(0.439 0 0);
+  --muted-foreground: oklch(0.75 0 0);
+  --accent: #2563eb;
+  --accent-foreground: #ffffff;
+  --destructive: #d4183d;
+  --destructive-foreground: #ffffff;
+  --border: rgba(96, 165, 250, 0.18);
+  --input: rgba(96, 165, 250, 0.18);
+  --input-background: oklch(0.205 0 0);
+  --switch-background: oklch(0.4 0 0);
+  --ring: #3b82f6;
   --font-weight-medium: 500;
   --font-weight-normal: 400;
-  --chart-1: oklch(0.488 0.243 264.376);
+  --chart-1: oklch(0.646 0.222 41.116);
   --chart-2: oklch(0.696 0.17 162.48);
   --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
+  --chart-4: oklch(0.828 0.189 84.429);
   --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.205 0 0);
+  --sidebar: oklch(0.185 0.01 255);
   --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(0.269 0 0);
-  --sidebar-ring: oklch(0.439 0 0);
+  --sidebar-primary: #3b82f6;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: oklch(0.3 0.055 255);
+  --sidebar-accent-foreground: #bfdbfe;
+  --sidebar-border: rgba(96, 165, 250, 0.18);
+  --sidebar-ring: #3b82f6;
+  --background-gradient: linear-gradient(
+    180deg,
+    rgba(37, 99, 235, 0.16) 0%,
+    rgba(37, 99, 235, 0.07) 18%,
+    rgba(37, 99, 235, 0.02) 45%,
+    rgba(37, 99, 235, 0.05) 100%
+  );
+  --card-gradient: linear-gradient(
+    180deg,
+    rgba(96, 165, 250, 0.07) 0%,
+    rgba(96, 165, 250, 0) 45%
+  );
+  --sidebar-gradient: linear-gradient(
+    180deg,
+    rgba(96, 165, 250, 0.05) 0%,
+    rgba(96, 165, 250, 0) 60%
+  );
 }
 @layer base {
   * {
@@ -3656,6 +3672,16 @@
     color: var(--foreground);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+  }
+  .dark body {
+    background-image: var(--background-gradient);
+    background-attachment: fixed;
+  }
+  .dark .bg-card, .dark .bg-popover {
+    background-image: var(--card-gradient);
+  }
+  .dark .bg-sidebar {
+    background-image: var(--sidebar-gradient);
   }
   :where(:not(:has([class*=' text-']), :not(:has([class^='text-'])))) h1 {
     font-size: var(--text-2xl);
@@ -3787,6 +3813,18 @@ html {
   .blog-content > *:first-child {
     margin-top: 0;
   }
+}
+.dark .blog-content {
+  color: #e5e7eb;
+}
+.dark .blog-content h1, .dark  .blog-content h2, .dark  .blog-content strong {
+  color: #f9fafb;
+}
+.dark .blog-content h3, .dark  .blog-content h4, .dark  .blog-content h5, .dark  .blog-content h6 {
+  color: #f3f4f6;
+}
+.dark .blog-content a {
+  color: #60a5fa;
 }
 .toastui-editor-mode-switch {
   display: none !important;

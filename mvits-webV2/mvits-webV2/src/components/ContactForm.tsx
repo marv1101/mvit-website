@@ -99,19 +99,8 @@ export function ContactForm() {
                   </div>
                   <div>
                     <h4 className="mb-1">Telefon</h4>
-                    <p className="text-muted-foreground">+49 (0) 123 456789</p>
+                    <p className="text-muted-foreground"></p>
                     <p className="text-muted-foreground">Mo-Fr: 9:00 - 17:00 Uhr</p>
-                  </div>
-                </div>
-
-                <div className="hidden flex items-start gap-4">
-                  <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
-                    <MapPin className="w-6 h-6 text-primary" />
-                  </div>
-                  <div>
-                    <h4 className="mb-1">Adresse</h4>
-                    <p className="text-muted-foreground">Musterstraße 123</p>
-                    <p className="text-muted-foreground">12345 Berlin, Deutschland</p>
                   </div>
                 </div>
               </div>

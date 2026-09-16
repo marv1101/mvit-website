@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import DOMPurify from 'dompurify';
-import { ArrowLeft, Calendar, Clock } from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
 import { ImageWithFallback } from './figma/ImageWithFallback';
 import { replaceDrupalImgTagsWithSrc } from '../utils/DrupalImageTools';
 import api from '../lib/api';
@@ -39,6 +39,10 @@ export function BlogPostPage() {
           headline: post.title,
           image: post.title_image_url ? [post.title_image_url] : undefined,
           datePublished: new Date(post.created * 1000).toISOString(),
+          dateModified:
+            post.changed !== post.created
+              ? new Date(post.changed * 1000).toISOString()
+              : undefined,
           author: { '@type': 'Organization', name: SITE_NAME, url: SITE_URL },
           publisher: { '@type': 'Organization', name: SITE_NAME, url: SITE_URL },
           mainEntityOfPage: `${SITE_URL}/blog/${post.nid}`,
@@ -118,15 +122,24 @@ export function BlogPostPage() {
               {post.langcode}
             </span>
             <time dateTime={new Date(post.created * 1000).toISOString()}>
-              {new Date(post.created * 1000).toLocaleDateString('de-DE', {
-                weekday: 'short',
+              Erstellt: {new Date(post.created * 1000).toLocaleDateString('de-DE', {
                 year: 'numeric',
                 month: '2-digit',
                 day: '2-digit',
-                hour: '2-digit',
-                minute: '2-digit',
               })}
             </time>
+            {post.changed !== post.created && (
+              <>
+                <span aria-hidden="true">·</span>
+                <time dateTime={new Date(post.changed * 1000).toISOString()}>
+                  Aktualisiert am: {new Date(post.changed * 1000).toLocaleDateString('de-DE', {
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit',
+                  })}
+                </time>
+              </>
+            )}
           </div>
         </header>
 
