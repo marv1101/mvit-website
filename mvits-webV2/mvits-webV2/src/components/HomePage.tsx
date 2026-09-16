@@ -10,6 +10,7 @@ import api from '../lib/api';
 import type { Blogpost } from '@/types/Blogpost';
 import type { Reference } from '@/types/Reference';
 import { useDocumentMeta, useJsonLd, SITE_URL, SITE_NAME } from '../hooks/useDocumentMeta';
+import { LoadingSpinner } from './ui/loading-spinner';
 
 const useHomeDocumentMeta = () => {
   useDocumentMeta({
@@ -113,19 +114,21 @@ const initialBlogPosts: Blogpost[] = [
 export function HomePage() {
   useHomeDocumentMeta();
 
-  const [offerings, setOfferings] = useState<Product[]>(initialOfferings);
-  const [blogposts, setBlogposts] = useState<Blogpost[]>(initialBlogPosts);
-  const [references, setReferences] = useState<Reference[]>([]);
+  // null = lädt, [] = leer/Fehler (Fallback), Array = echte Daten
+  const [offerings, setOfferings] = useState<Product[] | null>(null);
+  const [blogposts, setBlogposts] = useState<Blogpost[] | null>(null);
+  const [references, setReferences] = useState<Reference[] | null>(null);
 
   useEffect(() => {
     let mounted = true;
     api.get<Product[]>('/offerings/')
       .then((data) => {
         if (!mounted) return;
-        if (Array.isArray(data)) setOfferings(data);
+        setOfferings(Array.isArray(data) ? data : initialOfferings);
       })
       .catch((err) => {
          console.error('Failed to load offerings', err);
+         if (mounted) setOfferings(initialOfferings);
       });
     return () => { mounted = false; };
   }, []);
@@ -146,10 +149,13 @@ export function HomePage() {
           });
 
           setBlogposts(modifiedData);
+        } else {
+          setBlogposts(initialBlogPosts);
         }
       })
       .catch((err) => {
          console.error('Failed to load blogposts', err);
+         if (mounted) setBlogposts(initialBlogPosts);
       });
     return () => { mounted = false; };
   }, []);
@@ -159,10 +165,11 @@ export function HomePage() {
     api.get<Reference[]>('/references/')
       .then((data) => {
         if (!mounted) return;
-        if (Array.isArray(data)) setReferences(data);
+        setReferences(Array.isArray(data) ? data : []);
       })
       .catch((err) => {
          console.error('Failed to load references', err);
+         if (mounted) setReferences([]);
       });
     return () => { mounted = false; };
   }, []);
@@ -206,16 +213,20 @@ export function HomePage() {
             </p>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {offerings.map((product) => (
-              <ProductCard key={product.id} product={product} />
-            ))}
-          </div>
+          {offerings === null ? (
+            <LoadingSpinner className="py-12" />
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {offerings.map((product) => (
+                <ProductCard key={product.id} product={product} />
+              ))}
+            </div>
+          )}
         </div>
       </section>
-      
+
       {/* References Section */}
-      {references.length > 0 && (
+      {(references === null || references.length > 0) && (
         <section id="references" className="py-20 px-4 sm:px-6 lg:px-8">
           <div className="max-w-7xl mx-auto">
             <div className="text-center mb-12">
@@ -225,11 +236,15 @@ export function HomePage() {
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {references.map((reference) => (
-                <ReferenceCard key={reference.id} reference={reference} />
-              ))}
-            </div>
+            {references === null ? (
+              <LoadingSpinner className="py-12" />
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {references.map((reference) => (
+                  <ReferenceCard key={reference.id} reference={reference} />
+                ))}
+              </div>
+            )}
           </div>
         </section>
       )}
@@ -244,11 +259,15 @@ export function HomePage() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {blogposts.map((blogpost) => (
-              <BlogCard key={blogpost.nid} post={blogpost} />
-            ))}
-          </div>
+          {blogposts === null ? (
+            <LoadingSpinner className="py-12" />
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {blogposts.map((blogpost) => (
+                <BlogCard key={blogpost.nid} post={blogpost} />
+              ))}
+            </div>
+          )}
           
           <div className="text-center mt-12">
             <button onClick={() => window.location.href=CONFIG.DRUPAL_BASE_URL} className="px-8 py-3 border-2 border-primary text-primary rounded-lg hover:bg-primary hover:text-primary-foreground transition-all">

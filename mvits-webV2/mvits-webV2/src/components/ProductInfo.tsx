@@ -5,6 +5,7 @@ import DOMPurify from 'dompurify';
 import type { Product } from '../types/Product';
 import api from '../lib/api';
 import { useDocumentMeta, SITE_NAME } from '../hooks/useDocumentMeta';
+import { LoadingSpinner } from './ui/loading-spinner';
 
 interface ProductPageProps {
   onBack: () => void;
@@ -55,7 +56,7 @@ export function ProductInfo({ onBack }: ProductPageProps) {
           Zurück zur Startseite
         </button>
 
-        {loading && <p>Lädt...</p>}
+        {loading && <LoadingSpinner className="py-8" />}
         {error && <p className="text-red-500">{error}</p>}
         {!loading && !error && product && (
           <>
