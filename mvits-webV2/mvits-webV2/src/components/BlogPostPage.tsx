@@ -7,6 +7,7 @@ import { replaceDrupalImgTagsWithSrc } from '../utils/DrupalImageTools';
 import api from '../lib/api';
 import type { Blogpost } from '@/types/Blogpost';
 import { useDocumentMeta, useJsonLd, SITE_URL, SITE_NAME } from '../hooks/useDocumentMeta';
+import { LoadingSpinner } from './ui/loading-spinner';
 
 export function BlogPostPage() {
   const { id } = useParams<{ id: string }>();
@@ -79,7 +80,7 @@ export function BlogPostPage() {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center pt-20">
-        <div className="animate-pulse text-muted-foreground">Laden...</div>
+        <LoadingSpinner />
       </div>
     );
   }

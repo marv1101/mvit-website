@@ -5,6 +5,7 @@ import DOMPurify from 'dompurify';
 import type { Reference } from '../types/Reference';
 import api from '../lib/api';
 import { useDocumentMeta, SITE_NAME } from '../hooks/useDocumentMeta';
+import { LoadingSpinner } from './ui/loading-spinner';
 
 interface ReferencePageProps {
   onBack: () => void;
@@ -55,7 +56,7 @@ export function ReferenceInfo({ onBack }: ReferencePageProps) {
           Zurück zur Startseite
         </button>
 
-        {loading && <p>Lädt...</p>}
+        {loading && <LoadingSpinner className="py-8" />}
         {error && <p className="text-red-500">{error}</p>}
         {!loading && !error && reference && (
           <>
