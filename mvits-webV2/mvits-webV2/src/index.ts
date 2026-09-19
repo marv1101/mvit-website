@@ -22,6 +22,14 @@ const sitemapXml = [
   "</urlset>",
 ].join("\n") + "\n";
 
+// Statische Response-Routen mit lazy Bun.file-Body werden in Bun 1.4 nicht als
+// Route registriert (fielen auf den SPA-Fallback durch), daher die Icons
+// einmalig vollständig in den Speicher laden.
+const iconResp = async (file: string) =>
+  new Response(new Uint8Array(await Bun.file(`./src/res/icons/${file}`).bytes()), {
+    headers: { "Content-Type": "image/png" },
+  });
+
 const server = serve({
   port,
   routes: {
@@ -32,6 +40,12 @@ const server = serve({
     "/sitemap.xml": new Response(sitemapXml, {
       headers: { "Content-Type": "application/xml; charset=utf-8" },
     }),
+
+    // PWA-Icons (aus site.webmanifest referenziert → /icons/...)
+    "/icons/icon-192x192.png": await iconResp("icon-192x192.png"),
+    "/icons/icon-256x256.png": await iconResp("icon-256x256.png"),
+    "/icons/icon-512x512.png": await iconResp("icon-512x512.png"),
+    "/icons/icon-maskable-512x512.png": await iconResp("icon-maskable-512x512.png"),
 
     // Serve index.html for all unmatched routes.
     "/*": index,
