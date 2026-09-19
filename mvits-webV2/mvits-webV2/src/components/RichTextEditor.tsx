@@ -14,6 +14,16 @@ interface RichTextEditorProps {
 
 type EditorMode = "wysiwyg" | "markdown" | "html";
 
+function sanitizeForEditor(html: string): string {
+    if (!html) return "";
+    let cleaned = html
+        .replace(/<!(?:DOCTYPE|doctype)\s+[^>]*>/g, "")
+        .replace(/<!--[\s\S]*?-->/g, "")
+        .replace(/<head[\s\S]*?<\/head>/gi, "")
+        .replace(/<\/?(?:html|head|body)(?:\s[^>]*)?>/g, "");
+    return DOMPurify.sanitize(cleaned).trim();
+}
+
 const modes: { key: EditorMode; label: string }[] = [
     { key: "wysiwyg", label: "WYSIWYG" },
     { key: "markdown", label: "Markdown" },
@@ -48,7 +58,7 @@ export function RichTextEditor({ value, onChange, placeholder }: RichTextEditorP
                 clearTimeout(debounceRef.current);
             }
             debounceRef.current = setTimeout(() => {
-                onChange(val);
+                onChange(sanitizeForEditor(val));
             }, 300);
         },
         [onChange]
@@ -67,9 +77,13 @@ export function RichTextEditor({ value, onChange, placeholder }: RichTextEditorP
                     clearTimeout(debounceRef.current);
                     debounceRef.current = null;
                 }
-                const sanitized = DOMPurify.sanitize(htmlCode);
-                instance.setHTML(sanitized);
-                instance.changeMode(next);
+                const sanitized = sanitizeForEditor(htmlCode);
+                try {
+                    instance.setHTML(sanitized);
+                    instance.changeMode(next);
+                } catch {
+                    instance.changeMode(next);
+                }
                 onChange(sanitized);
             } else {
                 instance.changeMode(next);
@@ -108,7 +122,7 @@ export function RichTextEditor({ value, onChange, placeholder }: RichTextEditorP
             <div className={mode === "html" ? "hidden" : undefined}>
                 <Editor
                     ref={editorRef}
-                    initialValue={value || ""}
+                    initialValue={sanitizeForEditor(value)}
                     previewStyle="vertical"
                     height="400px"
                     initialEditType="wysiwyg"
