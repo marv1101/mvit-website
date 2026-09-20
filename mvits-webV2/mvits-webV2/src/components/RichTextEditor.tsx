@@ -21,7 +21,8 @@ function sanitizeForEditor(html: string): string {
         .replace(/<!--[\s\S]*?-->/g, "")
         .replace(/<head[\s\S]*?<\/head>/gi, "")
         .replace(/<\/?(?:html|head|body)(?:\s[^>]*)?>/g, "");
-    return DOMPurify.sanitize(cleaned).trim();
+    cleaned = DOMPurify.sanitize(cleaned);
+    return cleaned.replace(/^[ \t]+/gm, "").replace(/\n{3,}/g, "\n\n").trim();
 }
 
 const modes: { key: EditorMode; label: string }[] = [
