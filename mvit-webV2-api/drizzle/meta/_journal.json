@@ -29,6 +29,13 @@
       "when": 1789282564956,
       "tag": "0003_magical_terror",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1789368960000,
+      "tag": "0004_visit_daily",
+      "breakpoints": true
     }
   ]
 }

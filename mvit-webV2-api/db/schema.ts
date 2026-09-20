@@ -1,4 +1,4 @@
-import {integer, pgTable, varchar, text, json, timestamp, boolean} from "drizzle-orm/pg-core";
+import {integer, pgTable, varchar, text, json, timestamp, boolean, date, primaryKey, index} from "drizzle-orm/pg-core";
 
 export const offering = pgTable('offering', {
     id: integer().primaryKey().generatedAlwaysAsIdentity(),
@@ -54,4 +54,16 @@ export const pageVisit = pgTable('page_visit', {
     user_agent: text(),
     referrer: varchar({ length: 2048 }),
     device_type: varchar({ length: 50 }),
-});
+}, (table) => [
+    index('idx_page_visit_visited_at').on(table.visited_at),
+]);
+
+export const pageVisitDaily = pgTable('visit_daily', {
+    day: date('day').notNull(),
+    path: varchar({ length: 2048 }).notNull(),
+    referrer: varchar({ length: 2048 }).notNull(),
+    device_type: varchar({ length: 50 }).notNull(),
+    count: integer().default(0).notNull(),
+}, (table) => [
+    primaryKey({ columns: [table.day, table.path, table.referrer, table.device_type] }),
+]);

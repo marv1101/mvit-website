@@ -29,6 +29,17 @@ server.listen(port);
 server.on('error', onError);
 server.on('listening', onListening);
 
+let shuttingDown = false;
+function shutdown(signal: string) {
+  if (shuttingDown) return;
+  shuttingDown = true;
+  console.log(`[Shutdown] ${signal} received, closing server...`);
+  server.close(() => process.exit(0));
+  setTimeout(() => process.exit(0), 10000).unref();
+}
+process.on('SIGTERM', () => shutdown('SIGTERM'));
+process.on('SIGINT', () => shutdown('SIGINT'));
+
 /**
  * Normalize a port into a number, string, or false.
  */

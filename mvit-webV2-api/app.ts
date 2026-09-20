@@ -79,4 +79,20 @@ cron.schedule('0 3 * * *', async () => {
   }
 });
 
+let isShuttingDown = false;
+async function gracefulShutdown(signal: string) {
+  if (isShuttingDown) return;
+  isShuttingDown = true;
+  console.log(`[Shutdown] ${signal} received, flushing visit buffer...`);
+  try {
+    await visitService.flushOnShutdown();
+    console.log('[Shutdown] Visit buffer flushed');
+  } catch (error) {
+    console.log('[Shutdown] Error flushing visit buffer:', error);
+  }
+  process.exit(0);
+}
+process.on('SIGTERM', () => void gracefulShutdown('SIGTERM'));
+process.on('SIGINT', () => void gracefulShutdown('SIGINT'));
+
 export default app;

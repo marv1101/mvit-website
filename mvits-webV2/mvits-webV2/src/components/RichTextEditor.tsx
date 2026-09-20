@@ -25,6 +25,17 @@ function sanitizeForEditor(html: string): string {
     return cleaned.replace(/^[ \t]+/gm, "").replace(/\n{3,}/g, "\n\n").trim();
 }
 
+const blockTagPattern =
+    "div|p|h[1-6]|ul|ol|li|table|thead|tbody|tfoot|tr|td|th|blockquote|section|article|header|footer|figure|figcaption|nav|aside|dl|dt|dd|iframe|video|audio|source|picture|button";
+
+function formatHtml(html: string): string {
+    return html
+        .replace(new RegExp(`<(/?(?:${blockTagPattern}))\\b`, "gi"), "\n<$1")
+        .replace(/^(?:[ \t]*\n)+/gm, "\n")
+        .replace(/\n{2,}/g, "\n")
+        .trim();
+}
+
 const modes: { key: EditorMode; label: string }[] = [
     { key: "wysiwyg", label: "WYSIWYG" },
     { key: "markdown", label: "Markdown" },
@@ -72,7 +83,7 @@ export function RichTextEditor({ value, onChange, placeholder }: RichTextEditorP
             if (!instance) return;
 
             if (next === "html") {
-                setHtmlCode(instance.getHTML());
+                setHtmlCode(formatHtml(instance.getHTML()));
             } else if (mode === "html") {
                 if (debounceRef.current) {
                     clearTimeout(debounceRef.current);
