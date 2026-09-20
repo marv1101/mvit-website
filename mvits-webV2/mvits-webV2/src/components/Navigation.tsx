@@ -1,35 +1,18 @@
-import { Code2, Menu, X, Moon, Sun } from 'lucide-react';
-import { useState, useEffect } from 'react';
+import { Code2, Menu, X, Moon, Monitor, Sun } from 'lucide-react';
+import { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { useTheme } from '../hooks/useTheme';
 
 export function Navigation() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  const { mode, isDarkMode, setTheme } = useTheme();
   const navigate = useNavigate();
   const location = useLocation();
 
-  useEffect(() => {
-    // Check for saved theme preference or default to light mode
-    const savedTheme = localStorage.getItem('theme');
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    
-    if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
-      setIsDarkMode(true);
-      document.documentElement.classList.add('dark');
-    }
-  }, []);
-
-  const toggleDarkMode = () => {
-    setIsDarkMode(!isDarkMode);
-    if (!isDarkMode) {
-      document.documentElement.classList.add('dark');
-      localStorage.setItem('theme', 'dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-      localStorage.setItem('theme', 'light');
-    }
+  const cycleThemeMode = () => {
+    setTheme(mode === 'system' ? 'dark' : mode === 'dark' ? 'light' : 'system');
   };
-  
+
   const scrollToSection = (id: string) => {
     const element = document.getElementById(id);
     if (element) {
@@ -70,22 +53,24 @@ export function Navigation() {
               Kontakt
             </button>
             <button
-              onClick={toggleDarkMode}
+              onClick={cycleThemeMode}
               className="p-2 rounded-lg hover:bg-muted transition-colors"
-              aria-label="Toggle dark mode"
+              aria-label={mode === 'system' ? 'Schema: System' : mode === 'dark' ? 'Schema: Dunkel' : 'Schema: Hell'}
+              title={mode === 'system' ? 'Schema: System' : mode === 'dark' ? 'Schema: Dunkel' : 'Schema: Hell'}
             >
-              {isDarkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+              {mode === 'system' ? <Monitor className="w-5 h-5" /> : isDarkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
             </button>
           </div>
-          
+
           {/* Mobile Menu Button */}
           <div className="md:hidden flex items-center gap-2">
             <button
-              onClick={toggleDarkMode}
+              onClick={cycleThemeMode}
               className="p-2 rounded-lg hover:bg-muted transition-colors"
-              aria-label="Toggle dark mode"
+              aria-label={mode === 'system' ? 'Schema: System' : mode === 'dark' ? 'Schema: Dunkel' : 'Schema: Hell'}
+              title={mode === 'system' ? 'Schema: System' : mode === 'dark' ? 'Schema: Dunkel' : 'Schema: Hell'}
             >
-              {isDarkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+              {mode === 'system' ? <Monitor className="w-5 h-5" /> : isDarkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
             </button>
             <button 
               className="md:hidden"

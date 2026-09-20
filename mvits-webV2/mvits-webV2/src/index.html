@@ -4,9 +4,21 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="robots" content="index, follow" />
-    <meta name="theme-color" content="#ffffff" />
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0a0a0a" media="(prefers-color-scheme: dark)" />
     <link rel="icon" type="image/svg+xml" href="./res/icons/favicon.svg" />
     <link rel="manifest" href="./res/site.webmanifest" />
+    <script>
+      // Setzt die Theme-Klasse vor dem ersten Paint, um Flash of wrong theme zu vermeiden.
+      // Muss vor dem Stylesheet und dem Modul-Bundle laufen.
+      (function () {
+        var theme = null;
+        try { theme = localStorage.getItem("theme"); } catch (e) {}
+        var systemDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+        var dark = theme === "dark" || (!theme && systemDark) || theme === "system" && systemDark;
+        if (dark) document.documentElement.classList.add("dark");
+      })();
+    </script>
     <link rel="stylesheet" href="./output.css" />
     <title>mvit Solutions</title>
   </head>
