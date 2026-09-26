@@ -1,10 +1,11 @@
 import { ArrowLeft } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import DOMPurify from 'dompurify';
+import { sanitizeHtml } from '../lib/sanitize';
 import type { Product } from '../types/Product';
 import api from '../lib/api';
 import { useDocumentMeta, SITE_NAME } from '../hooks/useDocumentMeta';
+import { useRouteSSRData } from '../lib/ssrData';
 import { LoadingSpinner } from './ui/loading-spinner';
 
 interface ProductPageProps {
@@ -14,8 +15,10 @@ interface ProductPageProps {
 export function ProductInfo({ onBack }: ProductPageProps) {
   // read the `id` parameter from the URL
   const { id } = useParams<{ id: string }>();
-  const [product, setProduct] = useState<Product | null>(null);
-  const [loading, setLoading] = useState(true);
+  const ssr = useRouteSSRData();
+  // SSR-Daten des Servers vorab übernehmen, sonst klassischer Ladefluss
+  const [product, setProduct] = useState<Product | null>(ssr?.product ?? null);
+  const [loading, setLoading] = useState(id != null && !ssr?.product);
   const [error, setError] = useState<string | null>(null);
 
   useDocumentMeta({
@@ -63,7 +66,7 @@ export function ProductInfo({ onBack }: ProductPageProps) {
             <h1 className="mb-8">{product.name}</h1>
             <p className="text-muted-foreground mb-4">{product.description}</p>
             
-            <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(product.description_page || '') }}></div>
+            <div           dangerouslySetInnerHTML={{ __html: sanitizeHtml(product.description_page || '') }}></div>
 
           </>
         )}

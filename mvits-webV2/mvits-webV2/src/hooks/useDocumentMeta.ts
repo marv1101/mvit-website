@@ -75,6 +75,16 @@ export function useDocumentMeta({
       noindex ? [{ attr: "content", value: "noindex, nofollow" }] : [],
     );
 
+    upsertMeta(
+      'meta[name="author"]',
+      () => {
+        const m = document.createElement("meta");
+        m.name = "author";
+        return m;
+      },
+      [{ attr: "content", value: "Marian Voigtländer" }],
+    );
+
     let canonical = document.head.querySelector<HTMLLinkElement>('link[rel="canonical"]');
     if (!canonical) {
       canonical = document.createElement("link");
@@ -96,6 +106,9 @@ export function useDocumentMeta({
     }
     if (publishedTime) {
       ogValues.push({ attr: "content", property: "article:published_time", value: publishedTime });
+    }
+    if (type === "article") {
+      ogValues.push({ attr: "content", property: "article:author", value: "Marian Voigtländer" });
     }
 
     for (const v of ogValues) {

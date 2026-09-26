@@ -1,10 +1,11 @@
 import { ArrowLeft, ExternalLink } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import DOMPurify from 'dompurify';
+import { sanitizeHtml } from '../lib/sanitize';
 import type { Reference } from '../types/Reference';
 import api from '../lib/api';
 import { useDocumentMeta, SITE_NAME } from '../hooks/useDocumentMeta';
+import { useRouteSSRData } from '../lib/ssrData';
 import { LoadingSpinner } from './ui/loading-spinner';
 
 interface ReferencePageProps {
@@ -14,8 +15,10 @@ interface ReferencePageProps {
 export function ReferenceInfo({ onBack }: ReferencePageProps) {
   // read the `id` parameter from the URL
   const { id } = useParams<{ id: string }>();
-  const [reference, setReference] = useState<Reference | null>(null);
-  const [loading, setLoading] = useState(true);
+  const ssr = useRouteSSRData();
+  // SSR-Daten des Servers vorab übernehmen, sonst klassischer Ladefluss
+  const [reference, setReference] = useState<Reference | null>(ssr?.reference ?? null);
+  const [loading, setLoading] = useState(id != null && !ssr?.reference);
   const [error, setError] = useState<string | null>(null);
 
   useDocumentMeta({
@@ -92,7 +95,7 @@ export function ReferenceInfo({ onBack }: ReferencePageProps) {
 
             <p className="text-muted-foreground mb-4">{reference.summary}</p>
 
-            <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(reference.story || '') }}></div>
+            <div dangerouslySetInnerHTML={{ __html: sanitizeHtml(reference.story || '') }}></div>
           </>
         )}
 

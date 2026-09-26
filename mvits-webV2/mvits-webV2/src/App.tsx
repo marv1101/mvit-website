@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { lazy, Suspense, useEffect } from 'react';
 import { Navigation } from './components/Navigation';
 import { Footer } from './components/Footer';
 import { HomePage } from './components/HomePage';
@@ -7,20 +7,41 @@ import { Datenschutz } from './components/Datenschutz';
 import { ProductInfo } from './components/ProductInfo';
 import { BlogPostPage } from './components/BlogPostPage';
 import { ReferenceInfo } from './components/ReferenceInfo';
-import { ReferenceManager } from './components/ReferenceManager';
-import { ReferenceForm } from './components/ReferenceForm';
-import { AdminLogin } from './components/AdminLogin';
-import { AdminDashboard } from './components/AdminDashboard';
-import { ChangePassword } from './components/ChangePassword';
 import { ProtectedRoute } from './components/ProtectedRoute';
-import { OfferingManager } from './components/OfferingManager';
-import { OfferingForm } from './components/OfferingForm';
-import { CategoryManager } from './components/CategoryManager';
-import { ContactManager } from './components/ContactManager';
 import { NotFoundPage } from './components/NotFoundPage';
 import { CursorGlow } from './components/CursorGlow';
 import { usePageView } from './hooks/usePageView';
 import  Modal from 'react-modal';
+
+// Admin-Bereiche lazy laden: reduziert das initiale Bundle und verhindert,
+// dass toast-ui/recharts beim SSR/Startup bereits auf Modulebene geladen werden.
+const AdminLogin = lazy(() =>
+  import('./components/AdminLogin').then((m) => ({ default: m.AdminLogin })),
+);
+const AdminDashboard = lazy(() =>
+  import('./components/AdminDashboard').then((m) => ({ default: m.AdminDashboard })),
+);
+const ChangePassword = lazy(() =>
+  import('./components/ChangePassword').then((m) => ({ default: m.ChangePassword })),
+);
+const OfferingManager = lazy(() =>
+  import('./components/OfferingManager').then((m) => ({ default: m.OfferingManager })),
+);
+const OfferingForm = lazy(() =>
+  import('./components/OfferingForm').then((m) => ({ default: m.OfferingForm })),
+);
+const CategoryManager = lazy(() =>
+  import('./components/CategoryManager').then((m) => ({ default: m.CategoryManager })),
+);
+const ContactManager = lazy(() =>
+  import('./components/ContactManager').then((m) => ({ default: m.ContactManager })),
+);
+const ReferenceManager = lazy(() =>
+  import('./components/ReferenceManager').then((m) => ({ default: m.ReferenceManager })),
+);
+const ReferenceForm = lazy(() =>
+  import('./components/ReferenceForm').then((m) => ({ default: m.ReferenceForm })),
+);
 import {
   BrowserRouter as Router,
   Routes,
@@ -38,9 +59,12 @@ export default function App() {
 }
 
 
-Modal.setAppElement('#root'); // Setzt das App-Element für die Modal-Komponente
+// Nur im Browser ausführen – unter SSR ist document nicht verfügbar.
+if (typeof document !== "undefined") {
+  Modal.setAppElement('#root');
+}
 
-function Main() {
+export function Main() {
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -55,7 +79,8 @@ function Main() {
       <Navigation />
       <CursorGlow />
 
-      <Routes>
+      <Suspense fallback={<div className="min-h-screen flex items-center justify-center pt-20" />}>
+        <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/blog/:id" element={<BlogPostPage />} />
         <Route
@@ -156,7 +181,8 @@ function Main() {
           }
         />
         <Route path="*" element={<NotFoundPage />} />
-      </Routes>
+        </Routes>
+      </Suspense>
 
       <Footer
         onNavigate={(page) => {

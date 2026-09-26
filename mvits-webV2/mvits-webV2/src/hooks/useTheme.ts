@@ -11,6 +11,8 @@ function applyTheme(dark: boolean) {
 
 export function useTheme() {
   const [mode, setMode] = useState<ThemeMode>(() => {
+    // SSR: kein localStorage – neutraler Ausgangszustand (Client korrigiert nach).
+    if (typeof localStorage === 'undefined') return 'system';
     const saved = localStorage.getItem(STORAGE_KEY);
     return saved === 'dark' || saved === 'light' || saved === 'system' ? saved : 'system';
   });

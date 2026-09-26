@@ -10,6 +10,7 @@ import api from '../lib/api';
 import type { Blogpost } from '@/types/Blogpost';
 import type { Reference } from '@/types/Reference';
 import { useDocumentMeta, useJsonLd, SITE_URL, SITE_NAME } from '../hooks/useDocumentMeta';
+import { useRouteSSRData } from '../lib/ssrData';
 import { LoadingSpinner } from './ui/loading-spinner';
 
 const useHomeDocumentMeta = () => {
@@ -114,10 +115,14 @@ const initialBlogPosts: Blogpost[] = [
 export function HomePage() {
   useHomeDocumentMeta();
 
+  // SSR-Daten (falls vom Server vorgerendert) direkt nutzen – der useEffect
+  // lädt danach ohnehin frisch nach (Aktualisierung / CSR-Navigation).
+  const ssr = useRouteSSRData();
+
   // null = lädt, [] = leer/Fehler (Fallback), Array = echte Daten
-  const [offerings, setOfferings] = useState<Product[] | null>(null);
-  const [blogposts, setBlogposts] = useState<Blogpost[] | null>(null);
-  const [references, setReferences] = useState<Reference[] | null>(null);
+  const [offerings, setOfferings] = useState<Product[] | null>(ssr?.home ? ssr.home.offerings : null);
+  const [blogposts, setBlogposts] = useState<Blogpost[] | null>(ssr?.home ? ssr.home.blogposts : null);
+  const [references, setReferences] = useState<Reference[] | null>(ssr?.home ? ssr.home.references : null);
 
   useEffect(() => {
     let mounted = true;

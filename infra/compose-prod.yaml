@@ -125,6 +125,9 @@ services:
     environment:
       - NODE_ENV=production
       - PORT=3001
+      # Server-seitige API-Basis für SSR + dynamische Sitemap (im Container-Netzwerk).
+      # Default im Code für Produktion: http://mvit-api:3000/api
+      - INTERNAL_API_BASE_URL=${INTERNAL_API_BASE_URL:-http://mvit-api:3000/api}
       # Öffentliche Browser-URLs (Bun inlinet BUN_PUBLIC_* zur Serve-Zeit).
       # Defaults = Prod-Domain; für Staging via .env überschreiben.
       - BUN_PUBLIC_API_BASE_URL=${BUN_PUBLIC_API_BASE_URL:-https://mphion.de/api}

@@ -1,26 +1,24 @@
 import { serve } from "bun";
 import index from "./index.html";
+import { buildSitemap } from "./server/sitemap";
+import { buildSsrDocument, getShellHtml } from "./server/ssrPage";
 
 const port = process.env.PORT ? parseInt(process.env.PORT) : 3000;
 const siteUrl = process.env.BUN_PUBLIC_SITE_URL ?? "https://mphion.de";
 
+const HTML_HEADERS = { "Content-Type": "text/html; charset=utf-8" };
+
 const robotsTxt = [
   "User-agent: *",
   "Allow: /",
+  "",
+  "# Nicht öffentlich sichtbare Bereiche",
   "Disallow: /admin",
+  "Disallow: /api",
   "",
   `Sitemap: ${siteUrl}/sitemap.xml`,
   "",
 ].join("\n");
-
-const sitemapXml = [
-  '<?xml version="1.0" encoding="UTF-8"?>',
-  '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
-  ...["/", "/impressum", "/datenschutz"].map(
-    (path) => `  <url><loc>${siteUrl}${path}</loc></url>`,
-  ),
-  "</urlset>",
-].join("\n") + "\n";
 
 // Statische Response-Routen mit lazy Bun.file-Body werden in Bun 1.4 nicht als
 // Route registriert (fielen auf den SPA-Fallback durch), daher die Icons
@@ -30,16 +28,47 @@ const iconResp = async (file: string) =>
     headers: { "Content-Type": "image/png" },
   });
 
+// SSR für public/crawlable Routen (impressum/datenschutz ohne Daten-Abruf).
+const ssrRoute = async (req: Request): Promise<Response> => {
+  const pathname = new URL(req.url).pathname;
+  try {
+    const html = await buildSsrDocument(pathname);
+    return new Response(html ?? (await getShellHtml()), { headers: HTML_HEADERS });
+  } catch {
+    try {
+      // CSR-Fallback: unbearbeitetes App-Shell ausliefern
+      return new Response(await getShellHtml(), { headers: HTML_HEADERS });
+    } catch {
+      return new Response("Dienst vorübergehend nicht verfügbar", {
+        status: 503,
+        headers: { "Content-Type": "text/plain; charset=utf-8" },
+      });
+    }
+  }
+};
+
 const server = serve({
   port,
   routes: {
-    // SEO-Dateien
-    "/robots.txt": new Response(robotsTxt, {
-      headers: { "Content-Type": "text/plain; charset=utf-8" },
-    }),
-    "/sitemap.xml": new Response(sitemapXml, {
-      headers: { "Content-Type": "application/xml; charset=utf-8" },
-    }),
+    // SEO-Dateien (dynamisch generiert)
+    "/robots.txt": () =>
+      new Response(robotsTxt, {
+        headers: { "Content-Type": "text/plain; charset=utf-8" },
+      }),
+    "/sitemap.xml": () =>
+      buildSitemap(siteUrl).then((xml) =>
+        new Response(xml, {
+          headers: { "Content-Type": "application/xml; charset=utf-8" },
+        }),
+      ),
+
+    // SSR für crawlable Seiten
+    "/": ssrRoute,
+    "/product/:id": ssrRoute,
+    "/blog/:id": ssrRoute,
+    "/reference/:id": ssrRoute,
+    "/impressum": ssrRoute,
+    "/datenschutz": ssrRoute,
 
     // PWA-Icons (aus site.webmanifest referenziert → /icons/...)
     "/icons/icon-192x192.png": await iconResp("icon-192x192.png"),

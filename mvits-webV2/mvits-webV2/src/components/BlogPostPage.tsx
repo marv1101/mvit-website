@@ -1,19 +1,22 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import DOMPurify from 'dompurify';
+import { sanitizeHtml } from '../lib/sanitize';
 import { ArrowLeft } from 'lucide-react';
 import { ImageWithFallback } from './figma/ImageWithFallback';
 import { replaceDrupalImgTagsWithSrc } from '../utils/DrupalImageTools';
 import api from '../lib/api';
 import type { Blogpost } from '@/types/Blogpost';
 import { useDocumentMeta, useJsonLd, SITE_URL, SITE_NAME } from '../hooks/useDocumentMeta';
+import { useRouteSSRData } from '../lib/ssrData';
 import { LoadingSpinner } from './ui/loading-spinner';
 
 export function BlogPostPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const [post, setPost] = useState<Blogpost | null>(null);
-  const [loading, setLoading] = useState(true);
+  const ssr = useRouteSSRData();
+  // SSR-Daten des Servers vorab übernehmen, sonst klassischer Ladefluss
+  const [post, setPost] = useState<Blogpost | null>(ssr?.blogpost ?? null);
+  const [loading, setLoading] = useState(id != null && !ssr?.blogpost);
   const [error, setError] = useState<string | null>(null);
 
   const baseDescription =
@@ -156,7 +159,7 @@ export function BlogPostPage() {
         {post.content && (
           <div
             className="blog-content max-w-none text-muted-foreground"
-            dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(post.content) }}
+            dangerouslySetInnerHTML={{ __html: sanitizeHtml(post.content) }}
           />
         )}
       </div>
