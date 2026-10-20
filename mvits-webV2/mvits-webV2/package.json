@@ -20,7 +20,7 @@
     "bun-plugin-tailwind": "^0.1.2",
     "class-variance-authority": "0.7.1",
     "cmdk": "^1.1.1",
-    "dompurify": "^3.4.15",
+    "dompurify": "^3.4.16",
     "isomorphic-dompurify": "^4.2.0",
     "embla-carousel-react": "8.6.0",
     "input-otp": "^1.4.2",
